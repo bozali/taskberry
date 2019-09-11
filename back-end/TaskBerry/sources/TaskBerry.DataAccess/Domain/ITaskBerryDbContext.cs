@@ -1,6 +1,7 @@
-﻿namespace TaskBerry.Service.DataAccess
+﻿namespace TaskBerry.DataAccess.Domain
 {
     public interface ITaskBerryDbContext
     {
+        
     }
 }

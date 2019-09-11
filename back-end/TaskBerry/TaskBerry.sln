@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBerry.Api", "sources\Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBerry.Data", "sources\TaskBerry.Data\TaskBerry.Data.csproj", "{C07E78B3-B2A1-4288-81E6-6AB35B337052}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBerry.DataAccess", "sources\TaskBerry.DataAccess\TaskBerry.DataAccess.csproj", "{CE3BAF5B-3941-4F41-A1C9-A824BB76600B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE3BAF5B-3941-4F41-A1C9-A824BB76600B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE3BAF5B-3941-4F41-A1C9-A824BB76600B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE3BAF5B-3941-4F41-A1C9-A824BB76600B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE3BAF5B-3941-4F41-A1C9-A824BB76600B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

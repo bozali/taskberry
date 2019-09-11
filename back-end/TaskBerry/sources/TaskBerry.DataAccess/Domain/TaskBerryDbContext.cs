@@ -1,4 +1,4 @@
-﻿namespace TaskBerry.Service.DataAccess
+﻿namespace TaskBerry.DataAccess.Domain
 {
     using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +7,7 @@
     {
         public TaskBerryDbContext(string connectionString)
         {
-            // base.Database.GetDbConnection().ConnectionString = connectionString;
+            base.Database.GetDbConnection().ConnectionString = connectionString;
         }
     }
 }
