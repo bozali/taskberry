@@ -10,7 +10,7 @@
     /// Represents a database entity for the tasks.
     /// </summary>
     [Table("Task")]
-    public class TaskEntity
+    public class TaskEntity : IEntity
     {
         /// <summary>
         /// Id of the task.

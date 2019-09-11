@@ -7,7 +7,7 @@
     {
         public TaskBerryDbContext(string connectionString)
         {
-            base.Database.GetDbConnection().ConnectionString = connectionString;
+            // base.Database.GetDbConnection().ConnectionString = connectionString;
         }
     }
 }

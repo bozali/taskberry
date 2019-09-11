@@ -1,9 +1,9 @@
 ﻿namespace TaskBerry.Shared.Entities
 {
     /// <summary>
-    /// Types of tasks.
+    /// Entity interface that all entities inherit from.
     /// </summary>
-    public enum TaskType
+    public interface IEntity
     {
     }
 }

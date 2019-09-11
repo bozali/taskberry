@@ -4,12 +4,14 @@
     using System.ComponentModel.DataAnnotations;
     using System;
 
+    using TaskBerry.Shared.Models;
+
 
     /// <summary>
     /// Represents a database entity for the groups.
     /// </summary>
     [Table("Group")]
-    public class GroupEntity
+    public class GroupEntity : EntityBase<Group>
     {
         /// <summary>
         /// Id of the group.

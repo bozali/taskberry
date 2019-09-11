@@ -1,4 +1,7 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using System;
+using TaskBerry.Shared.Models;
+
+namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
