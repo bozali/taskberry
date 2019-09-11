@@ -1,4 +1,4 @@
-﻿namespace TaskBerry.Shared.Entities
+﻿namespace TaskBerry.Data.Entities
 {
     /// <summary>
     /// Types of tasks.

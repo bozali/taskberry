@@ -7,8 +7,8 @@
     <ProjectGuid>{C07E78B3-B2A1-4288-81E6-6AB35B337052}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TaskBerry.Shared</RootNamespace>
-    <AssemblyName>TaskBerry.Shared</AssemblyName>
+    <RootNamespace>TaskBerry.Data</RootNamespace>
+    <AssemblyName>TaskBerry.Data</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -54,9 +54,7 @@
     <Compile Include="Models\Group.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

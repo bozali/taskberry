@@ -1,6 +1,6 @@
-﻿namespace TaskBerry.Shared.Models
+﻿namespace TaskBerry.Data.Models
 {
-    using TaskBerry.Shared.Entities;
+    using TaskBerry.Data.Entities;
 
     using System;
 

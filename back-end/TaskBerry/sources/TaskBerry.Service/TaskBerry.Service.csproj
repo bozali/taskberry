@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskBerry.Shared\TaskBerry.Shared.csproj" />
+    <ProjectReference Include="..\TaskBerry.Data\TaskBerry.Data.csproj" />
   </ItemGroup>
 
 </Project>

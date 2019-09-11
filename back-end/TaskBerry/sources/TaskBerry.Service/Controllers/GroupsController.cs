@@ -1,14 +1,12 @@
-﻿using System;
-using TaskBerry.Shared.Models;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
     using TaskBerry.Service.DataAccess;
-    using TaskBerry.Shared.Entities;
+    using TaskBerry.Data.Entities;
 
     using System.Collections.Generic;
+    using System;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +26,11 @@ namespace TaskBerry.Service.Controllers
         [SwaggerOperation(Summary = "Gets groups.", Description = "Gets a null.")]
         public ActionResult<IEnumerable<GroupEntity>> Get()
         {
-            return null;
+            return new GroupEntity[]
+            {
+                new GroupEntity { Description = "Test description 1", Name = "Test name", Id = Guid.NewGuid() },
+                new GroupEntity { Description = "Test description 2", Name = "Test name", Id = Guid.NewGuid() }
+            };
         }
     }
 }

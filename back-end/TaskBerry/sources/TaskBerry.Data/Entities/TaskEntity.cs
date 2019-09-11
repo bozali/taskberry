@@ -1,4 +1,4 @@
-﻿namespace TaskBerry.Shared.Entities
+﻿namespace TaskBerry.Data.Entities
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
