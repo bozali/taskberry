@@ -1,6 +1,4 @@
-﻿using Swashbuckle.AspNetCore.Swagger;
-
-namespace TaskBerry.Service
+﻿namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
@@ -8,7 +6,11 @@ namespace TaskBerry.Service
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
-    
+
+    using TaskBerry.Service.DataAccess;
+
+    using Swashbuckle.AspNetCore.Swagger;
+
 
     public class Startup
     {
@@ -19,7 +21,14 @@ namespace TaskBerry.Service
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+             
+            // Dependency injection configuration
+            services.AddScoped<ITaskBerryDbContext, TaskBerryDbContext>(provider => new TaskBerryDbContext(this.Configuration.GetConnectionString("TaskBerry")));
+
+            // Add swagger documentation generation
             services.AddSwaggerGen(options =>
             {
                 options.EnableAnnotations();

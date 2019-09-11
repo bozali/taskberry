@@ -2,6 +2,7 @@
 {
     using Swashbuckle.AspNetCore.Annotations;
 
+    using TaskBerry.Service.DataAccess;
     using TaskBerry.Shared.Entities;
 
     using System.Collections.Generic;
@@ -13,8 +14,11 @@
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        public GroupsController()
+        private ITaskBerryDbContext _database;
+
+        public GroupsController(ITaskBerryDbContext database)
         {
+            this._database = database;
         }
 
         [HttpGet]
