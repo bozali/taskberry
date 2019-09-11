@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBerry.Service", "sources\TaskBerry.Service\TaskBerry.Service.csproj", "{E6D671A7-4362-4094-836A-82BF3BF6F89C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskBerry.Service", "sources\TaskBerry.Service\TaskBerry.Service.csproj", "{E6D671A7-4362-4094-836A-82BF3BF6F89C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBerry.Shared", "sources\TaskBerry.Shared\TaskBerry.Shared.csproj", "{C07E78B3-B2A1-4288-81E6-6AB35B337052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E6D671A7-4362-4094-836A-82BF3BF6F89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6D671A7-4362-4094-836A-82BF3BF6F89C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6D671A7-4362-4094-836A-82BF3BF6F89C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07E78B3-B2A1-4288-81E6-6AB35B337052}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
