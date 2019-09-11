@@ -32,7 +32,7 @@
             services.AddSwaggerGen(options =>
             {
                 options.EnableAnnotations();
-                options.SwaggerDoc("v1", new Info { Title = "TaskBerry", Version = "v1" });
+                options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry" });
             });
         }
 
@@ -47,7 +47,7 @@
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskBerry");
+                options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry");
                 options.RoutePrefix = "docs";
             });
 
