@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
-    using TaskBerry.Service.DataAccess;
+    using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
 

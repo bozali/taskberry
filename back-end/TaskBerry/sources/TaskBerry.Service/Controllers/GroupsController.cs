@@ -2,7 +2,7 @@
 {
     using Swashbuckle.AspNetCore.Annotations;
 
-    using TaskBerry.Service.DataAccess;
+    using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;
 
     using System.Collections.Generic;
