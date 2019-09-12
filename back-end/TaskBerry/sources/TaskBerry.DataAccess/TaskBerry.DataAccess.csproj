@@ -125,10 +125,16 @@
     <Compile Include="Repositories\GroupsRepository.cs" />
     <Compile Include="Repositories\IGroupsRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TaskBerry.Data\TaskBerry.Data.csproj">
+      <Project>{C07E78B3-B2A1-4288-81E6-6AB35B337052}</Project>
+      <Name>TaskBerry.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

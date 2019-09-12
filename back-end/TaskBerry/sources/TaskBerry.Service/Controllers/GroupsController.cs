@@ -16,7 +16,7 @@ namespace TaskBerry.Service.Controllers
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        private ITaskBerryContext _database;
+        // private ITaskBerryContext _database;
 
         /// <summary>
         /// Constructor.
