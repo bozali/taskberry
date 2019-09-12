@@ -13,21 +13,14 @@
     [Table("Group")]
     public class GroupEntity : EntityBase<Group>
     {
-        /// <summary>
-        /// Id of the group.
-        /// </summary>
+
         [Key]
         public Guid Id { get; set; }
 
-        /// <summary>
-        /// Name of the group.
-        /// </summary>
         [Required]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Description of the group.
-        /// </summary>
+
         public string Description { get; set; }
     }
 }

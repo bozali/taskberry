@@ -7,6 +7,10 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
+    using System.Reflection;
+    using System.IO;
+    using System;
+
     using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
@@ -26,32 +30,30 @@
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
              
             // Dependency injection configuration
-            services.AddScoped<ITaskBerryDbContext, TaskBerryDbContext>(provider => new TaskBerryDbContext(this.Configuration.GetConnectionString("TaskBerry")));
+            services.AddScoped<ITaskBerryContext, TaskBerryContext>(provider => new TaskBerryContext(this.Configuration.GetConnectionString("TaskBerry")));
 
             // Add swagger documentation generation
             services.AddSwaggerGen(options =>
             {
-                options.EnableAnnotations();
                 options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry" });
+                options.EnableAnnotations();
+
+                string xmlFullPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                options.IncludeXmlComments(xmlFullPath);
             });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app
+                .UseMvc()
+                .UseSwagger()
+                .UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry");
-                options.RoutePrefix = "docs";
-            });
-
-            app.UseMvc();
         }
 
         public IConfiguration Configuration { get; }

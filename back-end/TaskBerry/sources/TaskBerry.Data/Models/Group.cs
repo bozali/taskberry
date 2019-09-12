@@ -2,21 +2,31 @@
 {
     using TaskBerry.Data.Entities;
 
+    using System.Runtime.Serialization;
     using System;
 
 
     /// <summary>
     /// Group model.
     /// </summary>
+    [DataContract]
     public class Group
     {
-        /// <inheritdoc cref="GroupEntity"/>
+        /// <summary>
+        /// Id of the group.
+        /// </summary>   [DataMember(Name = "id")]
         public Guid Id { get; set; }
 
-        /// <inheritdoc cref="GroupEntity"/>
+        /// <summary>
+        /// Name of the group.
+        /// </summary>
+        [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        /// <inheritdoc cref="GroupEntity"/>
+        /// <summary>
+        /// Description of the group.
+        /// </summary>
+        [DataMember(Name = "description")]
         public string Description { get; set; }
     }
 }

@@ -3,11 +3,10 @@
     using Swashbuckle.AspNetCore.Annotations;
 
     using TaskBerry.DataAccess.Domain;
-    using TaskBerry.Data.Entities;
+    using TaskBerry.Data.Models;
 
     using System.Collections.Generic;
-    using System;
-
+    
     using Microsoft.AspNetCore.Mvc;
 
 
@@ -15,22 +14,18 @@
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        private ITaskBerryDbContext _database;
+        private ITaskBerryContext _database;
 
-        public GroupsController(ITaskBerryDbContext database)
+        public GroupsController(ITaskBerryContext database)
         {
             this._database = database;
         }
 
         [HttpGet]
         [SwaggerOperation(Summary = "Gets groups.", Description = "Gets a null.")]
-        public ActionResult<IEnumerable<GroupEntity>> Get()
+        public ActionResult<IEnumerable<Group>> Get()
         {
-            return new GroupEntity[]
-            {
-                new GroupEntity { Description = "Test description 1", Name = "Test name", Id = Guid.NewGuid() },
-                new GroupEntity { Description = "Test description 2", Name = "Test name", Id = Guid.NewGuid() }
-            };
+            return this.Ok();
         }
     }
 }
