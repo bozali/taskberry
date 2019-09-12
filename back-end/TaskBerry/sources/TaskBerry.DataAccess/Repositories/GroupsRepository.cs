@@ -5,12 +5,11 @@
 
     public class GroupsRepository : IGroupsRepository
     {
-        private readonly ITaskBerryContext _context;
+        private readonly ITaskBerryUnitOfWork _taskBerry;
 
-
-        public GroupsRepository(ITaskBerryContext context)
+        public GroupsRepository(ITaskBerryUnitOfWork taskBerry)
         {
-            this._context = context;
+            this._taskBerry = taskBerry;
         }
     }
 }

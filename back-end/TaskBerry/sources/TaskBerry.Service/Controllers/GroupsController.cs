@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using System;
+
+namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -16,14 +18,38 @@
     {
         private ITaskBerryContext _database;
 
-        public GroupsController(ITaskBerryContext database)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="database"></param>
+        public GroupsController(/*ITaskBerryContext database*/)
         {
-            this._database = database;
+            // this._database = database;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult<IEnumerable<Group>> GetGroups()
+        {
+            return this.Ok();
         }
 
         [HttpGet]
-        [SwaggerOperation(Summary = "Gets groups.", Description = "Gets a null.")]
-        public ActionResult<IEnumerable<Group>> Get()
+        public ActionResult<IEnumerable<Group>> GetGroupsByName(string name)
+        {
+            return this.Ok();
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Group>> GetGroupsByUserId(Guid userId)
+        {
+            return this.Ok();
+        }
+
+        [HttpGet]
+        public ActionResult<Group> GetGroupById(Guid id)
         {
             return this.Ok();
         }

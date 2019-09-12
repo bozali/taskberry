@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Service
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
@@ -16,21 +18,30 @@
     using Swashbuckle.AspNetCore.Swagger;
 
 
+    /// <summary>
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-             
+
             // Dependency injection configuration
-            services.AddScoped<ITaskBerryContext, TaskBerryContext>(provider => new TaskBerryContext(this.Configuration.GetConnectionString("TaskBerry")));
+            services
+                .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));
+
 
             // Add swagger documentation generation
             services.AddSwaggerGen(options =>
@@ -43,6 +54,10 @@
             });
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app
@@ -56,6 +71,8 @@
             }
         }
 
+        /// <summary>
+        /// </summary>
         public IConfiguration Configuration { get; }
     }
 }
