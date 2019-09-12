@@ -3,13 +3,10 @@
     using TaskBerry.DataAccess.Domain;
 
 
-    public class GroupsRepository : IGroupsRepository
+    public class GroupsRepository : RepositoryBase, IGroupsRepository
     {
-        private readonly ITaskBerryUnitOfWork _taskBerry;
-
-        public GroupsRepository(ITaskBerryUnitOfWork taskBerry)
+        public GroupsRepository(ITaskBerryUnitOfWork taskBerry) : base(taskBerry)
         {
-            this._taskBerry = taskBerry;
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿namespace TaskBerry.DataAccess.Domain
 {
+    using TaskBerry.DataAccess.Repositories;
+
+
     public class TaskBerryUnitOfWork : ITaskBerryUnitOfWork
     {
         public TaskBerryUnitOfWork(TaskBerryDbContext context)
@@ -16,6 +19,8 @@
         {
             this.Context.Dispose();
         }
+
+        public IGroupsRepository GroupsRepository { get; set; }
 
         public TaskBerryDbContext Context { get; set; }
     }
