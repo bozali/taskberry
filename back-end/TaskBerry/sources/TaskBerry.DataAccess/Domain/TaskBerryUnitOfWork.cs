@@ -22,6 +22,8 @@
 
         public IGroupRepository GroupsRepository { get; set; }
 
+        public IUserRepository UsersRepository { get; set; }
+
         public TaskBerryDbContext Context { get; set; }
     }
 }

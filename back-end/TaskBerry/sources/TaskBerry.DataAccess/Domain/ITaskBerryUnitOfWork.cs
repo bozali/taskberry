@@ -13,6 +13,8 @@
 
         IGroupRepository GroupsRepository { get; set; }
 
+        IUserRepository UsersRepository { get; set; }
+
         TaskBerryDbContext Context { get; set; }
     }
 }

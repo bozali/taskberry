@@ -27,7 +27,7 @@ namespace TaskBerry.DataAccess.Repositories
             return this.TaskBerry.Context.Groups.Where(entity => entity.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public IEnumerable<GroupEntity> GetGroupsByUserId(Guid userId)
+        public IEnumerable<GroupEntity> GetGroupsByUserId(int userId)
         {
             IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.UserId == userId);
             return assignments.Select(entity => this.TaskBerry.Context.Groups.FirstOrDefault(group => @group.Id == entity.GroupId));

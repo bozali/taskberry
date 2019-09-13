@@ -38,6 +38,11 @@ namespace TaskBerry.Service
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthentication().AddJwtBearer(options =>
+            {
+                // TODO Add options
+            });
+
             // Dependency injection configuration
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));

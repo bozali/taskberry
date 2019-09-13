@@ -4,9 +4,11 @@
     using Microsoft.AspNetCore.Mvc;
 
     using TaskBerry.DataAccess.Domain;
+    using TaskBerry.Data.Entities;
     using TaskBerry.Data.Models;
 
     using System.Collections.Generic;
+    using System.Linq;
 
 
     /// <summary>
@@ -33,7 +35,10 @@
         [Authorize]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            return this.Ok();
+            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsers();
+            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
+
+            return this.Ok(users);
         }
 
         /// <summary>
@@ -44,7 +49,10 @@
         [Authorize]
         public ActionResult<IEnumerable<User>> GetUsersByFirstName(string firstName)
         {
-            return this.Ok();
+            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByFirstName(firstName);
+            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
+
+            return this.Ok(users);
         }
 
         /// <summary>
@@ -55,7 +63,10 @@
         [Authorize]
         public ActionResult<IEnumerable<User>> GetUsersByLastName(string lastName)
         {
-            return this.Ok();
+            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByLastName(lastName);
+            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
+
+            return this.Ok(users);
         }
 
         /// <summary>
@@ -64,9 +75,16 @@
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public ActionResult<IEnumerable<User>> GetUserById(int id)
+        public ActionResult<User> GetUserById(int id)
         {
-            return this.Ok();
+            UserEntity entity = this._taskBerry.UsersRepository.GetUserById(id);
+
+            if (entity == null)
+            {
+                return this.NotFound(id);
+            }
+
+            return this.Ok(entity.ToModel());
         }
     }
 }

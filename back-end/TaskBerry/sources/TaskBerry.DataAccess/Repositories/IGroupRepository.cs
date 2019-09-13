@@ -12,7 +12,7 @@
 
         IEnumerable<GroupEntity> GetGroupsByName(string name);
 
-        IEnumerable<GroupEntity> GetGroupsByUserId(Guid userId);
+        IEnumerable<GroupEntity> GetGroupsByUserId(int userId);
 
         GroupEntity GetGroupById(Guid id);
 
