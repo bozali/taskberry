@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using System;
+
+namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -47,7 +49,7 @@
         /// </summary>
         /// <param name="userid"></param>
         /// <returns></returns>
-        [HttpGet("/id/{userid}")]
+        [HttpGet("/{userid:int}")]
         [Produces("application/json")]
         [SwaggerResponse(404, "User by id not found.")]
         [SwaggerResponse(200, "User by id successfully returned.")]
@@ -61,6 +63,16 @@
             }
 
             return this.Ok(entity.ToModel());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/byGroup/{groupId:guid}")]
+        [Produces("application/json")]
+        public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)
+        {
+            return this.Ok();
         }
     }
 }

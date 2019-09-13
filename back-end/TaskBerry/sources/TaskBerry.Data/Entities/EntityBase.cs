@@ -16,7 +16,8 @@
         /// </summary>
         /// <returns>Returns a model based on the entity.</returns>
         public virtual TModel ToModel()
-        {
+        { 
+            // TODO Change this with AutoMapper
             TModel model = new TModel();
 
             // Trying to convert entity to model with the help of reflection.

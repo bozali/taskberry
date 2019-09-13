@@ -76,6 +76,9 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Primitives.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Pomelo.EntityFrameworkCore.MySql">
+      <HintPath>..\..\..\..\..\..\..\.nuget\packages\pomelo.entityframeworkcore.mysql\2.2.0\lib\netstandard2.0\Pomelo.EntityFrameworkCore.MySql.dll</HintPath>
+    </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
@@ -121,6 +124,11 @@
     <Compile Include="Domain\ITaskBerryUnitOfWork.cs" />
     <Compile Include="Domain\TaskBerryDbContext.cs" />
     <Compile Include="Domain\TaskBerryUnitOfWork.cs" />
+    <Compile Include="Migrations\20190913202733_InitialCreate.cs" />
+    <Compile Include="Migrations\20190913202733_InitialCreate.designer.cs">
+      <DependentUpon>20190913202733_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\TaskBerryDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\IGroupRepository.cs" />

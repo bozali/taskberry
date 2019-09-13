@@ -12,7 +12,8 @@
     {
         /// <summary>
         /// Id of the group.
-        /// </summary>   [DataMember(Name = "id")]
+        /// </summary>
+        [DataMember(Name = "id")]
         public Guid Id { get; set; }
 
         /// <summary>

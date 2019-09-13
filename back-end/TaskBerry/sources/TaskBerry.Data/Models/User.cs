@@ -31,5 +31,11 @@
         /// </summary>
         [DataMember(Name = "email")]
         public string Email { get; set; }
+
+        /// <summary>
+        /// Jwt token.
+        /// </summary>
+        [DataMember(Name = "token")]
+        public string Token { get; set; }
     }
 }
