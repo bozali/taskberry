@@ -11,6 +11,10 @@
         {
         }
 
+        public DbSet<UserEntity> Users { get; set; }
+
         public DbSet<GroupEntity> Groups { get; set; }
+
+        public DbSet<GroupAssignmentEntity> GroupAssignments { get; set; }
     }
 }

@@ -14,13 +14,15 @@
     public class GroupEntity : EntityBase<Group>
     {
 
+        /// <inheritdoc cref="Group"/>
         [Key]
         public Guid Id { get; set; }
 
+        /// <inheritdoc cref="Group"/>
         [Required]
         public string Name { get; set; }
 
-
+        /// <inheritdoc cref="Group"/>
         public string Description { get; set; }
     }
 }

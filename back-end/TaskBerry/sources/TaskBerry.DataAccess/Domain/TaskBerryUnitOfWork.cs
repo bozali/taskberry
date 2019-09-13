@@ -20,7 +20,7 @@
             this.Context.Dispose();
         }
 
-        public IGroupsRepository GroupsRepository { get; set; }
+        public IGroupRepository GroupsRepository { get; set; }
 
         public TaskBerryDbContext Context { get; set; }
     }

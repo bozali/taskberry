@@ -1,7 +1,5 @@
 ﻿namespace TaskBerry.Data.Models
 {
-    using TaskBerry.Data.Entities;
-
     using System.Runtime.Serialization;
     using System;
 

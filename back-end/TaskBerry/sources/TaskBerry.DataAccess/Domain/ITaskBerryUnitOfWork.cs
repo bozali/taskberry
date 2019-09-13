@@ -11,7 +11,7 @@
 
         // TODO Make this repository access generic with GetRepository<TRepository>()
 
-        IGroupsRepository GroupsRepository { get; set; }
+        IGroupRepository GroupsRepository { get; set; }
 
         TaskBerryDbContext Context { get; set; }
     }

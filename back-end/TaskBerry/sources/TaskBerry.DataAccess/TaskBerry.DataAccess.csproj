@@ -122,9 +122,11 @@
     <Compile Include="Domain\TaskBerryDbContext.cs" />
     <Compile Include="Domain\TaskBerryUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\GroupsRepository.cs" />
-    <Compile Include="Repositories\IGroupsRepository.cs" />
+    <Compile Include="Repositories\GroupRepository.cs" />
+    <Compile Include="Repositories\IGroupRepository.cs" />
+    <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TaskBerry.Data\TaskBerry.Data.csproj">

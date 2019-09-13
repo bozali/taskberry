@@ -6,7 +6,7 @@
     using System;
 
 
-    public interface IGroupsRepository
+    public interface IGroupRepository
     {
         IEnumerable<GroupEntity> GetGroups();
 
