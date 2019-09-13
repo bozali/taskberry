@@ -46,6 +46,7 @@
             //services
             //    .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));
 
+            // TODO Use automapper c#
 
             // Add swagger documentation generation
 #if DEBUG
