@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TaskBerry.Service
+﻿namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.EntityFrameworkCore;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -38,17 +37,18 @@ namespace TaskBerry.Service
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddAuthentication().AddJwtBearer(options =>
-            {
-                // TODO Add options
-            });
+            //services.AddAuthentication().AddJwtBearer(options =>
+            //{
+            //    // TODO Add options
+            //});
 
             // Dependency injection configuration
-            services
-                .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));
+            //services
+            //    .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));
 
 
             // Add swagger documentation generation
+#if DEBUG
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry", Version = "v1" });
@@ -57,6 +57,7 @@ namespace TaskBerry.Service
                 string xmlFullPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
                 options.IncludeXmlComments(xmlFullPath);
             });
+#endif
         }
 
         /// <summary>
@@ -67,8 +68,10 @@ namespace TaskBerry.Service
         {
             app
                 .UseMvc()
-                .UseSwagger()
-                .UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
+                .UseSwagger();
+#if DEBUG
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
+#endif
 
             if (env.IsDevelopment())
             {

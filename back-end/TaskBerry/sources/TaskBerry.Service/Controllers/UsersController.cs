@@ -1,5 +1,7 @@
 ﻿namespace TaskBerry.Service.Controllers
 {
+    using Swashbuckle.AspNetCore.Annotations;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -32,56 +34,30 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        //[Authorize]
+        [SwaggerResponse(200, "All users successfully returned.")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
             IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsers();
-            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
 
-            return this.Ok(users);
+            return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="firstName"></param>
+        /// <param name="userid"></param>
         /// <returns></returns>
-        [HttpGet]
-        [Authorize]
-        public ActionResult<IEnumerable<User>> GetUsersByFirstName(string firstName)
+        [HttpGet("/id/{userid}")]
+        //[Authorize]
+        [SwaggerResponse(404, "User by id not found.")]
+        [SwaggerResponse(200, "User by id successfully returned.")]
+        public ActionResult<User> GetUserById(int userid)
         {
-            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByFirstName(firstName);
-            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
-
-            return this.Ok(users);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="lastName"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Authorize]
-        public ActionResult<IEnumerable<User>> GetUsersByLastName(string lastName)
-        {
-            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByLastName(lastName);
-            List<User> users = entities.Select(entity => entity.ToModel()).ToList();
-
-            return this.Ok(users);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Authorize]
-        public ActionResult<User> GetUserById(int id)
-        {
-            UserEntity entity = this._taskBerry.UsersRepository.GetUserById(id);
+            UserEntity entity = this._taskBerry.UsersRepository.GetUserById(userid);
 
             if (entity == null)
             {
-                return this.NotFound(id);
+                return this.NotFound(userid);
             }
 
             return this.Ok(entity.ToModel());

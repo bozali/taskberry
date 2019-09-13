@@ -9,10 +9,6 @@
     {
         IEnumerable<UserEntity> GetUsers();
 
-        IEnumerable<UserEntity> GetUsersByFirstName(string firstName);
-
-        IEnumerable<UserEntity> GetUsersByLastName(string lastName);
-
         UserEntity GetUserById(int id);
     }
 }

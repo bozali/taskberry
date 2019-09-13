@@ -1,5 +1,11 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using System.Collections;
+using System.Linq;
+using Swashbuckle.AspNetCore.Annotations;
+using TaskBerry.Data.Entities;
+
+namespace TaskBerry.Service.Controllers
 {
+    using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Models;
 
     using System.Collections.Generic;
@@ -9,29 +15,33 @@
     using Microsoft.AspNetCore.Mvc;
 
 
+    /// <summary>
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        // private ITaskBerryContext _database;
+        private readonly ITaskBerryUnitOfWork _taskBerry;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="database"></param>
-        public GroupsController(/*ITaskBerryContext database*/)
+        public GroupsController(ITaskBerryUnitOfWork taskBerry)
         {
-            // this._database = database;
+            this._taskBerry = taskBerry;
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        // [Authorize]
+        [SwaggerResponse(200, "Returned all groups successfully.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
         {
-            return this.Ok();
+            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
+            
+            return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
@@ -39,18 +49,20 @@
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [Authorize]
+        // [Authorize]
         public ActionResult<IEnumerable<Group>> GetGroupsByName(string name)
         {
-            return this.Ok();
+            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByName(name);
+
+            return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [HttpGet("getById/{userId}")]
-        [Authorize]
+        [HttpGet("/userid/{userId}")]
+        // [Authorize]
         public ActionResult<IEnumerable<Group>> GetGroupsByUserId(Guid userId)
         {
             return this.Ok();
@@ -60,8 +72,8 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("id/{id}")]
-        [Authorize]
+        [HttpGet("/id/{id}")]
+        // [Authorize]
         public ActionResult<Group> GetGroupById(Guid id)
         {
             return this.Ok();
@@ -72,7 +84,7 @@
         /// <param name="group"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
+        // [Authorize]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
         {
             return this.Ok();
