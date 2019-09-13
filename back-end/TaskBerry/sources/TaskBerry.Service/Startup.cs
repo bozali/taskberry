@@ -46,7 +46,7 @@ namespace TaskBerry.Service
             // Add swagger documentation generation
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry" });
+                options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry", Version = "v1" });
                 options.EnableAnnotations();
 
                 string xmlFullPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");

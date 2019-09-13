@@ -1,14 +1,10 @@
-﻿using System;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
-    using Swashbuckle.AspNetCore.Annotations;
-
-    using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Models;
 
     using System.Collections.Generic;
-    
+    using System;
+
     using Microsoft.AspNetCore.Mvc;
 
 
@@ -36,20 +32,26 @@ namespace TaskBerry.Service.Controllers
             return this.Ok();
         }
 
-        [HttpGet]
+        [HttpGet("{name}")]
         public ActionResult<IEnumerable<Group>> GetGroupsByName(string name)
         {
             return this.Ok();
         }
 
-        [HttpGet]
+        [HttpGet("getById/{userId}")]
         public ActionResult<IEnumerable<Group>> GetGroupsByUserId(Guid userId)
         {
             return this.Ok();
         }
 
-        [HttpGet]
+        [HttpGet("id/{id}")]
         public ActionResult<Group> GetGroupById(Guid id)
+        {
+            return this.Ok();
+        }
+
+        [HttpPost]
+        public ActionResult<Group> CreateGroup([FromBody] Group group)
         {
             return this.Ok();
         }
