@@ -33,10 +33,10 @@
         /// <returns></returns>
         /// <response code="404">User with the email not found</response>
         /// <response code="200">User email found and user is logged in</response>
-        [HttpGet("/login/{email}")]
+        [HttpPost("/login/")]
         [SwaggerResponse(404, "User with the email not found")]
         [SwaggerResponse(200, "User email found and user is logged in")]
-        public IActionResult Login(string email)
+        public IActionResult Login([FromBody] string email)
         {
             UserEntity entity = this._taskBerry.UsersRepository.GetUsers().FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 

@@ -35,13 +35,20 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        // [Authorize]
+        [Produces("application/json")]
         [SwaggerResponse(200, "Returned all groups successfully.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
         {
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
-            
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            return this.Ok(new Group[]
+            {
+                new Group { Name = "Test 1" },
+                new Group { Name = "Test 2" },
+                new Group { Name = "Test 3" },
+                new Group { Name = "Test 4" }
+            });
+            // IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
+            // 
+            // return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
@@ -49,7 +56,7 @@ namespace TaskBerry.Service.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        // [Authorize]
+        [Produces("application/json")]
         public ActionResult<IEnumerable<Group>> GetGroupsByName(string name)
         {
             IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByName(name);
@@ -62,7 +69,7 @@ namespace TaskBerry.Service.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("/userid/{userId}")]
-        // [Authorize]
+        [Produces("application/json")]
         public ActionResult<IEnumerable<Group>> GetGroupsByUserId(Guid userId)
         {
             return this.Ok();
@@ -73,7 +80,7 @@ namespace TaskBerry.Service.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/id/{id}")]
-        // [Authorize]
+        [Produces("application/json")]
         public ActionResult<Group> GetGroupById(Guid id)
         {
             return this.Ok();
@@ -83,11 +90,11 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [HttpPost]
-        // [Authorize]
-        public ActionResult<Group> CreateGroup([FromBody] Group group)
-        {
-            return this.Ok();
-        }
+        //[HttpPost]
+        //[Produces("application/json")]
+        //public ActionResult<Group> CreateGroup([FromBody] Group group)
+        //{
+        //    return this.Ok();
+        //}
     }
 }

@@ -1,4 +1,9 @@
-﻿namespace TaskBerry.Service
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using TaskBerry.Service.Configuration;
+
+namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
@@ -36,15 +41,35 @@
         {
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.Configure<TokenConfiguration>(this.Configuration.GetSection("TokenConfiguration"));
 
-            //services.AddAuthentication().AddJwtBearer(options =>
-            //{
-            //    // TODO Add options
-            //});
+            TokenConfiguration tokenConfiguration = this.Configuration.GetSection("TokenConfiguration").Get<TokenConfiguration>();
+
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenConfiguration.Secret)),
+                        ValidIssuer = tokenConfiguration.Issuer,
+                        ValidAudience = tokenConfiguration.Audience,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
 
             // Dependency injection configuration
-            //services
-            //    .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")));
+            services
+                .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
+                .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
 
             // TODO Use automapper c#
 
@@ -68,8 +93,11 @@
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app
+                .UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
                 .UseMvc()
-                .UseSwagger();
+                .UseSwagger()
+                .UseAuthentication();
+
 #if DEBUG
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
 #endif

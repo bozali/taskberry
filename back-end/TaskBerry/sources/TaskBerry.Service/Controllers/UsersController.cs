@@ -34,7 +34,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        //[Authorize]
+        [Produces("application/json")]
         [SwaggerResponse(200, "All users successfully returned.")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
@@ -48,7 +48,7 @@
         /// <param name="userid"></param>
         /// <returns></returns>
         [HttpGet("/id/{userid}")]
-        //[Authorize]
+        [Produces("application/json")]
         [SwaggerResponse(404, "User by id not found.")]
         [SwaggerResponse(200, "User by id successfully returned.")]
         public ActionResult<User> GetUserById(int userid)

@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-
-namespace TaskBerry.DataAccess.Repositories
+﻿namespace TaskBerry.DataAccess.Repositories
 {
     using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;

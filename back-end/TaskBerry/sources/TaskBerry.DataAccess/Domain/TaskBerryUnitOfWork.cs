@@ -8,6 +8,9 @@
         public TaskBerryUnitOfWork(TaskBerryDbContext context)
         {
             this.Context = context;
+
+            this.GroupsRepository = new GroupRepository(this);
+            this.UsersRepository = new UserRepository(this);
         }
 
         public int Commit()
