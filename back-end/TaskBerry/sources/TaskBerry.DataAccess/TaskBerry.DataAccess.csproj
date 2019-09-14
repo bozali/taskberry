@@ -124,11 +124,6 @@
     <Compile Include="Domain\ITaskBerryUnitOfWork.cs" />
     <Compile Include="Domain\TaskBerryDbContext.cs" />
     <Compile Include="Domain\TaskBerryUnitOfWork.cs" />
-    <Compile Include="Migrations\20190913202733_InitialCreate.cs" />
-    <Compile Include="Migrations\20190913202733_InitialCreate.designer.cs">
-      <DependentUpon>20190913202733_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\TaskBerryDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\IGroupRepository.cs" />

@@ -1,5 +1,6 @@
 ﻿namespace TaskBerry.Data.Models
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Runtime.Serialization;
     using System;
 
@@ -19,6 +20,7 @@
         /// <summary>
         /// Name of the group.
         /// </summary>
+        [Required]
         [DataMember(Name = "name")]
         public string Name { get; set; }
 

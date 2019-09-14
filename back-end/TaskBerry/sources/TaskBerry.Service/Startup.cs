@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TaskBerry.Service.Configuration;
@@ -74,9 +77,21 @@ namespace TaskBerry.Service
             // TODO Use automapper c#
 
             // Add swagger documentation generation
+
+
 #if DEBUG
             services.AddSwaggerGen(options =>
             {
+                options.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
+                options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> { { "Bearer", Enumerable.Empty<string>() } });
+
+
                 options.SwaggerDoc("taskberry", new Info { Title = "TaskBerry", Version = "v1" });
                 options.EnableAnnotations();
 
@@ -92,11 +107,12 @@ namespace TaskBerry.Service
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+
             app
                 .UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
                 .UseMvc()
-                .UseSwagger()
-                .UseAuthentication();
+                .UseSwagger();
 
 #if DEBUG
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));

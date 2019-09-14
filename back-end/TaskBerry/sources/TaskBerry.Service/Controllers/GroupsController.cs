@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -33,6 +35,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         [Produces("application/json")]
         [SwaggerResponse(200, "Returned all groups successfully.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
@@ -59,23 +62,31 @@
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [HttpGet("/byUser/{userId:guid}")]
+        [HttpGet("/byUser/{userId:int}")]
         [Produces("application/json")]
-        public ActionResult<IEnumerable<Group>> GetGroupsByUserId(Guid userId)
+        public ActionResult<IEnumerable<Group>> GetGroupsByUserId(int userId)
         {
-            return this.Ok();
+            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByUserId(userId);
+
+            return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/{id:guid}")]
         [HttpGet("/byGroup/{id:guid}")]
         [Produces("application/json")]
         public ActionResult<Group> GetGroupById(Guid id)
         {
-            return this.Ok();
+            GroupEntity entity = this._taskBerry.GroupsRepository.GetGroupById(id);
+
+            if (entity == null)
+            {
+                return this.NotFound(id);
+            }
+
+            return this.Ok(entity.ToModel());
         }
 
         /// <summary>
@@ -86,7 +97,16 @@
         [Produces("application/json")]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
         {
-            return this.Ok();
+            GroupEntity entity = new GroupEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = group.Name,
+                Description = group.Description,
+            };
+
+            this._taskBerry.GroupsRepository.CreateGroup(entity);
+
+            return this.Ok(entity.ToModel()); // TODO CreateResult?
         }
     }
 }

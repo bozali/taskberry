@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -13,9 +11,11 @@ namespace TaskBerry.Service.Controllers
 
     using System.Collections.Generic;
     using System.Linq;
+    using System;
 
 
     /// <summary>
+    /// Users controller.
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -68,10 +68,12 @@ namespace TaskBerry.Service.Controllers
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/byGroup/{groupId:guid}")]
+        [HttpGet("/usersByGroup/{groupId:guid}")]
         [Produces("application/json")]
         public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)
         {
+            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByGroupId(groupId);
+
             return this.Ok();
         }
     }
