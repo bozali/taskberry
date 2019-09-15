@@ -27,11 +27,11 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Authorize]
-        public ActionResult<IEnumerable<Task>> GetCurrentUserTasks()
-        {
-            return this.Ok();
-        }
+        //[HttpGet]
+        //[Authorize]
+        //public ActionResult<IEnumerable<Task>> GetCurrentUserTasks()
+        //{
+        //    return this.Ok();
+        //}
     }
 }

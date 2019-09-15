@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Data.Models
+﻿using System.Collections.Generic;
+
+namespace TaskBerry.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
     using System.Runtime.Serialization;
@@ -29,5 +31,10 @@
         /// </summary>
         [DataMember(Name = "description")]
         public string Description { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [DataMember(Name = "members")]
+        public List<int> Members { get; set; }
     }
 }

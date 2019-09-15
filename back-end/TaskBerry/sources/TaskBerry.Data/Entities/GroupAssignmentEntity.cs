@@ -11,14 +11,14 @@
         [Key]
         public Guid Id { get; set; }
 
+        [ForeignKey("User")]
         public int UserId { get; set; }
 
+        [ForeignKey("Group")]
         public Guid GroupId { get; set; }
 
-        [ForeignKey("UserId")]
         public UserEntity User { get; set; }
 
-        [ForeignKey("GroupId")]
         public GroupEntity Group { get; set; }
     }
 }

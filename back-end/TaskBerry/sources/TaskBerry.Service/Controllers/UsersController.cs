@@ -84,7 +84,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("/currentUser")]
         [Authorize]
         [Produces("application/json")]
         public ActionResult<User> GetCurrentUser()

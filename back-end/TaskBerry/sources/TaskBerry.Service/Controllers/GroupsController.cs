@@ -1,7 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Http;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,6 +9,7 @@ namespace TaskBerry.Service.Controllers
 
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System;
 
     using Microsoft.AspNetCore.Authorization;
@@ -57,7 +55,7 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <returns>Returns all groups of the current logged in user.</returns>
         [Authorize]
-        [HttpGet]
+        [HttpGet("/currentUserGroups")]
         [Produces("application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "No user is logged in.")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returns all groups of the current user")]
@@ -78,24 +76,32 @@ namespace TaskBerry.Service.Controllers
         /// <summary>
         /// </summary>
         /// <param name="group"></param>
+        /// <param name="assignment"></param>
         /// <returns></returns>
         [Authorize]
         [HttpPost("/new")]
         [Produces("application/json")]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
         {
+            // TODO Create services or repositories to create this
+
             GroupEntity entity = new GroupEntity
             {
                 Id = Guid.NewGuid(),
                 Name = group.Name,
-                Description = group.Description,
+                Description = group.Description
             };
 
             this._taskBerry.GroupsRepository.CreateGroup(entity);
 
+            foreach (int member in group.Members)
+            {
+                this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = member });
+            }
+
+            this._taskBerry.Context.SaveChanges();
+
             return this.Ok(entity.ToModel()); // TODO CreateResult?
         }
-
-
     }
 }
