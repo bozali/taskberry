@@ -19,20 +19,10 @@
             return this.TaskBerry.Context.Groups;
         }
 
-        public IEnumerable<GroupEntity> GetGroupsByName(string name)
-        {
-            return this.TaskBerry.Context.Groups.Where(entity => entity.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
-
         public IEnumerable<GroupEntity> GetGroupsByUserId(int userId)
         {
             IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.UserId == userId);
             return assignments.Select(entity => this.TaskBerry.Context.Groups.FirstOrDefault(group => @group.Id == entity.GroupId));
-        }
-
-        public GroupEntity GetGroupById(Guid id)
-        {
-            return this.TaskBerry.Context.Groups.FirstOrDefault(group => group.Id == id);
         }
 
         public GroupEntity CreateGroup(GroupEntity @group)

@@ -27,7 +27,8 @@
         public IEnumerable<UserEntity> GetUsersByGroupId(Guid groupId)
         {
             IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.GroupId == groupId);
-            return assignments.Select(entity => this.TaskBerry.Context.Users.FirstOrDefault())
+
+            return assignments.Select(entity => this.TaskBerry.Context.Users.FirstOrDefault());
         }
     }
 }

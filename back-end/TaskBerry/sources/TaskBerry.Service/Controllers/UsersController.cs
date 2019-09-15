@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using TaskBerry.DataAccess.Domain;
+    using TaskBerry.Service.Constants;
     using TaskBerry.Data.Entities;
     using TaskBerry.Data.Models;
 
@@ -35,7 +36,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         [Produces("application/json")]
         [SwaggerResponse(200, "All users successfully returned.")]
@@ -50,7 +51,7 @@
         /// </summary>
         /// <param name="userid"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("/{userid:int}")]
         [Produces("application/json")]
         [SwaggerResponse(404, "User by id not found.")]
@@ -78,6 +79,26 @@
             IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByGroupId(groupId);
 
             return this.Ok();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Produces("application/json")]
+        public ActionResult<User> GetCurrentUser()
+        {
+            if (this.User == null)
+            {
+                return this.NotFound("No user is not logged in.");
+            }
+
+            // Query current user
+            User user = new User();
+
+
+            return this.Ok(user);
         }
     }
 }

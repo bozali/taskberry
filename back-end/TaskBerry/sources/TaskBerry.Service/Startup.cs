@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using TaskBerry.Service.Configuration;
-
-namespace TaskBerry.Service
+﻿namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.EntityFrameworkCore;
 
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
+    using System.Collections.Generic;
     using System.Reflection;
+    using System.Linq;
+    using System.Text;
     using System.IO;
     using System;
 
+    using TaskBerry.Service.Configuration;
     using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
@@ -72,6 +70,7 @@ namespace TaskBerry.Service
             // Dependency injection configuration
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
+                .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
 
             // TODO Use automapper c#
@@ -107,10 +106,10 @@ namespace TaskBerry.Service
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseAuthentication();
 
             app
                 .UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
+                .UseAuthentication()
                 .UseMvc()
                 .UseSwagger();
 

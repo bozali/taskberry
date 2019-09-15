@@ -10,11 +10,7 @@
     {
         IEnumerable<GroupEntity> GetGroups();
 
-        IEnumerable<GroupEntity> GetGroupsByName(string name);
-
         IEnumerable<GroupEntity> GetGroupsByUserId(int userId);
-
-        GroupEntity GetGroupById(Guid id);
 
         GroupEntity CreateGroup(GroupEntity group);
     }

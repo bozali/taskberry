@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
+    using TaskBerry.Service.Constants;
     using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;
     using TaskBerry.Data.Models;
@@ -12,6 +14,7 @@ namespace TaskBerry.Service.Controllers
     using System.Linq;
     using System;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
 
@@ -34,61 +37,42 @@ namespace TaskBerry.Service.Controllers
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         [Produces("application/json")]
-        [SwaggerResponse(200, "Returned all groups successfully.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
         {
+            if (!this.User.IsInRole(Roles.Admin))
+            {
+                return this.Forbid();
+            }
+
             IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
             
             return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
+        /// Gets all groups of the current logged in user.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [HttpGet("{name}")]
-        [Produces("application/json")]
-        public ActionResult<IEnumerable<Group>> GetGroupsByName(string name)
-        {
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByName(name);
-
-            return this.Ok(entities.Select(entity => entity.ToModel()));
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>Returns all groups of the current logged in user.</returns>
         [Authorize]
-        [HttpGet("/byUser/{userId:int}")]
+        [HttpGet]
         [Produces("application/json")]
-        public ActionResult<IEnumerable<Group>> GetGroupsByUserId(int userId)
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, "No user is logged in.")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Returns all groups of the current user")]
+        public ActionResult<IEnumerable<Group>> GetCurrentUserGroups()
         {
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByUserId(userId);
-
-            return this.Ok(entities.Select(entity => entity.ToModel()));
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet("/byGroup/{id:guid}")]
-        [Produces("application/json")]
-        public ActionResult<Group> GetGroupById(Guid id)
-        {
-            GroupEntity entity = this._taskBerry.GroupsRepository.GetGroupById(id);
-
-            if (entity == null)
+            if (this.User == null)
             {
-                return this.NotFound(id);
+                return this.BadRequest("No user is logged in.");
             }
 
-            return this.Ok(entity.ToModel());
+            int currentUserId = int.Parse(this.User.Identity.Name);
+
+            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByUserId(currentUserId);
+
+            return this.Ok(entities.Select(entity => entity.ToModel()));
         }
 
         /// <summary>
@@ -111,5 +95,7 @@ namespace TaskBerry.Service.Controllers
 
             return this.Ok(entity.ToModel()); // TODO CreateResult?
         }
+
+
     }
 }
