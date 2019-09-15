@@ -35,6 +35,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]
         [Produces("application/json")]
         [SwaggerResponse(200, "All users successfully returned.")]
@@ -49,6 +50,7 @@
         /// </summary>
         /// <param name="userid"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("/{userid:int}")]
         [Produces("application/json")]
         [SwaggerResponse(404, "User by id not found.")]
@@ -68,6 +70,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("/usersByGroup/{groupId:guid}")]
         [Produces("application/json")]
         public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)

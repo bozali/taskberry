@@ -34,8 +34,8 @@ namespace TaskBerry.Service.Controllers
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         [Produces("application/json")]
         [SwaggerResponse(200, "Returned all groups successfully.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
@@ -62,6 +62,7 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("/byUser/{userId:int}")]
         [Produces("application/json")]
         public ActionResult<IEnumerable<Group>> GetGroupsByUserId(int userId)
@@ -75,6 +76,7 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("/byGroup/{id:guid}")]
         [Produces("application/json")]
         public ActionResult<Group> GetGroupById(Guid id)
@@ -93,6 +95,7 @@ namespace TaskBerry.Service.Controllers
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("/new")]
         [Produces("application/json")]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
