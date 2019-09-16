@@ -78,7 +78,7 @@
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [HttpPost("/api/groups/new")]
         [Produces("application/json")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returned successfully model.")]

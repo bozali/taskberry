@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import { NbDialogService, NbTooltipModule, NbIconModule, NbButtonModule, NbCardModule, NbInputModule, NbToastrService, NbDialogRef } from '@nebular/theme';
+import { NbTooltipModule, NbIconModule, NbButtonModule, NbCardModule, NbInputModule, NbToastrService, NbDialogRef } from '@nebular/theme';
 import { HeaderBarComponent } from '../header-bar/header-bar.component';
 import { AuthService } from '../auth.service';
 
@@ -15,18 +15,18 @@ import { AuthService } from '../auth.service';
     NbButtonModule,
     NbIconModule,
     NbTooltipModule,
-    NbInputModule,
+    NbInputModule
   ],
 })
 
 export class LoginComponent {
   Username: string;
   PasswordInputWrong = 0;
-  constructor(public authService: AuthService,
-    public toastrService: NbToastrService, protected dialogRef: NbDialogRef<any>) { }
+  constructor(protected dialogRef: NbDialogRef<HeaderBarComponent>, public authService: AuthService,
+              public toastrService: NbToastrService) { }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
 

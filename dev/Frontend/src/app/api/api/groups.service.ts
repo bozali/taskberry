@@ -98,7 +98,7 @@ export class GroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Group>(`${this.basePath}/new`,
+        return this.httpClient.post<Group>(`${this.basePath}/api/groups/new`,
             group,
             {
                 withCredentials: this.configuration.withCredentials,

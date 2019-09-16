@@ -15,7 +15,8 @@ import { AuthService } from '../auth.service';
   NbThemeModule,
   NbSidebarModule,
   NbButtonModule,
-  NbTabsetModule
+  NbTabsetModule,
+  NbDialogService
   ]
 })
 export class HeaderBarComponent implements OnInit {
@@ -26,7 +27,7 @@ export class HeaderBarComponent implements OnInit {
   public loginVisibile = true;
 
   constructor(private authService: AuthService, private router: Router,
-    private toastrService: NbToastrService, private dialogService: NbDialogService) { }
+    private toastrService: NbToastrService, public dialogService: NbDialogService) { }
 
   ngOnInit() {
     if (!this.authService.isAuthenticated()) {
@@ -54,7 +55,7 @@ public defaultUserLoggedOutView() {
 }
 
 public OpenLogin() {
-  this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false  })
+  const dialogRef = this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false  })
   .onClose.subscribe(loggedIn => loggedIn && this.defaultUserLoggedInView());
 }
 
