@@ -7,6 +7,7 @@
     /// <summary>
     /// </summary>
     [ApiController]
+    [Route("/api/tasks")]
     public class TasksController : ControllerBase
     {
         /// <summary>
@@ -18,24 +19,24 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [Authorize]
-        [HttpPost]
-        [Produces("application/json")]
-        public IActionResult MoveTask()
-        {
-            return this.Ok();
-        }
+        //[Authorize]
+        //[HttpPost]
+        //[Produces("application/json")]
+        //public IActionResult MoveTask()
+        //{
+        //    return this.Ok();
+        //}
 
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [Authorize]
-        [HttpPost]
-        [Produces("application/json")]
-        public IActionResult AssignTaskToUser()
-        {
-            return this.Ok();
-        }
+        //[Authorize]
+        //[HttpPost]
+        //[Produces("application/json")]
+        //public IActionResult AssignTaskToUser()
+        //{
+        //    return this.Ok();
+        //}
     }
 }

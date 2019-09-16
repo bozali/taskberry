@@ -19,6 +19,7 @@
     /// Users controller.
     /// </summary>
     [ApiController]
+    [Route("/api/users")]
     public class UsersController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;

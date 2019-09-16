@@ -1,4 +1,6 @@
-﻿namespace TaskBerry.Service.Controllers
+﻿using Microsoft.EntityFrameworkCore.Internal;
+
+namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -19,6 +21,7 @@
     /// <summary>
     /// </summary>
     [ApiController]
+    [Route("/api/groups")]
     public class GroupsController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
@@ -46,9 +49,26 @@
                 return this.Forbid();
             }
 
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
-            
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            IEnumerable<GroupEntity> groupEntities = this._taskBerry.GroupsRepository.GetGroups();
+
+            List<Group> groups = new List<Group>();
+
+            foreach (GroupEntity groupEntity in groupEntities)
+            {
+                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
+
+                Group group = groupEntity.ToModel();
+                group.Members = new List<int>();
+
+                foreach (GroupAssignmentEntity assignmentEntity in assignments)
+                {
+                    group.Members.Add(assignmentEntity.UserId);
+                }
+
+                groups.Add(group);
+            }
+
+            return this.Ok(groups);
         }
 
         /// <summary>
@@ -69,16 +89,35 @@
 
             int currentUserId = int.Parse(this.User.Identity.Name);
 
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByUserId(currentUserId);
+            IEnumerable<GroupEntity> groupEntities = this._taskBerry.GroupsRepository.GetGroupsByUserId(currentUserId);
 
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            List<Group> groups = new List<Group>();
+
+            foreach (GroupEntity groupEntity in groupEntities)
+            {
+                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
+
+                Group group = groupEntity.ToModel();
+                group.Members = new List<int>();
+
+                foreach (GroupAssignmentEntity assignmentEntity in assignments)
+                {
+                    group.Members.Add(assignmentEntity.UserId);
+                }
+
+                groups.Add(group);
+            }
+
+            return this.Ok(groups);
         }
 
         /// <summary>
+        /// Creating a new group.
         /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
-        //[Authorize]
+        /// <param name="group">New group to save in the database.</param>
+        /// <returns>Returns the new created group.</returns>
+        /// <remarks>For the property <see cref="Group.Members"/> only the ids of the user can be set.</remarks>
+        [Authorize]
         [HttpPost("/api/groups/new")]
         [Produces("application/json")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returned successfully model.")]
@@ -97,9 +136,9 @@
 
             if (group.Members != null)
             {
-                foreach (int member in group.Members)
+                foreach (int memberId in group.Members)
                 {
-                    this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = member });
+                    this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = memberId });
                 }
             }
 
