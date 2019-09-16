@@ -23,6 +23,7 @@
     /// <summary>
     /// </summary>
     [ApiController]
+    [Route("/api/authentication")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfigurationProvider _configurationProvider;
