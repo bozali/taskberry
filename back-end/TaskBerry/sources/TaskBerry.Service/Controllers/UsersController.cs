@@ -19,7 +19,6 @@
     /// Users controller.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
@@ -37,7 +36,7 @@
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpGet]
+        [HttpGet("/api/users")]
         [Produces("application/json")]
         [SwaggerResponse(200, "All users successfully returned.")]
         public ActionResult<IEnumerable<User>> GetUsers()
@@ -52,7 +51,7 @@
         /// <param name="userid"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet("/{userid:int}")]
+        [HttpGet("/api/users/{userid:int}")]
         [Produces("application/json")]
         [SwaggerResponse(404, "User by id not found.")]
         [SwaggerResponse(200, "User by id successfully returned.")]
@@ -72,7 +71,7 @@
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpGet("/usersByGroup/{groupId:guid}")]
+        [HttpGet("/api/users/users-by-group/{groupId:guid}")]
         [Produces("application/json")]
         public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)
         {
@@ -84,7 +83,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/currentUser")]
+        [HttpGet("/api/users/current-user")]
         [Authorize]
         [Produces("application/json")]
         public ActionResult<User> GetCurrentUser()

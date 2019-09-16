@@ -23,7 +23,6 @@
     /// <summary>
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfigurationProvider _configurationProvider;
@@ -45,7 +44,7 @@
         /// <returns></returns>
         /// <response code="404">User with the email not found</response>
         /// <response code="200">User email found and user is logged in</response>
-        [HttpPost("/login")]
+        [HttpPost("/api/authentication/login")]
         [SwaggerResponse(404, "User with the email not found")]
         [SwaggerResponse(200, "User email found and user is logged in")]
         public ActionResult<User> Login(string email)
@@ -84,7 +83,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/logout")]
+        [HttpGet("/api/authentication/logout")]
         public IActionResult Logout()
         {
             return this.Ok();
