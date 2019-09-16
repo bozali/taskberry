@@ -76,7 +76,6 @@
         /// <summary>
         /// </summary>
         /// <param name="group"></param>
-        /// <param name="assignment"></param>
         /// <returns></returns>
         [Authorize]
         [HttpPost("/new")]

@@ -45,7 +45,6 @@
         /// <returns></returns>
         /// <response code="404">User with the email not found</response>
         /// <response code="200">User email found and user is logged in</response>
-        [AllowAnonymous]
         [HttpPost("/login")]
         [SwaggerResponse(404, "User with the email not found")]
         [SwaggerResponse(200, "User email found and user is logged in")]
