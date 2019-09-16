@@ -77,7 +77,7 @@
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [Authorize]
+       // [Authorize]
         [HttpPost("/new")]
         [Produces("application/json")]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
@@ -88,16 +88,19 @@
             {
                 Id = Guid.NewGuid(),
                 Name = group.Name,
-                Description = group.Description
+                Description = group.Description ?? ""
             };
 
             this._taskBerry.GroupsRepository.CreateGroup(entity);
 
+            if(group.Members != null)
+            {
             foreach (int member in group.Members)
             {
                 this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = member });
             }
 
+            }
             this._taskBerry.Context.SaveChanges();
 
             return this.Ok(entity.ToModel()); // TODO CreateResult?
