@@ -147,13 +147,25 @@
         {
             GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
 
+            // TODO Make the member assignment bitiful
+            Group group = groupEntity.ToModel();
+            group.Members = new List<int>();
+
             if (groupEntity == null)
             {
                 return this.NotFound($"Group {groupId} not found.");
             }
 
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
+
             foreach (int userId in users)
             {
+                // Check if user is already assigned to this group
+                if (assignments.Any(a => a.GroupId == groupId && a.UserId == userId))
+                {
+                    continue;
+                }
+
                 // TODO Check if userid exists.
                 GroupAssignmentEntity assignment = new GroupAssignmentEntity
                 {
@@ -165,10 +177,58 @@
                 this._taskBerry.Context.GroupAssignments.Add(assignment);
             }
 
+            foreach (GroupAssignmentEntity assignment in this._taskBerry.Context.GroupAssignments)
+            {
+                group.Members.Add(assignment.UserId);
+            }
+
             // TODO Check if saved successfully
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok();
+            return this.Ok(group);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="users"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpDelete("/api/groups/remove-user-from-group")]
+        [Produces("application/json")]
+        public ActionResult<Group> RemoveUsersFromGroup(int[] users, Guid groupId)
+        {
+            GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
+
+            // TODO Make the member assignment bitiful
+            Group group = groupEntity.ToModel();
+            group.Members = new List<int>();
+
+            if (groupEntity == null)
+            {
+                return this.NotFound($"Group {groupId} not found.");
+            }
+
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
+
+            foreach (int userId in users)
+            {
+                // TODO Make this bitiful
+                // Get assignments with the userId and the groupId
+                GroupAssignmentEntity toRemove = assignments.FirstOrDefault(a => a.GroupId == groupId && a.UserId == userId);
+
+                this._taskBerry.Context.GroupAssignments.Remove(toRemove);
+            }
+
+            foreach (GroupAssignmentEntity assignment in this._taskBerry.Context.GroupAssignments)
+            {
+                group.Members.Add(assignment.UserId);
+            }
+
+            // TODO Check if saved successfully
+            this._taskBerry.Context.SaveChanges();
+
+            return this.Ok(group);
         }
 
         /// <summary>
@@ -203,7 +263,7 @@
         [Authorize(Roles = Roles.Admin)]
         [HttpPatch("/api/groups/edit")]
         [Produces("application/json")]
-        public IActionResult EditGroup(Group group)
+        public IActionResult EditGroup([FromBody] Group group)
         {
             GroupEntity entity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == group.Id);
 
@@ -214,6 +274,8 @@
 
             entity.Name = group.Name;
             entity.Description = group.Description;
+
+            this._taskBerry.Context.SaveChanges();
 
             return this.Ok(entity.ToModel());
         }
