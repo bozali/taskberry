@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbDialogRef, NbInputModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbInputModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FooterBarComponent } from './footer-bar/footer-bar.component';
@@ -57,6 +57,7 @@ const JWT_Module_Options: JwtModuleOptions = {
     FontAwesomeModule,
     NbWindowModule.forRoot(),
     NbDialogModule.forRoot(),
+
     NbCardModule,
     NbSelectModule,
     NbInputModule,

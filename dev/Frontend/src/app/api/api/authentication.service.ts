@@ -98,7 +98,7 @@ export class AuthenticationService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.post<User>(`${this.basePath}/login`,
+        return this.httpClient.post<User>(`${this.basePath}/api/authentication/login`,
         null,
             {
                 params: queryParameters,
@@ -140,7 +140,7 @@ export class AuthenticationService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<any>(`${this.basePath}/logout`,
+        return this.httpClient.get<any>(`${this.basePath}/api/authentication/logout`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

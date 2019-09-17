@@ -36,10 +36,10 @@ export class AuthService {
           return false;
       }
 
-    /*if (this.isAuthenticated()) {
+    if (this.isAuthenticated()) {
           console.log('already Authentificated');
           return false;
-      }*/
+      }
 
       // Increase if authentification failed -> PasswordInputWrong++
 
@@ -51,7 +51,6 @@ export class AuthService {
          const lastName = ( response as any).lastName;
          const email = ( response as any).email;
         // Define some model e.g. AuthentificationModel
-         console.log('im in4');
          localStorage.setItem('jwt', token);
          localStorage.setItem('userId', id);
          localStorage.setItem('userFirstName', firstName);
@@ -79,7 +78,7 @@ export class AuthService {
           localStorage.removeItem('userFirstName');
           localStorage.removeItem('userLastName');
           localStorage.removeItem('email');
-          this.router.navigate(['/login']);
+          //this.router.navigate(['/login']);
           return true;
          } else {
        // this.router.navigate(['/login']);
