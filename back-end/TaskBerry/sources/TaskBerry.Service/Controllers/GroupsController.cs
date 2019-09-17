@@ -140,7 +140,7 @@
         /// <param name="users"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        [Authorize(Roles = Roles.Admin]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/groups/assign")]
         [Produces("application/json")]
         public ActionResult<Group> AssignUsersToGroup(int[] users, Guid groupId)
