@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
     using Swashbuckle.AspNetCore.Annotations;
 
@@ -117,7 +115,7 @@ namespace TaskBerry.Service.Controllers
         /// <param name="group">New group to save in the database.</param>
         /// <returns>Returns the new created group.</returns>
         /// <remarks>For the property <see cref="Group.Members"/> only the ids of the user can be set.</remarks>
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/groups/new")]
         [Produces("application/json")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returned successfully model.")]
@@ -134,17 +132,90 @@ namespace TaskBerry.Service.Controllers
 
             this._taskBerry.GroupsRepository.CreateGroup(entity);
 
-            if (group.Members != null)
+            return this.Ok(entity.ToModel()); // TODO CreateResult?
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="users"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin]
+        [HttpPost("/api/groups/assign")]
+        [Produces("application/json")]
+        public ActionResult<Group> AssignUsersToGroup(int[] users, Guid groupId)
+        {
+            GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
+
+            if (groupEntity == null)
             {
-                foreach (int memberId in group.Members)
-                {
-                    this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = memberId });
-                }
+                return this.NotFound($"Group {groupId} not found.");
             }
+
+            foreach (int userId in users)
+            {
+                // TODO Check if userid exists.
+                GroupAssignmentEntity assignment = new GroupAssignmentEntity
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    GroupId = groupId
+                };
+
+                this._taskBerry.Context.GroupAssignments.Add(assignment);
+            }
+
+            // TODO Check if saved successfully
+            this._taskBerry.Context.SaveChanges();
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpDelete("/api/groups/delete")]
+        [Produces("application/json")]
+        public IActionResult DeleteGroup(Guid groupId)
+        {
+            GroupEntity groupEntity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == groupId);
+
+            if (groupEntity == null)
+            {
+                return this.NotFound($"Could not find {groupId}.");
+            }
+
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupId);
+            this._taskBerry.Context.GroupAssignments.RemoveRange(assignments);
+            this._taskBerry.Context.Groups.Remove(groupEntity);
 
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok(entity.ToModel()); // TODO CreateResult?
+            return this.Ok($"Successfully deleted {groupId}");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPatch("/api/groups/edit")]
+        [Produces("application/json")]
+        public IActionResult EditGroup(Group group)
+        {
+            GroupEntity entity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == group.Id);
+
+            if (entity == null)
+            {
+                return this.NotFound($"Could not find {group.Id}.");
+            }
+
+            entity.Name = group.Name;
+            entity.Description = group.Description;
+
+            return this.Ok(entity.ToModel());
         }
     }
 }
