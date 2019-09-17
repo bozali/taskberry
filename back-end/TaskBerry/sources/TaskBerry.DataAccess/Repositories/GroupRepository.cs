@@ -33,5 +33,10 @@
 
             return group; // TODO
         }
+
+        public IEnumerable<GroupAssignmentEntity> GetGroupAssignment(Guid groupId)
+        {
+            return this.TaskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupId);
+        }
     }
 }

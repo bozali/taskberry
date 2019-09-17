@@ -14,6 +14,7 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using TaskBerry.Business.Services;
 
 
     /// <summary>
@@ -23,12 +24,14 @@
     public class GroupsController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IGroupsService _groupsService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GroupsController(ITaskBerryUnitOfWork taskBerry)
+        public GroupsController(ITaskBerryUnitOfWork taskBerry, IGroupsService groupsService)
         {
+            this._groupsService = groupsService;
             this._taskBerry = taskBerry;
         }
 
@@ -47,24 +50,7 @@
                 return this.Forbid();
             }
 
-            IEnumerable<GroupEntity> groupEntities = this._taskBerry.GroupsRepository.GetGroups();
-
-            List<Group> groups = new List<Group>();
-
-            foreach (GroupEntity groupEntity in groupEntities)
-            {
-                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
-
-                Group group = groupEntity.ToModel();
-                group.Members = new List<int>();
-
-                foreach (GroupAssignmentEntity assignmentEntity in assignments)
-                {
-                    group.Members.Add(assignmentEntity.UserId);
-                }
-
-                groups.Add(group);
-            }
+            IEnumerable<Group> groups = this._groupsService.GetGroups();
 
             return this.Ok(groups);
         }

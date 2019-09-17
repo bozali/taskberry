@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskBerry.Business\TaskBerry.Business.csproj" />
     <ProjectReference Include="..\TaskBerry.DataAccess\TaskBerry.DataAccess.csproj" />
     <ProjectReference Include="..\TaskBerry.Data\TaskBerry.Data.csproj" />
   </ItemGroup>
