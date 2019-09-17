@@ -25,7 +25,7 @@
 
             foreach (GroupEntity groupEntity in groupEntities)
             {
-                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.GroupsRepository.GetGroupAssignment(groupId);
+                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.GroupsRepository.GetGroupAssignment(groupEntity.Id);
 
                 Group group = groupEntity.ToModel();
                 group.Members = new List<int>();
