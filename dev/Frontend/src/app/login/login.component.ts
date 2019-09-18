@@ -2,6 +2,7 @@ import { Component, NgModule } from '@angular/core';
 import { NbTooltipModule, NbIconModule, NbButtonModule, NbCardModule, NbInputModule, NbToastrService, NbDialogRef } from '@nebular/theme';
 import { HeaderBarComponent } from '../header-bar/header-bar.component';
 import { AuthService } from '../auth.service';
+import { BlankComponent } from '../blank/blank.component';
 
 @Component({
   selector: 'app-login',

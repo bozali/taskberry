@@ -142,7 +142,7 @@ export class AuthenticationService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<any>(`${this.basePath}/api/authentication/logout`,
+        return this.httpClient.post<any>(`${this.basePath}/api/authentication/logout`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

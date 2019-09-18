@@ -3,6 +3,7 @@ import { Router } from '@angular/router'; // we also need angular router for Neb
 import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastRef, NbToastrService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { LoginComponent } from '../login/login.component';
 import { AuthService } from '../auth.service';
+import { faColumns } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header-bar',
@@ -21,6 +22,10 @@ import { AuthService } from '../auth.service';
 })
 export class HeaderBarComponent implements OnInit {
 
+  // Font Awesome Icons
+  dashboardIcon = faColumns;
+
+  
   public dashboardVisible = false;
   public groupsVisible = false;
   public logoutVisible = false;
@@ -51,7 +56,7 @@ public defaultUserLoggedOutView() {
   this.logoutVisible = false;
   this.loginVisibile = true;
 
-  this.router.navigate(['/']);
+  this.router.navigate(['/blank']);
 }
 
 public OpenLogin() {
@@ -74,14 +79,15 @@ public OpenLogin() {
               if (this.authService.logout()) {
               this.defaultUserLoggedOutView();
               this.toastrService.show('Du hast dich erfolgreich vom System abgemeldet!', 'Ausgeloggt');
-              }
+              this.router.navigate(['/blank']);
+            }
               break;
           case 'Einloggen':
             this.OpenLogin();
             break;
       default:
-          this.router.navigate(['/login']);
-          break;
+        this.router.navigate(['/blank']);
+        break;
     }
   }
 }

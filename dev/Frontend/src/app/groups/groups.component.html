@@ -4,7 +4,11 @@
         <button style="float: right;" (click)="this.ShowAddGroupWindow()" nbButton status="primary">Gruppe hinzufügen</button>
 
     </nb-card-header>
-    <nb-card-body>
+<nb-card-body>
+
+    <div *ngIf="!this.loaded">
+      Lade Gruppen....
+    </div>
 
 <div *ngIf="this.loaded">
 <div>
@@ -51,14 +55,10 @@
               <!-- Gruppen Interaktionsbuttons -->
               <span class="hoverCursorInteract">
                 <fa-icon [icon]="this.trashIcon" (click)="this.DeleteGroup(row.data.id)" nbTooltipStatus="danger" nbTooltip="Gruppe löschen" alt="Gruppe löschen"></fa-icon>
-              </span>
 
-              <span class="hoverCursorInteract">
                 <fa-icon [icon]="this.addUserIcon" (click)="this.ShowAddUserWindow()" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Benutzer der Gruppe hinzufügen" alt="Benutzer der Gruppe hinzufügen"></fa-icon>
-              </span>
-
-              <span class="hoverCursorInteract">
-               <!-- <fa-icon [icon]="this.editGroupIcon" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Gruppe bearbeiten" alt="Gruppe bearbeiten"></fa-icon>-->
+               
+                <fa-icon [icon]="this.editGroupIcon" (click)="this.ShowEditGroupWindow(row.data.id, row.data.name, row.data.description)" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Gruppe bearbeiten" alt="Gruppe bearbeiten"></fa-icon>
               </span>
               </div>
 

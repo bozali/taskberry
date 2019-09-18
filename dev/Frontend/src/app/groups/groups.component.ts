@@ -2,11 +2,12 @@ import { Component, OnInit, NgModule, TemplateRef } from '@angular/core';
 import { GroupsViewModel, GroupViewModel } from '../models/GroupsViewModel';
 import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDialogService,
    NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder, NbTreeGridDataSource, NbToastrService } from '@nebular/theme';
-import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
-import { GroupsService, Group, User } from '../api';
+import { Group, GroupsService } from '../api';
 import { group } from '@angular/animations';
+import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
 
 interface TreeNode<T> {
   data: T;
@@ -143,30 +144,69 @@ export class GroupsComponent implements OnInit {
     }
   }
 
-  public DeleteGroup(groupId: string) {
+  public async DeleteGroup(groupId: string) {
     // Add HttpDelete
+    const resultText = await this.groupsService.deleteGroup(groupId).toPromise();
 
-    //Remove From Grid
-    const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
-    let groupName: string = "";
+    if(resultText != undefined || resultText != null) {
 
-    if(groupIndex !== -1) {
-      groupName = this.data[groupIndex].data.name;
-      this.data.splice(groupIndex, 1);
+      //Remove From Grid
+      const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
+      let groupName: string = "";
 
-      // Update Grid (reinstantiate)
-      this.dataSource = this.dataSourceBuilder.create(this.data);
+      if(groupIndex !== -1) {
+        groupName = this.data[groupIndex].data.name;
+        this.data.splice(groupIndex, 1);
 
-      // Return proper status message
-      this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
-      'Gruppe erfolgreich entfernt.');
+        // Update Grid (reinstantiate)
+        this.dataSource = this.dataSourceBuilder.create(this.data);
+
+        // Return proper status message
+
+        //this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
+        //'Gruppe erfolgreich entfernt.');
+      }
     }
+
+    this.toastrService.show(resultText);
   }
 
   public ShowAddGroupWindow() {
     let modal = this.dialogService.open(GroupsAddComponent,
       { hasBackdrop: true, closeOnBackdropClick: true  })
         .onClose.subscribe(result =>  result && this.AddNewGroup(result.groupName, result.groupDescription));
+  }
+
+  
+  public ShowEditGroupWindow(groupId: string, groupName: string, groupDescription: string) {
+    let modal = this.dialogService.open(GroupsEditComponent,
+      { hasBackdrop: true, closeOnBackdropClick: true  });
+
+    let editComponent = modal.componentRef.instance;
+    editComponent.id = groupId;
+    editComponent.name = groupName;
+    editComponent.description = groupDescription;
+
+    modal.onClose.subscribe(result =>  result &&
+          this.UpdateGroupChanges(editComponent.id, editComponent.name, editComponent.description)
+      );
+  }
+
+  public async UpdateGroupChanges(groupId: string, groupName: string, groupDescription: string) {
+    let group: Group = {
+      id: groupId,
+      name: groupName,
+      description: groupDescription
+    };
+
+    const updatedGroup = await this.groupsService.editGroup(group).toPromise();
+
+    if(updatedGroup !== undefined) {
+    // Update Grid properly
+
+    // Add received Group to Grid data
+      //this.AddGroupToTable(newGroup);
+    }
   }
 
   public ShowAddUserWindow(dialog: TemplateRef<any>) {

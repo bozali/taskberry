@@ -3,7 +3,7 @@
     <nb-layout-column>
       <nb-tabset (changeTab)="SelectedTabChanged($event.tabTitle)">
         <nb-tab tabTitle="Dashboard" *ngIf="this.dashboardVisible">
-
+          <fa-icon [icon]="this.dashboardIcon" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Dashboard" alt="Dashboard"></fa-icon>
         </nb-tab>
         <nb-tab tabTitle="Gruppen" *ngIf="this.groupsVisible">
 

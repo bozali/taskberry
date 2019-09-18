@@ -23,7 +23,7 @@ export class AuthService {
     const token = localStorage.getItem('jwt');
 
     if (token === undefined || token === null || token === '' || token === 'token') {
-      console.log('No Valid Token Present.');
+      //console.log('No Valid Token Present.');
       return false;
     }
 
@@ -62,13 +62,11 @@ export class AuthService {
 
          this.authenticationService.configuration.apiKeys = {'Authorization': token};
          this.groupsService.configuration.apiKeys = {'Authorization': token};
-         //this.userService.configuration.apiKeys = {'Authorization': token}; add to app.module falls required
-
-          //this.authenticationService.configuration.apiKeys['Authorization'] = token;
+         
          this.router.navigate(['/dashboard']);
          return true;
        }, err => {
-         console.log(err);
+         console.log('login failed' + err);
          return false;
         // this.PasswordInputWrong++;
         // this.invalidLogin = true;
@@ -87,7 +85,7 @@ export class AuthService {
             return true;
           },
            err => {
-            console.log('Couldnt log out! ' + err);
+            console.log('Couldnt log out! ' + err.toString());
             return false;
            });
     
