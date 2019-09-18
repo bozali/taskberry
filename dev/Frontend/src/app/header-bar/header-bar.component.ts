@@ -33,7 +33,7 @@ export class HeaderBarComponent implements OnInit {
     if (!this.authService.isAuthenticated()) {
       this.defaultUserLoggedOutView();
     } else {
-      this.defaultUserLoggedInView();
+      //this.defaultUserLoggedInView();
     }
   }
 

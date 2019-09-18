@@ -1,10 +1,11 @@
 import { Component, OnInit, NgModule, TemplateRef } from '@angular/core';
 import { GroupsViewModel, GroupViewModel } from '../models/GroupsViewModel';
-import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDialogService, NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder, NbTreeGridDataSource, NbToastrService, NbToastRef } from '@nebular/theme';
-import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDialogService,
+   NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder, NbTreeGridDataSource, NbToastrService } from '@nebular/theme';
+import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
-import { GroupsService, Group } from '../api';
+import { GroupsService, Group, User } from '../api';
 import { group } from '@angular/animations';
 
 interface TreeNode<T> {
@@ -46,6 +47,7 @@ export class GroupsComponent implements OnInit {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   dataSource: NbTreeGridDataSource<FSEntry>;
+  selectedGroupRow = '-1';
 
   // Modals
   addUserToGroupModal;
@@ -56,15 +58,16 @@ export class GroupsComponent implements OnInit {
   userIcon = faUserTie;
   addUserIcon = faUserPlus;
   deleteUserIcon = faUserAltSlash;
+  editGroupIcon = faEdit;
+
   // Tabelle
   customColumn = 'Gruppen / Mitglieder Name';
   defaultColumns = [ 'Beschreibung', 'Aktionen'];
 
   allColumns = [ this.customColumn, ...this.defaultColumns];
 
-
-  data: TreeNode<FSEntry>[] = [
-    {
+  data: TreeNode <FSEntry>[] = [
+    /*{
       data: { id: '1', groupId: '-1', name: 'Gruppe 1', description: 'Planungsgruppe', type: 1},
       children: [
         { data: { id: '2', groupId: '1', name: 'Max Musterman', description: '', type: 2} },
@@ -78,7 +81,7 @@ export class GroupsComponent implements OnInit {
       { data: { id: '5', groupId: '2', name: 'Mitglied 2', description: '', type: 2} },
       { data: { id: '6', groupId: '2', name: 'Mitglied 3',  description: '', type: 2} }
     ]
-  }];
+  }*/];
 
   constructor(private dialogService: NbDialogService, private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private toastrService: NbToastrService, private groupsService: GroupsService) {
@@ -86,14 +89,18 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupsViewModel = new GroupsViewModel();
-    let oneGroup: GroupViewModel = new GroupViewModel();
-    oneGroup.id = 1;
-    oneGroup.name = 'Test Name';
-    oneGroup.description = 'Beschreibung';
-    this.groupsViewModel.GroupViewModel.fill(oneGroup);
-    this.loaded = true;
+    this.InitializeGroupsTable();
+  }
 
+  private async InitializeGroupsTable() {
+    const allGroups = await this.groupsService.getGroups().toPromise();
+
+    if (allGroups !== undefined) {
+      allGroups.forEach(grp => {
+          this.AddGroupToTable(grp);
+      });
+      this.loaded = true;
+      }
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -120,7 +127,7 @@ export class GroupsComponent implements OnInit {
 
     // Remove from Grid
     const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.groupId === '-1' && w.data.type === 1);
-    if(groupIndex !== -1) {
+    if (groupIndex !== -1) {
     const userIndex = this.data[groupIndex].children.findIndex(w => w.data.id === userId.toString() && w.data.type === 2);
     if (userIndex !== -1) {
         this.data[groupIndex].
@@ -165,6 +172,7 @@ export class GroupsComponent implements OnInit {
   public ShowAddUserWindow(dialog: TemplateRef<any>) {
     this.dialogService.open(GroupsAddUserComponent, { hasBackdrop: true, closeOnBackdropClick: true  })
     .onClose.subscribe(s=> s && s.forEach((user: number) => {
+      // Get User from DB?
       this.AddUserToGroup('1', user, 'Peter'); // replace with group Id (get everything from userId)
         // Update Grid (reinstantiate)
       this.dataSource = this.dataSourceBuilder.create(this.data);
@@ -202,16 +210,21 @@ export class GroupsComponent implements OnInit {
 
     const newGroup = await this.groupsService.createGroup(group).toPromise();
 
+    if(newGroup !== undefined) {
     // Add received Group to Grid data
-    let groupToAddToViewTable: TreeNode<FSEntry> =
-    {
-      data: { id: newGroup.id, groupId: '-1', name: newGroup.name, description: newGroup.description, type: 1},
-      children: [ ]
-    };
+      this.AddGroupToTable(newGroup);
+    }
+  }
 
-    this.data.push(groupToAddToViewTable);
-
-    // Update Grid (reinstantiate)
-    this.dataSource = this.dataSourceBuilder.create(this.data);
+  public AddGroupToTable(group : Group) {
+        // Add received Group to Grid data
+        let groupToAddToViewTable: TreeNode<FSEntry> =
+        {
+          data: { id: group.id, groupId: '-1', name: group.name, description: group.description, type: 1},
+          children: [ ]
+        };
+        this.data.push(groupToAddToViewTable);
+        // Update Grid (reinstantiate)
+        this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, NgModule } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { AuthenticationService, User } from './api';
+import { AuthenticationService, User, GroupsService, UsersService } from './api';
 
 @Injectable({
   providedIn: 'root'
@@ -16,18 +16,19 @@ import { AuthenticationService, User } from './api';
 export class AuthService {
 
   public isLoggedIn: boolean;
-  constructor(public authenticationService: AuthenticationService, public router: Router, public jwtHelper: JwtHelperService) {}
+  constructor(public authenticationService: AuthenticationService, public groupsService: GroupsService,
+              public router: Router, public jwtHelper: JwtHelperService) {}
 
   public isAuthenticated(): boolean {
     const token = localStorage.getItem('jwt');
 
     if (token === undefined || token === null || token === '' || token === 'token') {
-      console.log('invalid token');
+      console.log('No Valid Token Present.');
       return false;
     }
 
   // Check whether the token is expired
-    return !this.jwtHelper.isTokenExpired(token);
+    return !this.jwtHelper.isTokenExpired(token, 600);
   }
 
   public async login(userName: string): Promise<boolean> {
@@ -38,7 +39,7 @@ export class AuthService {
 
     if (this.isAuthenticated()) {
           console.log('already Authentificated');
-          return false;
+          return true;
       }
 
       // Increase if authentification failed -> PasswordInputWrong++
@@ -50,6 +51,7 @@ export class AuthService {
          const firstName = ( response as any).firstName;
          const lastName = ( response as any).lastName;
          const email = ( response as any).email;
+
         // Define some model e.g. AuthentificationModel
          localStorage.setItem('jwt', token);
          localStorage.setItem('userId', id);
@@ -58,7 +60,11 @@ export class AuthService {
          localStorage.setItem('email', email);
         // this.invalidLogin = false;
 
-         //this.authenticationService.configuration.apiKeys['Authorization'] = token;
+         this.authenticationService.configuration.apiKeys = {'Authorization': token};
+         this.groupsService.configuration.apiKeys = {'Authorization': token};
+         //this.userService.configuration.apiKeys = {'Authorization': token}; add to app.module falls required
+
+          //this.authenticationService.configuration.apiKeys['Authorization'] = token;
          this.router.navigate(['/dashboard']);
          return true;
        }, err => {
@@ -71,18 +77,22 @@ export class AuthService {
 
     public async logout() {
       if (this.isAuthenticated()) {
-          await this.authenticationService.logout();
-          this.isLoggedIn = false;
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('userId');
-          localStorage.removeItem('userFirstName');
-          localStorage.removeItem('userLastName');
-          localStorage.removeItem('email');
-          //this.router.navigate(['/login']);
-          return true;
+          await this.authenticationService.logout().subscribe(response => {
+            this.isLoggedIn = false;
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userFirstName');
+            localStorage.removeItem('userLastName');
+            localStorage.removeItem('email');
+            return true;
+          },
+           err => {
+            console.log('Couldnt log out! ' + err);
+            return false;
+           });
+    
          } else {
-       // this.router.navigate(['/login']);
-        return false;
+           return false;
       }
     }
 }

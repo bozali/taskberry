@@ -57,7 +57,6 @@ const JWT_Module_Options: JwtModuleOptions = {
     FontAwesomeModule,
     NbWindowModule.forRoot(),
     NbDialogModule.forRoot(),
-
     NbCardModule,
     NbSelectModule,
     NbInputModule,
