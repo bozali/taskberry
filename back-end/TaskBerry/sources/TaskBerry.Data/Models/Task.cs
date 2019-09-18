@@ -39,11 +39,15 @@ namespace TaskBerry.Data.Models
         /// <summary>
         /// The owner of a task can be user or a group.
         /// </summary>
-        public Guid OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         /// <summary>
         /// The id of the user that is assigned to this task.
         /// </summary>
-        public Guid? AssigneeId { get; set; }
+        public int? AssigneeId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public int Row { get; set; }
     }
 }

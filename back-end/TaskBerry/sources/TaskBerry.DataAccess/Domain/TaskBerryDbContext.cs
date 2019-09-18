@@ -15,6 +15,8 @@
 
         public DbSet<GroupEntity> Groups { get; set; }
 
+        public DbSet<TaskEntity> Tasks { get; set; }
+
         public DbSet<GroupAssignmentEntity> GroupAssignments { get; set; }
     }
 }

@@ -5,12 +5,14 @@
     using System.ComponentModel;
     using System;
 
+    using TaskBerry.Data.Models;
+
 
     /// <summary>
     /// Represents a database entity for the tasks.
     /// </summary>
     [Table("Task")]
-    public class TaskEntity : IEntity
+    public class TaskEntity : EntityBase<Task>
     {
         /// <summary>
         /// Id of the task.
@@ -42,11 +44,15 @@
         /// <summary>
         /// The owner of a task can be user or a group.
         /// </summary>
-        public Guid OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         /// <summary>
         /// The id of the user that is assigned to this task.
         /// </summary>
-        public Guid? AssigneeId { get; set; }
+        public int? AssigneeId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public int Row { get; set; }
     }
 }

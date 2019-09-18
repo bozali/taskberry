@@ -5,5 +5,12 @@
     /// </summary>
     public enum TaskType
     {
+        /// <summary>
+        /// </summary>
+        User,
+
+        /// <summary>
+        /// </summary>
+        Group
     }
 }
