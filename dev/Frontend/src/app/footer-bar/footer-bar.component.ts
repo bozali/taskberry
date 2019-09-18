@@ -12,4 +12,15 @@ export class FooterBarComponent implements OnInit {
   ngOnInit() {
   }
 
+  public SelectedTabChanged(tabName) {
+    switch (tabName) {
+      case 'Impressum':
+        window.open('https://www.atiwonline.de/#openModal');
+      break;
+      case 'Datenschutzerklärung':
+          window.open('https://www.atiwonline.de/admin/tool/policy/viewall.php?returnurl=https%3A%2F%2Fwww.atiwonline.de%2F');
+      break;
+    }
+  }
+
 }
