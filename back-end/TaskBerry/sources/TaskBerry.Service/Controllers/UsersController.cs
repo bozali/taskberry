@@ -84,8 +84,8 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/users/current-user")]
         [Authorize]
+        [HttpGet("/api/users/current-user")]
         [Produces("application/json")]
         public ActionResult<User> GetCurrentUser()
         {
@@ -99,6 +99,29 @@
 
 
             return this.Ok(user);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("/api/users/get-classes")]
+        [Produces("application/json")]
+        public ActionResult<IEnumerable<string>> GetClasses()
+        {
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="schoolClass"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("/api/users/get-users-in-class")]
+        [Produces("application/json")]
+        public ActionResult<IEnumerable<User>> GetUsersInClass(string schoolClass)
+        {
+            return this.Ok();
         }
     }
 }

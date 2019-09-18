@@ -151,6 +151,8 @@
                 return this.BadRequest("Cannot assign user task to another users.");
             }
 
+            // Check if user is in the group where the task is located at.
+
             taskEntity.AssigneeId = user;
 
             this._taskBerry.Context.SaveChanges();
