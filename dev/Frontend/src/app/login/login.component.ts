@@ -2,7 +2,9 @@ import { Component, NgModule } from '@angular/core';
 import { NbTooltipModule, NbIconModule, NbButtonModule, NbCardModule, NbInputModule, NbToastrService, NbDialogRef } from '@nebular/theme';
 import { HeaderBarComponent } from '../header-bar/header-bar.component';
 import { AuthService } from '../auth.service';
-import { BlankComponent } from '../blank/blank.component';
+import { isNullOrUndefined } from 'util';
+import { AuthenticationService, GroupsService } from '../api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,32 +19,41 @@ import { BlankComponent } from '../blank/blank.component';
     NbIconModule,
     NbTooltipModule,
     NbInputModule
-  ],
+  ]
 })
 
 export class LoginComponent {
   Username: string;
   PasswordInputWrong = 0;
-  constructor(protected dialogRef: NbDialogRef<HeaderBarComponent>, public authService: AuthService,
+  Password: string;
+  PasswordFieldVisible = false;
+  // tslint:disable-next-line: max-line-length
+  constructor(private authenticationService: AuthenticationService, private groupsService: GroupsService, private router: Router, public dialogRef: NbDialogRef<HeaderBarComponent>, public authService: AuthService,
               public toastrService: NbToastrService) { }
 
   close() {
-    this.dialogRef.close(false);
+    this.dialogRef.close(this.Username);
   }
 
+  public Login() {
 
-public Login() {
-  // Validate Username
-  if (this.authService.login(this.Username)) {
-    // Send proper status message
-    this.toastrService.show('Du hast dich erfolgreich am System angemeldet!', 'Eingeloggt');
+    // Validate Username
+    // if email exists in moodle database
+    //    Show Password Field
+    // else
+    //    Proper User Notification
 
-    // close dialog and route to other component?
-    this.dialogRef.close(true);
+  if (this.PasswordFieldVisible) {
+      // close dialog and route to other component?
+      this.dialogRef.close(this.Username);
+  } else if(isNullOrUndefined(this.Password) && this.PasswordFieldVisible) {
+      this.toastrService.show('Die eingegebenen Einlog Daten waren nicht korrekt!', 'Fehler beim Einloggen');
+  } else if (this.PasswordFieldVisible === false) {
+      this.PasswordFieldVisible = true;
+      } else {
+        this.toastrService.show('Fehler beim einloggen!', 'Status');
+     }
+
   }
-   else {
-      this.toastrService.show('Du bist bereits eingeloggt!', 'Status');
-   }
 
-}
 }

@@ -2,6 +2,10 @@ import { Injectable, NgModule } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { AuthenticationService, User, GroupsService, UsersService } from './api';
+import { LoginComponent } from './login/login.component';
+import { NbDialogRef } from '@nebular/theme';
+import { HeaderBarComponent } from './header-bar/header-bar.component';
+import { AppComponent } from './app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -31,65 +35,22 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token, 600);
   }
 
-  public async login(userName: string): Promise<boolean> {
-    if (userName == null || userName === undefined) {
-          console.log(userName + ' falscher benutzername wurde eingegeben.');
-          return false;
-      }
-
-    if (this.isAuthenticated()) {
-          console.log('already Authentificated');
-          return true;
-      }
-
-      // Increase if authentification failed -> PasswordInputWrong++
-
-    await this.authenticationService.login(userName).
-       subscribe(response => {
-         const token = ( response as any).token;
-         const id = ( response as any).id;
-         const firstName = ( response as any).firstName;
-         const lastName = ( response as any).lastName;
-         const email = ( response as any).email;
-
-        // Define some model e.g. AuthentificationModel
-         localStorage.setItem('jwt', token);
-         localStorage.setItem('userId', id);
-         localStorage.setItem('userFirstName', firstName);
-         localStorage.setItem('userLastName', lastName);
-         localStorage.setItem('email', email);
-        // this.invalidLogin = false;
-
-         this.authenticationService.configuration.apiKeys = {'Authorization': token};
-         this.groupsService.configuration.apiKeys = {'Authorization': token};
-         
-         this.router.navigate(['/dashboard']);
-         return true;
-       }, err => {
-         console.log('login failed' + err);
-         return false;
-        // this.PasswordInputWrong++;
-        // this.invalidLogin = true;
-       });
-    }
-
-    public async logout() {
+    public logout() {
       if (this.isAuthenticated()) {
-          await this.authenticationService.logout().subscribe(response => {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userFirstName');
+        localStorage.removeItem('userLastName');
+        localStorage.removeItem('email');
+        localStorage.removeItem('jwt');
+        this.authenticationService.logout().subscribe(response => {
             this.isLoggedIn = false;
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('userFirstName');
-            localStorage.removeItem('userLastName');
-            localStorage.removeItem('email');
-            return true;
           },
            err => {
             console.log('Couldnt log out! ' + err.toString());
-            return false;
            });
-    
+
          } else {
+           this.router.navigate(['/']);
            return false;
       }
     }

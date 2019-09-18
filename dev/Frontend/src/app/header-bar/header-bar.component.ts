@@ -4,6 +4,7 @@ import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabse
 import { LoginComponent } from '../login/login.component';
 import { AuthService } from '../auth.service';
 import { faColumns } from '@fortawesome/free-solid-svg-icons';
+import { AuthenticationService, GroupsService } from '../api';
 
 @Component({
   selector: 'app-header-bar',
@@ -17,7 +18,8 @@ import { faColumns } from '@fortawesome/free-solid-svg-icons';
   NbSidebarModule,
   NbButtonModule,
   NbTabsetModule,
-  NbDialogService
+  NbDialogService,
+  NbDialogRef
   ]
 })
 export class HeaderBarComponent implements OnInit {
@@ -25,20 +27,29 @@ export class HeaderBarComponent implements OnInit {
   // Font Awesome Icons
   dashboardIcon = faColumns;
 
-  
+
   public dashboardVisible = false;
   public groupsVisible = false;
   public logoutVisible = false;
   public loginVisibile = true;
 
-  constructor(private authService: AuthService, private router: Router,
-    private toastrService: NbToastrService, public dialogService: NbDialogService) { }
+  // Dialogs
+  private dialog: NbDialogRef<LoginComponent>;
+
+
+  // tslint:disable-next-line: max-line-length
+  constructor(private authenticationService: AuthenticationService, private groupsService: GroupsService, private authService: AuthService, private router: Router,
+              private toastrService: NbToastrService, public dialogService: NbDialogService) { }
+
+  toggle() {
+    this.groupsVisible = !this.groupsVisible;
+  }
 
   ngOnInit() {
     if (!this.authService.isAuthenticated()) {
       this.defaultUserLoggedOutView();
     } else {
-      //this.defaultUserLoggedInView();
+      this.defaultUserLoggedInView();
     }
   }
 
@@ -47,7 +58,7 @@ public defaultUserLoggedInView() {
   this.groupsVisible = true; // Add extr authentification for teachers
   this.logoutVisible = true;
   this.loginVisibile = false;
-  this.router.navigate(['/dashboard']);
+  // this.router.navigate(['/dashboard']);
 }
 
 public defaultUserLoggedOutView() {
@@ -55,13 +66,14 @@ public defaultUserLoggedOutView() {
   this.groupsVisible = false;
   this.logoutVisible = false;
   this.loginVisibile = true;
-
-  this.router.navigate(['/blank']);
 }
 
 public OpenLogin() {
-  const dialogRef = this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false  })
-  .onClose.subscribe(loggedIn => loggedIn && this.defaultUserLoggedInView());
+  // tslint:disable-next-line: max-line-length
+  this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false }).onClose.subscribe(
+    (username) =>
+      this.login(username)
+    );
 }
 
   /**
@@ -76,18 +88,64 @@ public OpenLogin() {
           this.router.navigate(['/groups']);
           break;
           case 'Ausloggen':
-              if (this.authService.logout()) {
+              this.authService.logout();
               this.defaultUserLoggedOutView();
               this.toastrService.show('Du hast dich erfolgreich vom System abgemeldet!', 'Ausgeloggt');
               this.router.navigate(['/blank']);
-            }
               break;
           case 'Einloggen':
             this.OpenLogin();
             break;
       default:
-        this.router.navigate(['/blank']);
+        this.router.navigate(['/']);
+        this.defaultUserLoggedOutView();
         break;
     }
   }
+
+
+
+
+  public login(userName: string) {
+    if (userName == null || userName === undefined) {
+          console.log(userName + ' falscher benutzername wurde eingegeben.');
+          return false;
+      }
+
+    if (this.authService.isAuthenticated()) {
+          console.log('already Authentificated');
+          this.defaultUserLoggedInView();
+          this.dialog.close(false);
+          this.router.navigate(['/dashboard']);
+          return true;
+      }
+
+      // Increase if authentification failed -> PasswordInputWrong++
+
+    this.authenticationService.login(userName).
+      subscribe(response => {
+        const token = (response as any).token;
+        const id = (response as any).id;
+        const firstName = (response as any).firstName;
+        const lastName = (response as any).lastName;
+        const email = (response as any).email;
+        // Define some model e.g. AuthentificationModel
+        localStorage.setItem('jwt', token);
+        localStorage.setItem('userId', id);
+        localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userLastName', lastName);
+        localStorage.setItem('email', email);
+        // this.invalidLogin = false;
+        this.authenticationService.configuration.apiKeys = { Authorization: token };
+        this.groupsService.configuration.apiKeys = { Authorization: token };
+        this.defaultUserLoggedInView();
+        //this.dialog.close(false);
+        this.router.navigate(['/dashboard']);
+      }, err => {
+        console.log('login failed' + err);
+        // this.router.navigate(['/']);
+        // this.PasswordInputWrong++;
+        // this.invalidLogin = true;
+      });
+    }
 }

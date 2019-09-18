@@ -84,7 +84,7 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [HttpPost("/api/authentication/logout")]
         public IActionResult Logout()
         {

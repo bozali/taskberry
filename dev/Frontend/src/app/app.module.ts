@@ -23,6 +23,7 @@ import { DashboardMyBoardComponent } from './dashboard-my-board/dashboard-my-boa
 import { DashboardGroupBoardsComponent } from './dashboard-group-boards/dashboard-group-boards.component';
 import { DashboardGroupBoardComponent } from './dashboard-group-board/dashboard-group-board.component';
 import { BlankComponent } from './blank/blank.component';
+import { UserLogoutComponent } from './user-logout/user-logout.component';
 
 
 export function getToken() {
@@ -52,6 +53,7 @@ const JWT_Module_Options: JwtModuleOptions = {
     DashboardGroupBoardsComponent,
     DashboardGroupBoardComponent,
     BlankComponent,
+    UserLogoutComponent,
   ],
   entryComponents: [GroupsAddUserComponent, LoginComponent, GroupsAddComponent, GroupsEditComponent],
   imports: [
