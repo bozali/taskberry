@@ -139,6 +139,7 @@ public OpenLogin() {
         this.authenticationService.configuration.apiKeys = { Authorization: token };
         this.groupsService.configuration.apiKeys = { Authorization: token };
         this.defaultUserLoggedInView();
+        this.toastrService.primary('Du hast dich erfolgreich angemeldet!', 'Anmeldung');
         //this.dialog.close(false);
         this.router.navigate(['/dashboard']);
       }, err => {
