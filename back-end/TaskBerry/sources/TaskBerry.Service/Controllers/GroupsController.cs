@@ -131,45 +131,12 @@
         [Produces("application/json")]
         public ActionResult<Group> AssignUsersToGroup(int[] users, Guid groupId)
         {
-            GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
+            Group group = this._groupsService.AssignUsersToGroup(users, groupId);
 
-            // TODO Make the member assignment bitiful
-            Group group = groupEntity.ToModel();
-            group.Members = new List<int>();
-
-            if (groupEntity == null)
+            if (group == null)
             {
-                return this.NotFound($"Group {groupId} not found.");
+                return this.NotFound($"Could not find {groupId}.");
             }
-
-            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
-
-            foreach (int userId in users)
-            {
-                // Check if user is already assigned to this group
-                if (assignments.Any(a => a.GroupId == groupId && a.UserId == userId))
-                {
-                    continue;
-                }
-
-                // TODO Check if userid exists.
-                GroupAssignmentEntity assignment = new GroupAssignmentEntity
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = userId,
-                    GroupId = groupId
-                };
-
-                this._taskBerry.Context.GroupAssignments.Add(assignment);
-            }
-
-            foreach (GroupAssignmentEntity assignment in this._taskBerry.Context.GroupAssignments)
-            {
-                group.Members.Add(assignment.UserId);
-            }
-
-            // TODO Check if saved successfully
-            this._taskBerry.Context.SaveChanges();
 
             return this.Ok(group);
         }
@@ -249,7 +216,7 @@
         [Authorize(Roles = Roles.Admin)]
         [HttpPatch("/api/groups/edit")]
         [Produces("application/json")]
-        public IActionResult EditGroup([FromBody] Group group)
+        public ActionResult<Group> EditGroup([FromBody] Group group)
         {
             GroupEntity entity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == group.Id);
 

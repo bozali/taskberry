@@ -36,12 +36,17 @@
         [Produces("application/json")]
         public IActionResult MoveTask(Guid taskId, TaskStatus status, int row)
         {
+            // TODO Check if the user has access rights to edit the task
+
             TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
                 return this.NotFound($"Could not fnd {taskId}.");
             }
+
+            taskEntity.Row = row;
+            this._taskBerry.Context.SaveChanges();
 
             return this.Ok();
         }
