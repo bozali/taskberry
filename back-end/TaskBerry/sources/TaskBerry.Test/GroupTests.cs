@@ -20,7 +20,12 @@ namespace TaskBerry.Test
     public class GroupTests
     {
         [Test]
-        public void Test_GetGroups()
+        public void Test_GetGroups_Without_User_Assignments()
+        {
+        }
+
+        [Test]
+        public void Test_GetGroups_With_User_Assignments()
         {
             List<GroupEntity> entities = new List<GroupEntity>
             {
@@ -76,6 +81,51 @@ namespace TaskBerry.Test
                     CollectionAssert.AreEqual(groups[i].Members, should[i].Members);
                 }
             }
+        }
+
+        [Test]
+        public void Test_RemoveUsersFromGroup_Where_Users_Are_In_Group()
+        {
+        }
+
+        [Test]
+        public void Test_RemoveUsersFromGroup_Where_Users_Are_Not_In_Group()
+        {
+        }
+
+        [Test]
+        public void Test_EditGroup_Where_Group_Does_Not_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_EditGroup_Where_Group_Does_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_DeleteGroup_Where_Group_Does_Not_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_DeleteGroup_Where_Group_Does_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_AssignsUsersToGroup_Where_Group_Does_Not_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_AssignUsersToGroup_Where_Users_Does_Not_Exist()
+        {
+        }
+
+        [Test]
+        public void Test_AssignUsersToGroup_Where_Users_And_Group_Exists()
+        {
         }
     }
 }

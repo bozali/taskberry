@@ -153,14 +153,14 @@
         {
             GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
 
-            // TODO Make the member assignment bitiful
-            Group group = groupEntity.ToModel();
-            group.Members = new List<int>();
-
             if (groupEntity == null)
             {
                 return this.NotFound($"Group {groupId} not found.");
             }
+
+            // TODO Make the member assignment bitiful
+            Group group = groupEntity.ToModel();
+            group.Members = new List<int>();
 
             IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
 
