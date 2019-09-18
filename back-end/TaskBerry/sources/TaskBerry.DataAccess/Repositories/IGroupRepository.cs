@@ -12,6 +12,8 @@
 
         IEnumerable<GroupEntity> GetGroupsByUserId(int userId);
 
+        IEnumerable<GroupAssignmentEntity> GetGroupAssignment(Guid groupId);
+
         GroupEntity CreateGroup(GroupEntity group);
     }
 }

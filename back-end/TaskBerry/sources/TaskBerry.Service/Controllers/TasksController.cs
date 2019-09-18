@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System;
 
 
     /// <summary>
@@ -19,24 +20,24 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        //[Authorize]
-        //[HttpPost]
-        //[Produces("application/json")]
-        //public IActionResult MoveTask()
-        //{
-        //    return this.Ok();
-        //}
+        // [Authorize]
+        // [HttpPost("/api/tasks/move")]
+        // [Produces("application/json")]
+        // public IActionResult MoveTask(Guid taskId, int column, int row)
+        // {
+        //     return this.Ok();
+        // }
 
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        //[Authorize]
-        //[HttpPost]
-        //[Produces("application/json")]
-        //public IActionResult AssignTaskToUser()
-        //{
-        //    return this.Ok();
-        //}
+        // [Authorize]
+        // [HttpPost]
+        // [Produces("application/json")]
+        // public IActionResult AssignTaskToUser()
+        // {
+        //     return this.Ok();
+        // }
     }
 }
