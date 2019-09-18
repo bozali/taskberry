@@ -226,7 +226,7 @@
             }
 
             entity.Name = group.Name;
-            entity.Description = group.Description;
+            entity.Description = group.Description ?? "";
 
             this._taskBerry.Context.SaveChanges();
 

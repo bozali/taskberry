@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TaskBerry.Business.Services
+﻿namespace TaskBerry.Business.Services
 {
     using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;
@@ -8,6 +6,7 @@ namespace TaskBerry.Business.Services
 
     using System.Collections.Generic;
     using System.Linq;
+    using System;
 
 
     public class GroupsService : IGroupsService
