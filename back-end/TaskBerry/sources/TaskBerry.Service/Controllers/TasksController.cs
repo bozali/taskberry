@@ -132,6 +132,7 @@
         public ActionResult<Task> CreateTask([FromBody] Task newTask)
         {
             // TODO Check if the user is allowed to create the task at newTask.GroupId (OwnerId)
+            // TODO Check if the row with the same status and the same group is already in use by another task
 
             TaskEntity taskEntity = this._mapper.Map<TaskEntity>(newTask);
             taskEntity.Id = Guid.NewGuid();
