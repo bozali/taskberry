@@ -1,8 +1,7 @@
-﻿using System;
-
-namespace TaskBerry.Business.Services
+﻿namespace TaskBerry.Business.Services
 {
     using System.Collections.Generic;
+    using System;
 
     using TaskBerry.Data.Models;
 

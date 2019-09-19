@@ -8,14 +8,19 @@
     using System.Linq;
     using System;
 
+    using AutoMapper;
+
 
     public class GroupsService : IGroupsService
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IMapper _mapper;
 
-        public GroupsService(ITaskBerryUnitOfWork taskBerry)
+
+        public GroupsService(ITaskBerryUnitOfWork taskBerry, IMapper mapper)
         {
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         public IEnumerable<Group> GetGroups()
@@ -28,7 +33,7 @@
             {
                 IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.GroupsRepository.GetGroupAssignment(groupEntity.Id);
 
-                Group group = groupEntity.ToModel();
+                Group group = this._mapper.Map<Group>(groupEntity);
                 group.Members = new List<int>();
 
                 foreach (GroupAssignmentEntity assignmentEntity in assignments)
@@ -57,7 +62,7 @@
             }
 
             // TODO Make the member assignment bitiful
-            Group group = groupEntity.ToModel();
+            Group group = this._mapper.Map<Group>(groupEntity);
             group.Members = new List<int>();
 
             IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;

@@ -10,7 +10,7 @@
     /// User entity.
     /// </summary>
     [Table("User")]
-    public class UserEntity : EntityBase<User>
+    public class UserEntity
     {
         /// <inheritdoc cref="User"/>
         [Key]

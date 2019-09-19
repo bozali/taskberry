@@ -12,6 +12,8 @@
     using System.Linq;
     using System;
 
+    using AutoMapper;
+
 
     /// <summary>
     /// Controller for task functions.
@@ -21,13 +23,15 @@
     public class TasksController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TasksController(ITaskBerryUnitOfWork taskBerry)
+        public TasksController(ITaskBerryUnitOfWork taskBerry, IMapper mapper)
         {
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -78,7 +82,7 @@
             int userId = int.Parse(this.User.Identity.Name);
             IEnumerable<TaskEntity> tasks = userTasks.Where(t => t.AssigneeId == userId);
 
-            return this.Ok(tasks.Select(entity => entity.ToModel()));
+            return this.Ok(tasks.Select(this._mapper.Map<Task>));
         }
 
         /// <summary>
@@ -113,7 +117,7 @@
                 .Where(t => t.Type == TaskType.Group)
                 .Where(gt => gt.OwnerId.Equals(groupId.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
-            return this.Ok(taskEntities.Select(entity => entity.ToModel()));
+            return this.Ok(taskEntities.Select(this._mapper.Map<Task>));
         }
 
         /// <summary>
@@ -128,18 +132,9 @@
         public ActionResult<Task> CreateTask([FromBody] Task newTask)
         {
             // TODO Check if the user is allowed to create the task at newTask.GroupId (OwnerId)
-            // TODO Use automapper
-            TaskEntity taskEntity = new TaskEntity
-            {
-                Id = Guid.NewGuid(),
-                OwnerId = newTask.OwnerId,
-                Description = newTask.Description,
-                Type = newTask.Type,
-                AssigneeId = newTask.AssigneeId,
-                Row = newTask.Row,
-                Status = TaskStatus.Open,
-                Title = newTask.Title
-            };
+
+            TaskEntity taskEntity = this._mapper.Map<TaskEntity>(newTask);
+            taskEntity.Id = Guid.NewGuid();
 
             this._taskBerry.Context.Tasks.Add(taskEntity);
 
@@ -187,7 +182,7 @@
 
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok(taskEntity.ToModel());
+            return this.Ok(this._mapper.Map<Task>(taskEntity));
         }
 
         /// <summary>

@@ -11,7 +11,7 @@
     /// Represents a database entity for the groups.
     /// </summary>
     [Table("Group")]
-    public class GroupEntity : EntityBase<Group>
+    public class GroupEntity
     {
 
         /// <inheritdoc cref="Group"/>

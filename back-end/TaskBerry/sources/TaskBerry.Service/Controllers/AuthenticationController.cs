@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace TaskBerry.Service.Controllers
+﻿namespace TaskBerry.Service.Controllers
 {
     using TaskBerry.Service.Configuration;
     using TaskBerry.Service.Constants;
@@ -8,9 +6,6 @@ namespace TaskBerry.Service.Controllers
     using TaskBerry.Data.Entities;
     using TaskBerry.Data.Models;
 
-    using Swashbuckle.AspNetCore.Annotations;
-
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.IdentityModel.Tokens;
 
@@ -20,6 +15,10 @@ namespace TaskBerry.Service.Controllers
     using System.Text;
     using System.Linq;
     using System;
+
+    using AutoMapper;
+
+    using IConfigurationProvider = Configuration.IConfigurationProvider;
 
 
     /// <summary>
@@ -31,16 +30,18 @@ namespace TaskBerry.Service.Controllers
     {
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="taskBerry">UnitOfWork pattern.</param>
         /// <param name="configurationProvider">The configuration provider.</param>
-        public AuthenticationController(ITaskBerryUnitOfWork taskBerry, IConfigurationProvider configurationProvider)
+        public AuthenticationController(ITaskBerryUnitOfWork taskBerry, IConfigurationProvider configurationProvider, IMapper mapper)
         {
             this._configurationProvider = configurationProvider;
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -96,8 +97,7 @@ namespace TaskBerry.Service.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(descriptor);
 
-            // TODO Change this with AutoMapper
-            User user = entity.ToModel();
+            User user = this._mapper.Map<User>(entity);
             user.Token = "Bearer " + tokenHandler.WriteToken(token);
 
             return this.Ok(user);

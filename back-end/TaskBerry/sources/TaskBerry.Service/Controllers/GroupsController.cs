@@ -2,6 +2,7 @@
 {
     using Swashbuckle.AspNetCore.Annotations;
 
+    using TaskBerry.Business.Services;
     using TaskBerry.Service.Constants;
     using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;
@@ -14,7 +15,8 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using TaskBerry.Business.Services;
+
+    using AutoMapper;
 
 
     /// <summary>
@@ -26,14 +28,16 @@
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
         private readonly IGroupsService _groupsService;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GroupsController(ITaskBerryUnitOfWork taskBerry, IGroupsService groupsService)
+        public GroupsController(ITaskBerryUnitOfWork taskBerry, IGroupsService groupsService, IMapper mapper)
         {
             this._groupsService = groupsService;
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -83,7 +87,7 @@
             {
                 IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
 
-                Group group = groupEntity.ToModel();
+                Group group = this._mapper.Map<Group>(groupEntity);
                 group.Members = new List<int>();
 
                 foreach (GroupAssignmentEntity assignmentEntity in assignments)
@@ -121,7 +125,7 @@
 
             this._taskBerry.GroupsRepository.CreateGroup(entity);
 
-            return this.Ok(entity.ToModel()); // TODO CreateResult?
+            return this.Ok(this._mapper.Map<Group>(entity)); // TODO CreateResult?
         }
 
         /// <summary>
@@ -168,7 +172,7 @@
             }
 
             // TODO Make the member assignment bitiful
-            Group group = groupEntity.ToModel();
+            Group group = this._mapper.Map<Group>(groupEntity);
             group.Members = new List<int>();
 
             IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
@@ -246,7 +250,7 @@
 
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok(entity.ToModel());
+            return this.Ok(this._mapper.Map<Group>(entity));
         }
     }
 }

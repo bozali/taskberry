@@ -16,6 +16,8 @@
     using System.Linq;
     using System;
 
+    using AutoMapper;
+
 
     /// <summary>
     /// Controller for user functions.
@@ -25,14 +27,16 @@
     public class UsersController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="taskBerry"></param>
-        public UsersController(ITaskBerryUnitOfWork taskBerry)
+        public UsersController(ITaskBerryUnitOfWork taskBerry, IMapper mapper)
         {
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -47,7 +51,7 @@
         {
             IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsers();
 
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            return this.Ok(entities.Select(this._mapper.Map<User>));
         }
 
         /// <summary>
@@ -71,7 +75,7 @@
                 return this.NotFound(userid);
             }
 
-            return this.Ok(entity.ToModel());
+            return this.Ok(this._mapper.Map<User>(entity));
         }
 
         /// <summary>
