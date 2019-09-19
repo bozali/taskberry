@@ -5,7 +5,7 @@ import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDial
 import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
-import { Group, GroupsService } from '../api';
+import { Group, GroupsService, User } from '../api';
 import { group } from '@angular/animations';
 import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
 
@@ -64,6 +64,7 @@ export class GroupsComponent implements OnInit {
   // Tabelle
   customColumn = 'Gruppen / Mitglieder Name';
   defaultColumns = [ 'Beschreibung', 'Aktionen'];
+  selectedGroupId = '';
 
   allColumns = [ this.customColumn, ...this.defaultColumns];
 
@@ -148,13 +149,13 @@ export class GroupsComponent implements OnInit {
     // Add HttpDelete
     const resultText = await this.groupsService.deleteGroup(groupId).toPromise();
 
-    if(resultText != undefined || resultText != null) {
+    if (resultText != undefined || resultText != null) {
 
-      //Remove From Grid
+      // Remove From Grid
       const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
-      let groupName: string = "";
+      let groupName = '';
 
-      if(groupIndex !== -1) {
+      if (groupIndex !== -1) {
         groupName = this.data[groupIndex].data.name;
         this.data.splice(groupIndex, 1);
 
@@ -163,8 +164,8 @@ export class GroupsComponent implements OnInit {
 
         // Return proper status message
 
-        //this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
-        //'Gruppe erfolgreich entfernt.');
+        // this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
+        // 'Gruppe erfolgreich entfernt.');
       }
     }
 
@@ -172,17 +173,17 @@ export class GroupsComponent implements OnInit {
   }
 
   public ShowAddGroupWindow() {
-    let modal = this.dialogService.open(GroupsAddComponent,
+    const modal = this.dialogService.open(GroupsAddComponent,
       { hasBackdrop: true, closeOnBackdropClick: true  })
         .onClose.subscribe(result =>  result && this.AddNewGroup(result.groupName, result.groupDescription));
   }
 
-  
+
   public ShowEditGroupWindow(groupId: string, groupName: string, groupDescription: string) {
-    let modal = this.dialogService.open(GroupsEditComponent,
+    const modal = this.dialogService.open(GroupsEditComponent,
       { hasBackdrop: true, closeOnBackdropClick: true  });
 
-    let editComponent = modal.componentRef.instance;
+    const editComponent = modal.componentRef.instance;
     editComponent.id = groupId;
     editComponent.name = groupName;
     editComponent.description = groupDescription;
@@ -193,7 +194,7 @@ export class GroupsComponent implements OnInit {
   }
 
   public async UpdateGroupChanges(groupId: string, groupName: string, groupDescription: string) {
-    let group: Group = {
+    const group: Group = {
       id: groupId,
       name: groupName,
       description: groupDescription
@@ -201,65 +202,84 @@ export class GroupsComponent implements OnInit {
 
     const updatedGroup = await this.groupsService.editGroup(group).toPromise();
 
-    if(updatedGroup !== undefined) {
+    if (updatedGroup !== undefined) {
     // Update Grid properly
 
     // Add received Group to Grid data
-      //this.AddGroupToTable(newGroup);
+      // this.AddGroupToTable(newGroup);
     }
   }
 
-  public ShowAddUserWindow(dialog: TemplateRef<any>) {
+  public ShowAddUserWindow(groupId: string) {
+    this.selectedGroupId = groupId;
     this.dialogService.open(GroupsAddUserComponent, { hasBackdrop: true, closeOnBackdropClick: true  })
-    .onClose.subscribe(s=> s && s.forEach((user: number) => {
-      // Get User from DB?
-      this.AddUserToGroup('1', user, 'Peter'); // replace with group Id (get everything from userId)
-        // Update Grid (reinstantiate)
-      this.dataSource = this.dataSourceBuilder.create(this.data);
-    }));
+    .onClose.subscribe(users => this.layer(this.selectedGroupId, users));
 
 
   }
 
-  public AddUserToGroup(groupIdt: string, userId: number, userName: string) {
-    let usersToAddToGroup: TreeNode<FSEntry> =
-      {
-        data: { id: userId.toString(), groupId: groupIdt, name: userName, description: '', type: 2},
-        children: [ ]
-      };
+  public layer(groupIdt: string, users: User[]) {
+    if (this.selectedGroupId !== '') {
+      this.AddUsersToGroup(this.selectedGroupId, users);
+
+    }
+  }
+
+  public async AddUsersToGroup(groupIdt: string, users: User[]) {
+
       // Add HTTP POST
 
-    // Add received Group to Grid
-    const groupIndex = this.data.findIndex(w => w.data.id === groupIdt && w.data.groupId === '-1' && w.data.type === 1);
-    if(groupIndex !== -1) {
-      const userIndex = this.data[groupIndex].children.findIndex(w => w.data.id === userId.toString() && w.data.type === 2);
+       const userIds = new Array();
+
+       users.forEach(us => {
+        userIds.push(us.id);
+      });
+
+       const groupe = await this.groupsService.assignUsersToGroup(userIds, groupIdt).toPromise();
+
+       if (groupe == null || groupe === undefined) {
+        return;
+    }
+
+       users.forEach(user => {
+
+      let usersToAddToGroup: TreeNode<FSEntry> = {
+        data: { id: user.id.toString(), groupId: groupIdt, name: user.firstName, description: '', type: 2},
+        children: [ ]
+      };
+
+      // Add received Group to Grid
+      const groupIndex = this.data.findIndex(w => w.data.id === groupIdt && w.data.groupId === '-1' && w.data.type === 1);
+      if (groupIndex !== -1) {
+      const userIndex = this.data[groupIndex].children.findIndex(w => w.data.id === user.id.toString() && w.data.type === 2);
       if (userIndex !== -1) {
         // User ist bereits in dieser Gruppe
       } else {
         this.data[groupIndex].children.push(usersToAddToGroup);
      }
     }
+    });
+       this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   public async AddNewGroup(groupName: string, groupDescription: string) {
     // Add HTTP POST
-    let group: Group = {
+    const group: Group = {
       name: groupName,
-      description:groupDescription
+      description: groupDescription
     };
 
     const newGroup = await this.groupsService.createGroup(group).toPromise();
 
-    if(newGroup !== undefined) {
+    if (newGroup !== undefined) {
     // Add received Group to Grid data
       this.AddGroupToTable(newGroup);
     }
   }
 
-  public AddGroupToTable(group : Group) {
+  public AddGroupToTable(group: Group) {
         // Add received Group to Grid data
-        let groupToAddToViewTable: TreeNode<FSEntry> =
-        {
+        const groupToAddToViewTable: TreeNode<FSEntry> = {
           data: { id: group.id, groupId: '-1', name: group.name, description: group.description, type: 1},
           children: [ ]
         };

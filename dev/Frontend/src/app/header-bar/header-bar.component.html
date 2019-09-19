@@ -1,7 +1,7 @@
 
     <!-- Header -->
     <nb-layout-column>
-      <nb-tabset (changeTab)="SelectedTabChanged($event.tabTitle)" style="font-size:24px;" style=" margin-top:30px; height:100%; width:100%; color:rgb(89,139,255);">
+      <nb-tabset tabset-tab-active-text-color="#3366ff" (changeTab)="SelectedTabChanged($event.tabTitle)" style="font-size:24px;" style=" margin-top:30px; height:100%; width:100%; color:rgb(89,139,255);">
         <nb-tab tabTitle="Dashboard" *ngIf="this.dashboardVisible" tabIcon="layout">
         </nb-tab>
         <nb-tab tabTitle="Gruppen" *ngIf="this.groupsVisible" tabIcon="people" responsive>

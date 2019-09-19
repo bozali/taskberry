@@ -4,7 +4,7 @@ import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabse
 import { LoginComponent } from '../login/login.component';
 import { AuthService } from '../auth.service';
 import { faColumns } from '@fortawesome/free-solid-svg-icons';
-import { AuthenticationService, GroupsService } from '../api';
+import { AuthenticationService, GroupsService, UsersService } from '../api';
 
 @Component({
   selector: 'app-header-bar',
@@ -39,7 +39,7 @@ export class HeaderBarComponent implements OnInit {
 
   // tslint:disable-next-line: max-line-length
   constructor(private authenticationService: AuthenticationService, private groupsService: GroupsService, private authService: AuthService, private router: Router,
-              private toastrService: NbToastrService, public dialogService: NbDialogService) { }
+              private toastrService: NbToastrService, public dialogService: NbDialogService, private usersService: UsersService) { }
 
   toggle() {
     this.groupsVisible = !this.groupsVisible;
@@ -138,6 +138,7 @@ public OpenLogin() {
         // this.invalidLogin = false;
         this.authenticationService.configuration.apiKeys = { Authorization: token };
         this.groupsService.configuration.apiKeys = { Authorization: token };
+        this.usersService.configuration.apiKeys = { Authorization: token };
         this.defaultUserLoggedInView();
         this.toastrService.primary('Du hast dich erfolgreich angemeldet!', 'Anmeldung');
         //this.dialog.close(false);
