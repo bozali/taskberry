@@ -5,21 +5,27 @@
     using System;
 
 
-    [Table("GroupAssignment")]
-    public class GroupAssignmentEntity
+    /// <summary>
+    /// </summary>
+    [Table("UserInfo")]
+    public class UserInfoEntity
     {
+        /// <summary>
+        /// </summary>
         [Key]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// </summary>
         [ForeignKey("User")]
         public int UserId { get; set; }
 
-        [MaxLength(36)]
-        [ForeignKey("Group")]
-        public Guid GroupId { get; set; }
+        /// <summary>
+        /// </summary>
+        public string Password { get; set; }
 
+        /// <summary>
+        /// </summary>
         public UserEntity User { get; set; }
-
-        public GroupEntity Group { get; set; }
     }
 }

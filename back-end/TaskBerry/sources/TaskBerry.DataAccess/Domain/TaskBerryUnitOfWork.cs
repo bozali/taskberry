@@ -1,16 +1,18 @@
-﻿namespace TaskBerry.DataAccess.Domain
+﻿using AutoMapper;
+
+namespace TaskBerry.DataAccess.Domain
 {
     using TaskBerry.DataAccess.Repositories;
 
 
     public class TaskBerryUnitOfWork : ITaskBerryUnitOfWork
     {
-        public TaskBerryUnitOfWork(TaskBerryDbContext context)
+        public TaskBerryUnitOfWork(TaskBerryDbContext context, IMapper mapper)
         {
             this.Context = context;
 
             this.GroupsRepository = new GroupRepository(this);
-            this.UsersRepository = new UserRepository(this);
+            this.UsersRepository = new UserRepository(this, mapper);
         }
 
         public int Commit()

@@ -10,7 +10,7 @@
     /// User entity.
     /// </summary>
     [Table("User")]
-    public class UserEntity : EntityBase<User>
+    public class UserEntity
     {
         /// <inheritdoc cref="User"/>
         [Key]
@@ -19,14 +19,17 @@
 
         /// <inheritdoc cref="User"/>
         [Required]
+        [MaxLength(50)]
         public string FirstName { get; set; }
 
         /// <inheritdoc cref="User"/>
         [Required]
+        [MaxLength(50)]
         public string LastName { get; set; }
 
         /// <inheritdoc cref="User"/>
         [Required]
+        [MaxLength(62)]
         public string Email { get; set; }
     }
 }

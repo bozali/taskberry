@@ -18,10 +18,11 @@
     using System;
 
     using TaskBerry.Service.Configuration;
+    using TaskBerry.Business.Services;
     using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
-    using TaskBerry.Business.Services;
+    using AutoMapper;
 
 
     /// <summary>
@@ -71,6 +72,7 @@
             // Dependency injection configuration
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
+                .AddSingleton(p => new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper())
                 .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
                 .AddScoped<IGroupsService, GroupsService>()
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
