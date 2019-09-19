@@ -77,8 +77,12 @@
         public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)
         {
             IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByGroupId(groupId);
+            List<User> users = new List<User>();
 
-            return this.Ok();
+            foreach (var user in entities)
+                users.Add(user.ToModel());
+
+            return this.Ok(users.ToArray());
         }
 
         /// <summary>

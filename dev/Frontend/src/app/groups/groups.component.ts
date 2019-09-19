@@ -5,7 +5,7 @@ import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDial
 import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
-import { Group, GroupsService, User } from '../api';
+import { Group, GroupsService, User, UsersService } from '../api';
 import { group } from '@angular/animations';
 import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
 
@@ -85,7 +85,8 @@ export class GroupsComponent implements OnInit {
     ]
   }*/];
 
-  constructor(private dialogService: NbDialogService, private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+  constructor(private usersService: UsersService, private dialogService: NbDialogService,
+              private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private toastrService: NbToastrService, private groupsService: GroupsService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -243,8 +244,8 @@ export class GroupsComponent implements OnInit {
 
        users.forEach(user => {
 
-      let usersToAddToGroup: TreeNode<FSEntry> = {
-        data: { id: user.id.toString(), groupId: groupIdt, name: user.firstName, description: '', type: 2},
+      const usersToAddToGroup: TreeNode<FSEntry> = {
+        data: { id: user.id.toString(), groupId: groupIdt, name: user.lastName + ' ' + user.firstName, description: '', type: 2},
         children: [ ]
       };
 
@@ -277,12 +278,29 @@ export class GroupsComponent implements OnInit {
     }
   }
 
-  public AddGroupToTable(group: Group) {
+  public async AddGroupToTable(group: Group) {
         // Add received Group to Grid data
         const groupToAddToViewTable: TreeNode<FSEntry> = {
           data: { id: group.id, groupId: '-1', name: group.name, description: group.description, type: 1},
           children: [ ]
         };
+
+        const usersInGroup = await this.usersService.getUsersByGroupId(group.id).toPromise();
+
+        if (usersInGroup != null) {
+        usersInGroup.forEach(member => {
+          // Prevent Dublicates in Table (not in database)
+          const userIndex = groupToAddToViewTable.children.findIndex(w => w.data.type === 2 && w.data.id === member.id.toString());
+          if (userIndex === -1) {
+            const userToAddToGroup: TreeNode<FSEntry> = {
+              data: { id: member.id.toString(), groupId: group.id,
+                 name: member.lastName + ' ' + member.firstName, description: '', type: 2},
+              children: [ ]
+            };
+            groupToAddToViewTable.children.push(userToAddToGroup);
+        }
+        });
+        }
         this.data.push(groupToAddToViewTable);
         // Update Grid (reinstantiate)
         this.dataSource = this.dataSourceBuilder.create(this.data);

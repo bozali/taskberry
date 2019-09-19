@@ -221,7 +221,7 @@ export class UsersService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<User>>(`${this.basePath}/usersByGroup/${encodeURIComponent(String(groupId))}`,
+        return this.httpClient.get<Array<User>>(`${this.basePath}/api/users/users-by-group/${encodeURIComponent(String(groupId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
