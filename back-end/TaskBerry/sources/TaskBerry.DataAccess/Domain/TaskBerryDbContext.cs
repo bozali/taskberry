@@ -13,6 +13,8 @@
 
         public DbSet<UserEntity> Users { get; set; }
 
+        public DbSet<UserInfoEntity> UserInfos { get; set; }
+
         public DbSet<GroupEntity> Groups { get; set; }
 
         public DbSet<TaskEntity> Tasks { get; set; }

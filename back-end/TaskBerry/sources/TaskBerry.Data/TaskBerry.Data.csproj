@@ -60,6 +60,7 @@
     <Compile Include="Entities\TaskStatus.cs" />
     <Compile Include="Entities\TaskType.cs" />
     <Compile Include="Entities\UserEntity.cs" />
+    <Compile Include="Entities\UserInfoEntity.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\User.cs" />

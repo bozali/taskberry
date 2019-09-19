@@ -11,6 +11,8 @@
     using TaskBerry.Data.Models;
 
     using System.Collections.Generic;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Linq;
     using System;
 
@@ -122,6 +124,71 @@
         public ActionResult<IEnumerable<User>> GetUsersInClass(string schoolClass)
         {
             return this.Ok();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("/api/users/user-exists")]
+        [Produces("application/json")]
+        public ActionResult<bool> UserExists(string email)
+        {
+            return this._taskBerry.Context.Users.Any(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("/api/users/is-user-registered")]
+        [Produces("application/json")]
+        public ActionResult<bool> IsUserRegistered(string email)
+        {
+            UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+
+            if (userEntity == null)
+            {
+                return this.NotFound($"User with the email {email} does not exist.");
+            }
+
+            return this._taskBerry.Context.UserInfos.Any(info => info.UserId == userEntity.Id);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("/api/users/change-password")]
+        [Produces("application/json")]
+        public IActionResult ChangeUserPassword(string email, string newPassword)
+        {
+            using (MD5CryptoServiceProvider cryptoProvider = new MD5CryptoServiceProvider())
+            {
+                byte[] bytes = cryptoProvider.ComputeHash(Encoding.ASCII.GetBytes(newPassword));
+                string hashedPassword = Encoding.ASCII.GetString(bytes);
+
+                UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+
+                if (userEntity == null)
+                {
+                    return this.NotFound($"Could not find user {email}.");
+                }
+
+                UserInfoEntity infoEntity = this._taskBerry.Context.UserInfos.FirstOrDefault(info => info.UserId == userEntity.Id);
+
+                if (infoEntity == null)
+                {
+                    return this.NotFound($"User {email} was not registered");
+                }
+
+                infoEntity.Password = hashedPassword;
+                this._taskBerry.Context.SaveChanges();
+            }
+
+            return this.Ok($"Successfully changed password of {email}.");
         }
     }
 }

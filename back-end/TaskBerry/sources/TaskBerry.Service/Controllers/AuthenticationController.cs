@@ -6,7 +6,6 @@
     using TaskBerry.Data.Entities;
     using TaskBerry.Data.Models;
 
-
     using Swashbuckle.AspNetCore.Annotations;
 
     using Microsoft.AspNetCore.Authorization;
@@ -14,6 +13,7 @@
     using Microsoft.IdentityModel.Tokens;
 
     using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Cryptography;
     using System.Security.Claims;
     using System.Text;
     using System.Linq;
@@ -48,13 +48,31 @@
         [HttpPost("/api/authentication/login")]
         [SwaggerResponse(404, "User with the email not found")]
         [SwaggerResponse(200, "User email found and user is logged in")]
-        public ActionResult<User> Login(string email)
+        public ActionResult<User> Login(string email, string password)
         {
             UserEntity entity = this._taskBerry.UsersRepository.GetUsers().FirstOrDefault(e => e.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 
             if (entity == null)
             {
                 return this.NotFound(email);
+            }
+
+            UserInfoEntity userInfoEntity = this._taskBerry.Context.UserInfos.FirstOrDefault(info => info.UserId == entity.Id);
+
+            if (userInfoEntity == null)
+            {
+                return this.BadRequest($"User with the email {email} is not registered.");
+            }
+
+            using (MD5CryptoServiceProvider cryptoProvider = new MD5CryptoServiceProvider())
+            {
+                byte[] bytes = cryptoProvider.ComputeHash(Encoding.ASCII.GetBytes(password));
+                string hashedPassword = Encoding.ASCII.GetString(bytes);
+
+                if (hashedPassword != userInfoEntity.Password)
+                {
+                    return this.BadRequest($"Wrong password.");
+                }
             }
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -79,6 +97,47 @@
             user.Token = "Bearer " + tokenHandler.WriteToken(token);
 
             return this.Ok(user);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        [HttpPost("/api/authentication/register")]
+        [Produces("application/json")]
+        public IActionResult Register(string email, string password)
+        {
+
+            UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+
+            if (userEntity == null)
+            {
+                return this.NotFound($"User with the email {email} does not exist.");
+            }
+
+            if (this._taskBerry.Context.UserInfos.Any(info => info.UserId == userEntity.Id))
+            {
+                return this.BadRequest($"User with the email {email} already exists.");
+            }
+
+            using (MD5CryptoServiceProvider cryptoProvider = new MD5CryptoServiceProvider())
+            {
+                byte[] bytes = cryptoProvider.ComputeHash(Encoding.ASCII.GetBytes(password));
+                string hashedPassword = Encoding.ASCII.GetString(bytes);
+
+                UserInfoEntity entity = new UserInfoEntity
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userEntity.Id,
+                    Password = hashedPassword
+                };
+
+                this._taskBerry.Context.UserInfos.Add(entity);
+                this._taskBerry.Context.SaveChanges();
+            }
+
+            return this.Ok($"Successfully registered {email}.");
         }
 
         /// <summary>
