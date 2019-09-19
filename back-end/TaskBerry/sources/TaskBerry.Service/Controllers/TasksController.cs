@@ -152,6 +152,13 @@
             }
 
             // Check if user is in the group where the task is located at.
+            IEnumerable<GroupAssignmentEntity> assignmentEntities = this._taskBerry.Context.GroupAssignments;
+
+            Guid groupId = Guid.Parse(taskEntity.OwnerId);
+            if (!assignmentEntities.Any(assignment => assignment.GroupId == groupId && assignment.UserId == user))
+            {
+                return this.BadRequest("User is not part of the group.");
+            }
 
             taskEntity.AssigneeId = user;
 
