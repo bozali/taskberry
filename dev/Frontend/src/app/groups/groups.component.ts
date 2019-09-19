@@ -193,9 +193,8 @@ export class GroupsComponent implements OnInit {
     editComponent.name = groupName;
     editComponent.description = groupDescription;
 
-    modal.onClose.subscribe(result =>  result &&
-          this.UpdateGroupChanges(editComponent.id, editComponent.name, editComponent.description)
-      );
+    modal.onClose.subscribe(result => result &&
+          this.UpdateGroupChanges(editComponent.id, result.name, result.description));
   }
 
   public async UpdateGroupChanges(groupId: string, groupName: string, groupDescription: string) {
@@ -210,8 +209,16 @@ export class GroupsComponent implements OnInit {
     if (updatedGroup !== undefined) {
     // Update Grid properly
 
-    // Add received Group to Grid data
-      // this.AddGroupToTable(newGroup);
+      // Update Group Properties
+      const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
+
+      if (groupIndex !== -1) {
+        this.data[groupIndex].data.name = groupName;
+        this.data[groupIndex].data.description = groupDescription;
+
+        // Update Grid (reinstantiate)
+        this.dataSource = this.dataSourceBuilder.create(this.data);
+      }
     }
   }
 

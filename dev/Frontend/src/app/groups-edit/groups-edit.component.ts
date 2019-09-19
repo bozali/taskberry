@@ -34,7 +34,7 @@ export class GroupsEditComponent {
   public EditGroup() {
     if (!isNullOrUndefined(this.id) && !isNullOrUndefined(this.name))
     {
-      this.dialogRef.close();
+      this.dialogRef.close({name: this.name, description: this.description});
     }
   }
 
