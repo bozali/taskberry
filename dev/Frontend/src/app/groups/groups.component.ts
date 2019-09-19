@@ -2,11 +2,11 @@ import { Component, OnInit, NgModule, TemplateRef } from '@angular/core';
 import { GroupsViewModel, GroupViewModel } from '../models/GroupsViewModel';
 import { NbTreeGridModule, NbIconModule, NbButtonModule, NbTooltipModule, NbDialogService,
    NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder, NbTreeGridDataSource, NbToastrService } from '@nebular/theme';
-import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
-import { GroupsService, Group, User } from '../api';
-import { group } from '@angular/animations';
+import { Group, GroupsService, User, UsersService } from '../api';
+import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
 
 interface TreeNode<T> {
   data: T;
@@ -39,6 +39,7 @@ interface FSEntry {
     NbDialogService
   ]
 })
+
 export class GroupsComponent implements OnInit {
   groupsViewModel: GroupsViewModel;
   loaded = false;
@@ -63,6 +64,7 @@ export class GroupsComponent implements OnInit {
   // Tabelle
   customColumn = 'Gruppen / Mitglieder Name';
   defaultColumns = [ 'Beschreibung', 'Aktionen'];
+  selectedGroupId = '';
 
   allColumns = [ this.customColumn, ...this.defaultColumns];
 
@@ -83,7 +85,8 @@ export class GroupsComponent implements OnInit {
     ]
   }*/];
 
-  constructor(private dialogService: NbDialogService, private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+  constructor(private usersService: UsersService, private dialogService: NbDialogService,
+              private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private toastrService: NbToastrService, private groupsService: GroupsService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -122,8 +125,17 @@ export class GroupsComponent implements OnInit {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  public DeleteUserFromGroup(groupId: string, userId: number) {
+  public async DeleteUserFromGroup(groupId: string, userId: number) {
     // Add HttpDelete
+    const usaf = new Array<number>();
+    usaf.push(userId);
+    const freshGroup = await this.groupsService.removeUsersFromGroup(usaf, groupId).toPromise();
+
+    if (freshGroup == null || freshGroup == undefined) {
+      this.toastrService.show('Aus technischen Gründen, kann der User grade nicht entfernt werden.',
+      'Mitglied konnte nicht entfernt werden.');
+      return;
+    }
 
     // Remove from Grid
     const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.groupId === '-1' && w.data.type === 1);
@@ -143,86 +155,163 @@ export class GroupsComponent implements OnInit {
     }
   }
 
-  public DeleteGroup(groupId: string) {
-    // Add HttpDelete
+  public async DeleteGroup(groupId: string) {
 
-    //Remove From Grid
-    const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
-    let groupName: string = "";
+    const resultText = await this.groupsService.deleteGroup(groupId).toPromise();
 
-    if(groupIndex !== -1) {
-      groupName = this.data[groupIndex].data.name;
-      this.data.splice(groupIndex, 1);
+    if (resultText != undefined || resultText != null) {
 
-      // Update Grid (reinstantiate)
-      this.dataSource = this.dataSourceBuilder.create(this.data);
+      // Remove From Grid
+      const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
+      let groupName = '';
 
-      // Return proper status message
-      this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
-      'Gruppe erfolgreich entfernt.');
+      if (groupIndex !== -1) {
+        groupName = this.data[groupIndex].data.name;
+        this.data.splice(groupIndex, 1);
+
+        // Update Grid (reinstantiate)
+        this.dataSource = this.dataSourceBuilder.create(this.data);
+      }
     }
+
+    this.toastrService.show(resultText);
   }
 
   public ShowAddGroupWindow() {
-    let modal = this.dialogService.open(GroupsAddComponent,
+    const modal = this.dialogService.open(GroupsAddComponent,
       { hasBackdrop: true, closeOnBackdropClick: true  })
         .onClose.subscribe(result =>  result && this.AddNewGroup(result.groupName, result.groupDescription));
   }
 
-  public ShowAddUserWindow(dialog: TemplateRef<any>) {
-    this.dialogService.open(GroupsAddUserComponent, { hasBackdrop: true, closeOnBackdropClick: true  })
-    .onClose.subscribe(s=> s && s.forEach((user: number) => {
-      // Get User from DB?
-      this.AddUserToGroup('1', user, 'Peter'); // replace with group Id (get everything from userId)
+
+  public ShowEditGroupWindow(groupId: string, groupName: string, groupDescription: string) {
+    const modal = this.dialogService.open(GroupsEditComponent,
+      { hasBackdrop: true, closeOnBackdropClick: true  });
+
+    const editComponent = modal.componentRef.instance;
+    editComponent.id = groupId;
+    editComponent.name = groupName;
+    editComponent.description = groupDescription;
+
+    modal.onClose.subscribe(result => result &&
+          this.UpdateGroupChanges(editComponent.id, result.name, result.description));
+  }
+
+  public async UpdateGroupChanges(groupId: string, groupName: string, groupDescription: string) {
+    const group: Group = {
+      id: groupId,
+      name: groupName,
+      description: groupDescription
+    };
+
+    const updatedGroup = await this.groupsService.editGroup(group).toPromise();
+
+    if (updatedGroup !== undefined) {
+    // Update Grid properly
+
+      // Update Group Properties
+      const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.type === 1);
+
+      if (groupIndex !== -1) {
+        this.data[groupIndex].data.name = groupName;
+        this.data[groupIndex].data.description = groupDescription;
+
         // Update Grid (reinstantiate)
-      this.dataSource = this.dataSourceBuilder.create(this.data);
-    }));
+        this.dataSource = this.dataSourceBuilder.create(this.data);
+      }
+    }
+  }
+
+  public ShowAddUserWindow(groupId: string) {
+    this.selectedGroupId = groupId;
+    this.dialogService.open(GroupsAddUserComponent, { hasBackdrop: true, closeOnBackdropClick: true  })
+    .onClose.subscribe(users => this.layer(this.selectedGroupId, users));
 
 
   }
 
-  public AddUserToGroup(groupIdt: string, userId: number, userName: string) {
-    let usersToAddToGroup: TreeNode<FSEntry> =
-      {
-        data: { id: userId.toString(), groupId: groupIdt, name: userName, description: '', type: 2},
-        children: [ ]
-      };
+  public layer(groupIdt: string, users: User[]) {
+    if (this.selectedGroupId !== '') {
+      this.AddUsersToGroup(this.selectedGroupId, users);
+
+    }
+  }
+
+  public async AddUsersToGroup(groupIdt: string, users: User[]) {
+
       // Add HTTP POST
 
-    // Add received Group to Grid
-    const groupIndex = this.data.findIndex(w => w.data.id === groupIdt && w.data.groupId === '-1' && w.data.type === 1);
-    if(groupIndex !== -1) {
-      const userIndex = this.data[groupIndex].children.findIndex(w => w.data.id === userId.toString() && w.data.type === 2);
+       const userIds = new Array();
+
+       users.forEach(us => {
+        userIds.push(us.id);
+      });
+
+       const groupe = await this.groupsService.assignUsersToGroup(userIds, groupIdt).toPromise();
+
+       if (groupe == null || groupe === undefined) {
+        return;
+    }
+
+       users.forEach(user => {
+
+      const usersToAddToGroup: TreeNode<FSEntry> = {
+        data: { id: user.id.toString(), groupId: groupIdt, name: user.lastName + ' ' + user.firstName, description: '', type: 2},
+        children: [ ]
+      };
+
+      // Add received Group to Grid
+      const groupIndex = this.data.findIndex(w => w.data.id === groupIdt && w.data.groupId === '-1' && w.data.type === 1);
+      if (groupIndex !== -1) {
+      const userIndex = this.data[groupIndex].children.findIndex(w => w.data.id === user.id.toString() && w.data.type === 2);
       if (userIndex !== -1) {
         // User ist bereits in dieser Gruppe
       } else {
         this.data[groupIndex].children.push(usersToAddToGroup);
      }
     }
+    });
+       this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   public async AddNewGroup(groupName: string, groupDescription: string) {
     // Add HTTP POST
-    let group: Group = {
+    const group: Group = {
       name: groupName,
-      description:groupDescription
+      description: groupDescription
     };
 
     const newGroup = await this.groupsService.createGroup(group).toPromise();
 
-    if(newGroup !== undefined) {
+    if (newGroup !== undefined) {
     // Add received Group to Grid data
       this.AddGroupToTable(newGroup);
     }
   }
 
-  public AddGroupToTable(group : Group) {
+  public async AddGroupToTable(group: Group) {
         // Add received Group to Grid data
-        let groupToAddToViewTable: TreeNode<FSEntry> =
-        {
+        const groupToAddToViewTable: TreeNode<FSEntry> = {
           data: { id: group.id, groupId: '-1', name: group.name, description: group.description, type: 1},
           children: [ ]
         };
+
+        const usersInGroup = await this.usersService.getUsersByGroupId(group.id).toPromise();
+
+        if (usersInGroup != null) {
+        usersInGroup.forEach(member => {
+          // Prevent Dublicates in Table (not in database)
+          const userIndex = groupToAddToViewTable.children.findIndex(w => w.data.type === 2 && w.data.id === member.id.toString());
+          if (userIndex === -1) {
+            const userToAddToGroup: TreeNode<FSEntry> = {
+              data: { id: member.id.toString(), groupId: group.id,
+                 name: member.lastName + ' ' + member.firstName, description: '', type: 2},
+              children: [ ]
+            };
+            groupToAddToViewTable.children.push(userToAddToGroup);
+        }
+        });
+        }
         this.data.push(groupToAddToViewTable);
         // Update Grid (reinstantiate)
         this.dataSource = this.dataSourceBuilder.create(this.data);

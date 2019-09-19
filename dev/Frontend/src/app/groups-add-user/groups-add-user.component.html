@@ -4,7 +4,8 @@
   </nb-card-header>
   <nb-card-body>
       <nb-select [(selected)]="this.selectedClass" placeholder="Klasse auswählen">
-          <nb-option value="FS 174">FS 174</nb-option>
+
+         <nb-option value="FS 174">FS 174</nb-option>
           <nb-option value="FS 175">FS 175</nb-option>
           <nb-option value="FST 174">FST 174</nb-option>
           <nb-option value="FIS 176">FIS 176</nb-option>
@@ -23,7 +24,8 @@ Benutzer auswählen
     <nb-card-body>
 
       <nb-select [(selected)]="this.selectedUser" multiple placeholder="Schüler auswählen">
-          <nb-option value="11">Ali Bozna</nb-option>
+      <nb-option *ngFor="let user of this.allUser" value='{{user.id}}'>{{user.lastName + ' ' + user.firstName}}</nb-option>
+          <!--<nb-option value="11">Ali Bozna</nb-option>
           <nb-option value="22">Alfredo Pommelonie</nb-option>
           <nb-option value="33">Paul Panzer</nb-option>
           <nb-option value="44">2pac</nb-option>
@@ -31,7 +33,7 @@ Benutzer auswählen
           <nb-option value="36">Paul Panzer</nb-option>
           <nb-option value="47">2pac</nb-option>
           <nb-option value="58">Big Fat Fish</nb-option>
-          <nb-option value="69">Paul Panzer</nb-option>
+          <nb-option value="69">Paul Panzer</nb-option>-->
       </nb-select>
       <button style="margin-left:10px;" (click)="this.AddSelectedUserToGroup()" nbButton status="primary">zur Gruppe Hinzufügen</button>
     </nb-card-body>

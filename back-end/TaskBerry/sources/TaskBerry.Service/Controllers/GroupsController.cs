@@ -147,7 +147,7 @@
         /// <param name="groupId"></param>
         /// <returns></returns>
         [Authorize(Roles = Roles.Admin)]
-        [HttpDelete("/api/groups/remove-user-from-group")]
+        [HttpPost("/api/groups/remove-user-from-group")]
         [Produces("application/json")]
         public ActionResult<Group> RemoveUsersFromGroup(int[] users, Guid groupId)
         {

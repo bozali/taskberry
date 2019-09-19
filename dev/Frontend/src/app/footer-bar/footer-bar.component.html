@@ -1,10 +1,10 @@
     <!-- Footer -->
     <nb-layout-column>
-      <nb-tabset>
-        <nb-tab tabTitle="Impressum">
+      <nb-tabset (changeTab)="SelectedTabChanged($event.tabTitle)">
+        <nb-tab tabTitle="Impressum" tabIcon="archive" active="this.imprintSelected">
 
         </nb-tab>
-        <nb-tab tabTitle="Datenschutzerklärung">
+        <nb-tab tabTitle="Datenschutzerklärung" tabIcon="archive" active="this.privacyPolicySelected">
 
         </nb-tab>
        </nb-tabset>

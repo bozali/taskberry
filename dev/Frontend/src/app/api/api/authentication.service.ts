@@ -124,15 +124,15 @@ export class AuthenticationService {
         let headers = this.defaultHeaders;
 
         // authentication (Bearer) required
-        if (this.configuration.apiKeys['Authorization']) {
+       /* if (this.configuration.apiKeys['Authorization']) {
             headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
-        }
+        }*/
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
             'application/json',
         ];
-        
+
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
@@ -142,7 +142,7 @@ export class AuthenticationService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<any>(`${this.basePath}/api/authentication/logout`,
+        return this.httpClient.post<any>(`${this.basePath}/api/authentication/logout`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

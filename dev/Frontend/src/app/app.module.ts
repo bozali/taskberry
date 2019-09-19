@@ -17,13 +17,23 @@ import { LoginComponent } from './login/login.component';
 import { GroupsAddComponent } from './groups-add/groups-add.component';
 import { AuthGuardGuard } from './auth-guard.guard';
 import { JwtModule, JwtModuleOptions } from '@auth0/angular-jwt';
-import { AuthenticationService, GroupsService } from './api';
+import { AuthenticationService, GroupsService, UsersService } from './api';
+import { GroupsEditComponent } from './groups-edit/groups-edit.component';
+import { DashboardMyBoardComponent } from './dashboard-my-board/dashboard-my-board.component';
+import { DashboardGroupBoardsComponent } from './dashboard-group-boards/dashboard-group-boards.component';
+import { DashboardGroupBoardComponent } from './dashboard-group-board/dashboard-group-board.component';
+import { BlankComponent } from './blank/blank.component';
+import { UserLogoutComponent } from './user-logout/user-logout.component';
 
+
+export function getToken() {
+  return localStorage.getItem('token');
+}
 
 // tslint:disable-next-line: variable-name
 const JWT_Module_Options: JwtModuleOptions = {
   config: {
-      // tokenGetter: yourTokenGetter,
+    tokenGetter: getToken
       // whitelistedDomains: yourWhitelistedDomains
   }
 };
@@ -38,8 +48,14 @@ const JWT_Module_Options: JwtModuleOptions = {
     GroupsAddUserComponent,
     LoginComponent,
     GroupsAddComponent,
+    GroupsEditComponent,
+    DashboardMyBoardComponent,
+    DashboardGroupBoardsComponent,
+    DashboardGroupBoardComponent,
+    BlankComponent,
+    UserLogoutComponent,
   ],
-  entryComponents: [GroupsAddUserComponent, LoginComponent, GroupsAddComponent],
+  entryComponents: [GroupsAddUserComponent, LoginComponent, GroupsAddComponent, GroupsEditComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -65,7 +81,8 @@ const JWT_Module_Options: JwtModuleOptions = {
   providers: [
       AuthGuardGuard,
       AuthenticationService,
-      GroupsService
+      GroupsService,
+      UsersService
     //{
       // provide: BASE_PATH, useValue: 'http://localhost:50352/v2',
     //},

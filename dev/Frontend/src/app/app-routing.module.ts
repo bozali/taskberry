@@ -5,6 +5,7 @@ import { GroupsComponent } from './groups/groups.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardGuard } from './auth-guard.guard';
 import { NbDialogRef } from '@nebular/theme';
+import { BlankComponent } from './blank/blank.component';
 
 
 const routes: Routes = [
@@ -27,8 +28,12 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'blank',
+    component: BlankComponent
+  },
+  {
     path: '**',
-    redirectTo: ''
+    component: BlankComponent
   },
 
 ];

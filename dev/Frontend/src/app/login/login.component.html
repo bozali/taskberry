@@ -4,13 +4,15 @@
     </nb-card-header>
     <nb-card-body>
             <div style="margin-bottom: 10px; text-align:left;">
-                Benutzername oder E-Mail<span style="color:lightblue;">*</span>
+                Benutzername oder E-Mail<span style="color:red;">*</span>
             </div>
-        <input  type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Moodle Benutzername" status="danger">
+        <input  type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Moodle E-Mail" status="danger">
         <br/>
-        <!--<input type="password" placeholder="Passwort"> NOT REQUIRED LUL -->
+        <div *ngIf="this.PasswordFieldVisible" style="margin-bottom: 10px; margin-top: 10px; text-align:left;">
+          Passwort<span style="color:red;">*</span>
+      </div>
+        <input *ngIf="this.PasswordFieldVisible" type="password" placeholder="Passwort" (input)="this.Password = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Passwort..." status="danger" style="margin-bottom: 10px;">
         <br/>
         <button nbButton status="primary" (click)="this.Login();">Einloggen</button>
-        <!--<p>Anmelden als: {{this.Username}}!</p> -->
     </nb-card-body>
 </nb-card>

@@ -4,7 +4,11 @@
         <button style="float: right;" (click)="this.ShowAddGroupWindow()" nbButton status="primary">Gruppe hinzufügen</button>
 
     </nb-card-header>
-    <nb-card-body>
+<nb-card-body>
+
+    <div *ngIf="!this.loaded">
+      Lade Gruppen....
+    </div>
 
 <div *ngIf="this.loaded">
 <div>
@@ -39,7 +43,7 @@
           <td nbTreeGridCell *nbTreeGridCellDef="let row">
             <div *ngIf="row.data.type == 2 && column == 'Aktionen'">
               <!-- Benutzer Interaktionsbuttons -->
-                <span class="hoverCursorInteract" (click)="this.DeleteUserFromGroup(row.data.groupId, row.data.id);">
+                <span class="hoverCursorInteract" (click)="this.DeleteUserFromGroup(row.data.groupId, row.data.id)">
                   <fa-icon  [icon]="this.deleteUserIcon" nbTooltipStatus="danger" nbTooltip="Benutzer aus Gruppe entfernen" alt="Benutzer aus Gruppe entfernen"></fa-icon>
                   </span>
             </div>
@@ -50,15 +54,11 @@
             <div *ngIf="row.data.type == 1 && column == 'Aktionen'" >
               <!-- Gruppen Interaktionsbuttons -->
               <span class="hoverCursorInteract">
-                <fa-icon [icon]="this.trashIcon" (click)="this.DeleteGroup(row.data.id)" nbTooltipStatus="danger" nbTooltip="Gruppe löschen" alt="Gruppe löschen"></fa-icon>
-              </span>
+                <fa-icon [icon]="this.trashIcon" (click)="this.DeleteUserFromGroup(row.data.id)" nbTooltipStatus="danger" nbTooltip="Gruppe löschen" alt="Gruppe löschen"></fa-icon>
 
-              <span class="hoverCursorInteract">
-                <fa-icon [icon]="this.addUserIcon" (click)="this.ShowAddUserWindow()" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Benutzer der Gruppe hinzufügen" alt="Benutzer der Gruppe hinzufügen"></fa-icon>
-              </span>
+                <fa-icon [icon]="this.addUserIcon" (click)="this.ShowAddUserWindow(row.data.id)" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Benutzer der Gruppe hinzufügen" alt="Benutzer der Gruppe hinzufügen"></fa-icon>
 
-              <span class="hoverCursorInteract">
-               <!-- <fa-icon [icon]="this.editGroupIcon" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Gruppe bearbeiten" alt="Gruppe bearbeiten"></fa-icon>-->
+                <fa-icon [icon]="this.editGroupIcon" (click)="this.ShowEditGroupWindow(row.data.id, row.data.name, row.data.description)" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Gruppe bearbeiten" alt="Gruppe bearbeiten"></fa-icon>
               </span>
               </div>
 

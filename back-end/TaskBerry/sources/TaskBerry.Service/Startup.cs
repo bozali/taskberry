@@ -1,6 +1,4 @@
-﻿using TaskBerry.Business.Services;
-
-namespace TaskBerry.Service
+﻿namespace TaskBerry.Service
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
@@ -23,6 +21,7 @@ namespace TaskBerry.Service
     using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
+    using TaskBerry.Business.Services;
 
 
     /// <summary>
@@ -45,7 +44,7 @@ namespace TaskBerry.Service
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.Configure<TokenConfiguration>(this.Configuration.GetSection("TokenConfiguration"));
-
+            
             TokenConfiguration tokenConfiguration = this.Configuration.GetSection("TokenConfiguration").Get<TokenConfiguration>();
 
             services
@@ -73,7 +72,7 @@ namespace TaskBerry.Service
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
                 .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
-                .AddSingleton<IGroupsService, GroupsService>()
+                .AddScoped<IGroupsService, GroupsService>()
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
 
             // TODO Use automapper c#
