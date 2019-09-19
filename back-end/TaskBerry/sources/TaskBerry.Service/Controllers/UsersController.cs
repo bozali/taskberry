@@ -74,15 +74,11 @@
         [Authorize]
         [HttpGet("/api/users/users-by-group/{groupId:guid}")]
         [Produces("application/json")]
-        public ActionResult<IEnumerable<User>> GetUsersByGroupId(Guid groupId)
+        public ActionResult<User[]> GetUsersByGroupId(Guid groupId)
         {
-            IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsersByGroupId(groupId);
-            List<User> users = new List<User>();
+            IEnumerable<User> entities = this._taskBerry.UsersRepository.GetUsersByGroupId(groupId);
 
-            foreach (var user in entities)
-                users.Add(user.ToModel());
-
-            return this.Ok(users.ToArray());
+            return this.Ok(entities.ToArray());
         }
 
         /// <summary>

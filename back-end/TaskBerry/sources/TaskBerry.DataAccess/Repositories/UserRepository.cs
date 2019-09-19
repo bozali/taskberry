@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System;
-
+    using TaskBerry.Data.Models;
 
     public class UserRepository : RepositoryBase, IUserRepository
     {
@@ -24,11 +24,17 @@
             return this.TaskBerry.Context.Users.FirstOrDefault(user => user.Id == id);
         }
 
-        public IEnumerable<UserEntity> GetUsersByGroupId(Guid groupId)
+        public IEnumerable<User> GetUsersByGroupId(Guid groupId)
         {
-            IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.GroupId == groupId);
-
-            return assignments.Select(entity => this.TaskBerry.Context.Users.FirstOrDefault());
+            List<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.GroupId == groupId).Distinct().ToList();
+            List<User> usersToAdd = new List<User>();
+            foreach (var assignment in assignments)
+                if(this.TaskBerry.Context.Users.Any(w=> w.Id == assignment.UserId))
+                {
+                    var assignedUser = this.TaskBerry.Context.Users.SingleOrDefault(w => w.Id == assignment.UserId);
+                    usersToAdd.Add(assignedUser.ToModel());
+                }
+            return usersToAdd;
         }
     }
 }

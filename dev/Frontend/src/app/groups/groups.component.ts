@@ -6,7 +6,6 @@ import { faTrash, faUserPlus, faUserTie, faUserAltSlash, faUsers, faEdit, faUser
 import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.component';
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
 import { Group, GroupsService, User, UsersService } from '../api';
-import { group } from '@angular/animations';
 import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
 
 interface TreeNode<T> {
@@ -40,6 +39,7 @@ interface FSEntry {
     NbDialogService
   ]
 })
+
 export class GroupsComponent implements OnInit {
   groupsViewModel: GroupsViewModel;
   loaded = false;
@@ -125,8 +125,17 @@ export class GroupsComponent implements OnInit {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  public DeleteUserFromGroup(groupId: string, userId: number) {
+  public async DeleteUserFromGroup(groupId: string, userId: number) {
     // Add HttpDelete
+    const usaf = new Array<number>();
+    usaf.push(userId);
+    const freshGroup = await this.groupsService.removeUsersFromGroup(usaf, groupId).toPromise();
+
+    if (freshGroup == null || freshGroup == undefined) {
+      this.toastrService.show('Aus technischen Gründen, kann der User grade nicht entfernt werden.',
+      'Mitglied konnte nicht entfernt werden.');
+      return;
+    }
 
     // Remove from Grid
     const groupIndex = this.data.findIndex(w => w.data.id === groupId && w.data.groupId === '-1' && w.data.type === 1);
@@ -147,7 +156,7 @@ export class GroupsComponent implements OnInit {
   }
 
   public async DeleteGroup(groupId: string) {
-    // Add HttpDelete
+
     const resultText = await this.groupsService.deleteGroup(groupId).toPromise();
 
     if (resultText != undefined || resultText != null) {
@@ -162,11 +171,6 @@ export class GroupsComponent implements OnInit {
 
         // Update Grid (reinstantiate)
         this.dataSource = this.dataSourceBuilder.create(this.data);
-
-        // Return proper status message
-
-        // this.toastrService.show('Du hast erfolgreich die Gruppe ' + groupName + ' entfernt.',
-        // 'Gruppe erfolgreich entfernt.');
       }
     }
 

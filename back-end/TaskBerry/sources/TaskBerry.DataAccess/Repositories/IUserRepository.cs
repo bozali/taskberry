@@ -4,7 +4,7 @@
     using System;
 
     using TaskBerry.Data.Entities;
-
+    using TaskBerry.Data.Models;
 
     public interface IUserRepository
     {
@@ -12,6 +12,6 @@
 
         UserEntity GetUserById(int id);
 
-        IEnumerable<UserEntity> GetUsersByGroupId(Guid groupId);
+        IEnumerable<User> GetUsersByGroupId(Guid groupId);
     }
 }
