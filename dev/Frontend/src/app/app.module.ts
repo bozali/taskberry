@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbInputModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbInputModule, NbAccordionModule, NbIconModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FooterBarComponent } from './footer-bar/footer-bar.component';
@@ -24,7 +24,7 @@ import { DashboardGroupBoardsComponent } from './dashboard-group-boards/dashboar
 import { DashboardGroupBoardComponent } from './dashboard-group-board/dashboard-group-board.component';
 import { BlankComponent } from './blank/blank.component';
 import { UserLogoutComponent } from './user-logout/user-logout.component';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 export function getToken() {
   return localStorage.getItem('token');
@@ -53,7 +53,7 @@ const JWT_Module_Options: JwtModuleOptions = {
     DashboardGroupBoardsComponent,
     DashboardGroupBoardComponent,
     BlankComponent,
-    UserLogoutComponent,
+    UserLogoutComponent
   ],
   entryComponents: [GroupsAddUserComponent, LoginComponent, GroupsAddComponent, GroupsEditComponent],
   imports: [
@@ -77,6 +77,9 @@ const JWT_Module_Options: JwtModuleOptions = {
     NbSelectModule,
     NbInputModule,
     JwtModule.forRoot(JWT_Module_Options),
+    DragDropModule,
+    NbAccordionModule,
+    NbIconModule
   ],
   providers: [
       AuthGuardGuard,

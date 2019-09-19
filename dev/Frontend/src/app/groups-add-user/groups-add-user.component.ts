@@ -52,7 +52,7 @@ public ResetClassSelected()
 public AddSelectedUserToGroup() {
   const toastRef: NbToastRef = this.toastrService.show('Du hast erfolgreich die Schüler zur Gruppe hinzugefügt.', 'Benutzer hinzugefügt');
 
-  let usersToAdd = new Array();
+  const usersToAdd = new Array();
 
   this.selectedUser.forEach(usra => {
     let userIndex = this.allUser.findIndex(w => w.id.toString() === usra);

@@ -1,1 +1,110 @@
-<p>dashboard-my-board works!</p>
+
+<div id="tasksBoard">
+
+  <nb-accordion multi>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          <h4 class="tasksGroupHeader">
+            Meine Aufgaben <fa-icon style="float:right; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon></h4>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+        <div class="example-container">
+            <h4 class="taskHeader">OFFEN<fa-icon style="float:right; margin-right:25px;" [icon]="this.openTasksHeaderIcon"></fa-icon></h4>
+            <div
+              id="all"
+              cdkDropList
+              [cdkDropListData]="all"
+              cdkDropListConnectedTo="even"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListEnterPredicate]="noReturnPredicate">
+              <div
+                class="example-box"
+                *ngFor="let number of all"
+                [cdkDragData]="number"
+                cdkDrag>
+                <!-- TASK -->
+                <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
+                <hr>
+                Beschreibung der Aufgabe
+
+              </div>
+              <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
+                  <button (click)="AddTask()" fullWidth nbButton status="primary">
+                      <nb-icon icon="plus-outline"></nb-icon>
+                      Aufgabe hinzufügen
+                      </button>
+              </div>
+            </div>
+        </div>
+          <div class="example-container">
+            <h4 class="taskHeader">IN ARBEIT <fa-icon style="float:right; margin-right:25px;" [icon]="this.inProgressHeaderIcon"></fa-icon></h4>
+            <div
+              id="even"
+              cdkDropList
+              [cdkDropListData]="even"
+              cdkDropListConnectedTo="all"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListEnterPredicate]="noReturnPredicate">
+              <div
+                class="example-box"
+                *ngFor="let number of even"
+                [cdkDragData]="number"
+                cdkDrag>
+                <!-- TASK -->
+                <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Benutzer aus Gruppe entfernen"></fa-icon></div>
+                <hr>
+                Beschreibung der Aufgabe
+
+              </div>
+              <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
+                  <button (click)="AddTask()" fullWidth nbButton status="primary">
+                      <nb-icon icon="plus-outline"></nb-icon>
+                      Aufgabe hinzufügen
+                      </button>
+              </div>
+            </div>
+            </div>
+            <div class="example-container">
+                <h4 class="taskHeader">FERTIG <fa-icon style="float:right; margin-right:25px;" [icon]="this.doneHeaderIcon"></fa-icon></h4>
+            <div
+            id="even3"
+            cdkDropList
+            [cdkDropListData]="even3"
+            [cdkDropListConnectedTo]="all"
+            class="example-list"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListEnterPredicate]="noReturnPredicate">
+            <div
+              class="example-box"
+              *ngFor="let number of even3"
+              [cdkDragData]="number"
+              cdkDrag>
+              <!-- TASK -->
+              <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Benutzer aus Gruppe entfernen"></fa-icon></div>
+              <hr>
+              Beschreibung der Aufgabe
+            </div>
+            <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
+                <button (click)="AddTask()" fullWidth nbButton status="primary">
+                    <nb-icon icon="plus-outline"></nb-icon>
+                    Aufgabe hinzufügen
+                    </button>
+            </div>
+          </div>
+</div>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+
+      <!-- Foreach Group from User -->
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          <h4 class="tasksGroupHeader">Gruppen</h4>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          Group Task Board
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+
+    </nb-accordion>
