@@ -14,6 +14,7 @@
         [ForeignKey("User")]
         public int UserId { get; set; }
 
+        [MaxLength(36)]
         [ForeignKey("Group")]
         public Guid GroupId { get; set; }
 

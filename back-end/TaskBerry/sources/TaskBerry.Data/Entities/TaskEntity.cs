@@ -23,6 +23,7 @@
         /// <summary>
         /// Title of the task.
         /// </summary>
+        [MaxLength(96)]
         public string Title { get; set; }
 
         /// <summary>
@@ -44,6 +45,7 @@
         /// <summary>
         /// The owner of a task can be user or a group.
         /// </summary>
+        [MaxLength(36)]
         public string OwnerId { get; set; }
 
         /// <summary>
