@@ -14,6 +14,7 @@
 
 
     /// <summary>
+    /// Controller for task functions.
     /// </summary>
     [ApiController]
     [Route("/api/tasks")]
@@ -22,6 +23,7 @@
         private readonly ITaskBerryUnitOfWork _taskBerry;
 
         /// <summary>
+        /// Constructor.
         /// </summary>
         public TasksController(ITaskBerryUnitOfWork taskBerry)
         {
@@ -29,12 +31,18 @@
         }
 
         /// <summary>
+        /// Moves a task to a new status or/and row.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="taskId"></param>
+        /// <param name="status">The new status of the task. Can be null.</param>
+        /// <param name="row">The new row of the task. Can be null.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="404">Task could not be found.</response>
+        /// <response code="200">Successfully moved the task.</response>
         [Authorize]
         [HttpPost("/api/tasks/move")]
         [Produces("application/json")]
-        public IActionResult MoveTask(Guid taskId, TaskStatus status, int row)
+        public IActionResult MoveTask(Guid taskId, TaskStatus? status, int? row)
         {
             // TODO Check if the user has access rights to edit the task
 
@@ -45,25 +53,26 @@
                 return this.NotFound($"Could not fnd {taskId}.");
             }
 
-            taskEntity.Row = row;
+            taskEntity.Status = status ?? taskEntity.Status;
+            taskEntity.Row = row ?? taskEntity.Row;
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok();
+            return this.Ok("Successfully moved the task.");
         }
 
         /// <summary>
+        /// Gets all the users tasks of the current user.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>This does not return the tasks that are assigned to the user. This methods
+        /// returns the tasks where the user is the owner of the task.
+        /// </remarks>
+        /// <returns>Returns user tasks of the current user.</returns>
+        /// <response code="200">Successfully got the user tasks of the current user.</response>
         [Authorize]
         [HttpGet("/api/tasks/current-user")]
         [Produces("application/json")]
         public ActionResult<IEnumerable<Task>> GetCurrentUserTasks()
         {
-            if (this.User == null)
-            {
-                return this.Forbid("No user is logged in.");
-            }
-
             IEnumerable<TaskEntity> userTasks = this._taskBerry.Context.Tasks.Where(t => t.Type == TaskType.User);
 
             int userId = int.Parse(this.User.Identity.Name);
@@ -73,9 +82,13 @@
         }
 
         /// <summary>
+        /// Gets all tasks from the group.
         /// </summary>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
+        /// <param name="groupId">The group id to get the tasks.</param>
+        /// <returns>Returns the tasks of the group.</returns>
+        /// <response code="404">Could not find the group.</response>
+        /// <response code="403">User is not member of the group.</response>
+        /// <response code="200">Successfully returned all the tasks from the group.</response>
         [Authorize]
         [HttpGet("/api/tasks/tasks-from-group")]
         [Produces("application/json")]
@@ -104,13 +117,17 @@
         }
 
         /// <summary>
+        /// Creates a new task.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="newTask">The new task.</param>
+        /// <returns>Returns the new created task.</returns>
+        /// <response code="200">Successfully created the task.</response>
         [Authorize]
         [HttpPost("/api/tasks/new")]
         [Produces("application/json")]
         public ActionResult<Task> CreateTask([FromBody] Task newTask)
         {
+            // TODO Check if the user is allowed to create the task at newTask.GroupId (OwnerId)
             // TODO Use automapper
             TaskEntity taskEntity = new TaskEntity
             {
@@ -132,8 +149,14 @@
         }
 
         /// <summary>
+        /// Assigns a task to a user.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="taskId">The task id.</param>
+        /// <param name="user">The user id.</param>
+        /// <returns>Returns the assigned task.</returns>
+        /// <response code="404">Could not find the task.</response>
+        /// <response code="200">Successfully assigned task to user.</response>
+        /// <response code="400">User is not part of the group or could not assign a user task to another user <see cref="TaskType.User"/>.</response>
         [Authorize]
         [HttpPost("/api/tasks/assign")]
         [Produces("application/json")]
@@ -168,9 +191,12 @@
         }
 
         /// <summary>
+        /// Deletes a task.
         /// </summary>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
+        /// <param name="taskId">The task id.</param>
+        /// <returns>Returns the result of the response.</returns>
+        /// <response code="404">Could not find the task.</response>
+        /// <response code="200">Successfully deleted the task.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("/api/tasks/delete")]
         public IActionResult DeleteTask(Guid taskId)

@@ -18,7 +18,7 @@
 
 
     /// <summary>
-    /// Users controller.
+    /// Controller for user functions.
     /// </summary>
     [ApiController]
     [Route("/api/users")]
@@ -36,12 +36,13 @@
         }
 
         /// <summary>
+        /// Get all users.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns all users.</returns>
+        /// <response code="200">Successfully returned all users.</response>
         [Authorize]
         [HttpGet("/api/users")]
         [Produces("application/json")]
-        [SwaggerResponse(200, "All users successfully returned.")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
             IEnumerable<UserEntity> entities = this._taskBerry.UsersRepository.GetUsers();
@@ -50,9 +51,12 @@
         }
 
         /// <summary>
+        /// Gets a user by id.
         /// </summary>
-        /// <param name="userid"></param>
-        /// <returns></returns>
+        /// <param name="userid">The user id.</param>
+        /// <returns>Returns a user.</returns>
+        /// <response code="404">User was not found.</response>
+        /// <response code="200">Successfully returned the user.</response>
         [Authorize]
         [HttpGet("/api/users/{userid:int}")]
         [Produces("application/json")]
@@ -71,8 +75,11 @@
         }
 
         /// <summary>
+        /// Gets users by the group id.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="groupId">The group id.</param>
+        /// <returns>Returns all users in a group.</returns>
+        /// <response code="200">Successfully returned the users.</response>
         [Authorize]
         [HttpGet("/api/users/users-by-group/{groupId:guid}")]
         [Produces("application/json")]
@@ -84,8 +91,10 @@
         }
 
         /// <summary>
+        /// Returns the current user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the current user.</returns>
+        /// <response code="200">Successfully returned the current user.</response>
         [Authorize]
         [HttpGet("/api/users/current-user")]
         [Produces("application/json")]
@@ -96,16 +105,17 @@
                 return this.NotFound("No user is not logged in.");
             }
 
-            // Query current user
+            // TODO Query current user
             User user = new User();
-
 
             return this.Ok(user);
         }
 
         /// <summary>
+        /// Gets all school classes.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns all school classes.</returns>
+        /// <response code="200">Successfully returned all school classes.</response>
         [Authorize]
         [HttpGet("/api/users/get-classes")]
         [Produces("application/json")]
@@ -115,9 +125,11 @@
         }
 
         /// <summary>
+        /// Gets all users in a school class.
         /// </summary>
-        /// <param name="schoolClass"></param>
-        /// <returns></returns>
+        /// <param name="schoolClass">The school class name.</param>
+        /// <returns>Returns all users in a school class.</returns>
+        /// <response code="200">Successfully returned the users in a school class.</response>
         [Authorize]
         [HttpGet("/api/users/get-users-in-class")]
         [Produces("application/json")]
@@ -127,9 +139,11 @@
         }
 
         /// <summary>
+        /// Checks if the user exists by email.
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
+        /// <param name="email">The email.</param>
+        /// <returns>Returns true if the user exists.</returns>
+        /// <response code="200">A boolean value as result.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("/api/users/user-exists")]
         [Produces("application/json")]
@@ -139,9 +153,12 @@
         }
 
         /// <summary>
+        /// Checks if the user is registered.
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
+        /// <param name="email">The email.</param>
+        /// <returns>Returns true if the user is registered.</returns>
+        /// <response code="200">Successfully returned the value.</response>
+        /// <response code="404">User with the email does not exist.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("/api/users/is-user-registered")]
         [Produces("application/json")]
@@ -158,8 +175,13 @@
         }
 
         /// <summary>
+        /// Changes a password of a user that is registered.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="email">The email.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="200">Successfully changed the password of the user.</response>
+        /// <response code="404">The user was not found or the user was not registered.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/users/change-password")]
         [Produces("application/json")]

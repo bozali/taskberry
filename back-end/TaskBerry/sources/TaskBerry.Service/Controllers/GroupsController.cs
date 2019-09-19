@@ -18,6 +18,7 @@
 
 
     /// <summary>
+    /// Controller for group functions.
     /// </summary>
     [ApiController]
     [Route("/api/groups")]
@@ -36,13 +37,14 @@
         }
 
         /// <summary>
+        /// Returns all groups in database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns all groups in database.</returns>
+        /// <response code="200">Successfully returned groups.</response>
+        /// <response code="403">User is not in the <see cref="Roles.Admin"/> to access the request.</response>
         [HttpGet("/api/groups")]
         [Authorize(Roles = Roles.Admin)]
         [Produces("application/json")]
-        [SwaggerResponse((int)HttpStatusCode.Forbidden, "")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Successfully returned models.")]
         public ActionResult<IEnumerable<Group>> GetGroups()
         {
             if (!this.User.IsInRole(Roles.Admin))
@@ -59,11 +61,11 @@
         /// Gets all groups of the current logged in user.
         /// </summary>
         /// <returns>Returns all groups of the current logged in user.</returns>
+        /// <response code="400">No user is logged in.</response>
+        /// <response code="200">Returns all groups of the current user.</response>
         [Authorize]
         [HttpGet("/api/groups/current-user-groups")]
         [Produces("application/json")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "No user is logged in.")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Returns all groups of the current user")]
         public ActionResult<IEnumerable<Group>> GetCurrentUserGroups()
         {
             if (this.User == null)
@@ -101,6 +103,7 @@
         /// <param name="group">New group to save in the database.</param>
         /// <returns>Returns the new created group.</returns>
         /// <remarks>For the property <see cref="Group.Members"/> only the ids of the user can be set.</remarks>
+        /// <response code="200">Created successfully the group and returned the result.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/groups/new")]
         [Produces("application/json")]
@@ -122,10 +125,13 @@
         }
 
         /// <summary>
+        /// Assigns a users to a specific group.
         /// </summary>
-        /// <param name="users"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
+        /// <param name="users">List of the user ids.</param>
+        /// <param name="groupId">The group where the users will be assigned to.</param>
+        /// <returns>Returns the group with the assigned users.</returns>
+        /// <response code="404">The group with the id could not be found.</response>
+        /// <response code="200">Successfully assigned the users to the group.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/groups/assign")]
         [Produces("application/json")]
@@ -142,10 +148,13 @@
         }
 
         /// <summary>
+        /// Removes users from a group.
         /// </summary>
-        /// <param name="users"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
+        /// <param name="users">List of user ids that will be removed from the group.</param>
+        /// <param name="groupId">The group id where the users will be removed.</param>
+        /// <returns>Returns the group with the removed users.</returns>
+        /// <response code="404">The group could not be found.</response>
+        /// <response code="200">Users were successfully removed from the group.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("/api/groups/remove-user-from-group")]
         [Produces("application/json")]
@@ -185,9 +194,12 @@
         }
 
         /// <summary>
+        /// Deletes a group.
         /// </summary>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
+        /// <param name="groupId">The group to delete.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="404">Could not find the group.</response>
+        /// <response code="200">Successfully deleted the group.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("/api/groups/delete")]
         [Produces("application/json")]
@@ -210,9 +222,13 @@
         }
 
         /// <summary>
+        /// Edits a group with its properties.
         /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
+        /// <remarks>Members will be just ignored.</remarks>
+        /// <param name="group">The edited group.</param>
+        /// <returns>Returns the edited group.</returns>
+        /// <response code="404">Group could not be found.</response>
+        /// <response code="200">Successfully edited the group.</response>
         [Authorize(Roles = Roles.Admin)]
         [HttpPatch("/api/groups/edit")]
         [Produces("application/json")]
