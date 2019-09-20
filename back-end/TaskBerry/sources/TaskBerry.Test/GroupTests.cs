@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace TaskBerry.Test
 {
     using TaskBerry.DataAccess.Repositories;
@@ -14,7 +12,10 @@ namespace TaskBerry.Test
     using Moq;
 
     using System.Collections.Generic;
+    using System.Linq;
     using System;
+
+    using AutoMapper;
 
 
     public class GroupTests
@@ -50,6 +51,18 @@ namespace TaskBerry.Test
             using (AutoMock mock = AutoMock.GetLoose())
             {
                 Mock<IGroupRepository> groupsRepositoryMock = mock.Mock<IGroupRepository>();
+                Mock<IMapper> mapperMock = mock.Mock<IMapper>();
+                mapperMock
+                    .Setup(x => x.Map<Group>(It.Is<GroupEntity>(p => p.Id == entities[0].Id)))
+                    .Returns(should[0]);
+
+                mapperMock
+                    .Setup(x => x.Map<Group>(It.Is<GroupEntity>(p => p.Id == entities[1].Id)))
+                    .Returns(should[1]);
+
+                mapperMock
+                    .Setup(x => x.Map<Group>(It.Is<GroupEntity>(p => p.Id == entities[2].Id)))
+                    .Returns(should[2]);
 
                 groupsRepositoryMock
                     .Setup(x => x.GetGroupAssignment(Guid.Parse("DFFB361C-3A4F-4761-8365-58EA22CCDA85")))
