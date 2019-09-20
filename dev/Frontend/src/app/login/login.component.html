@@ -1,18 +1,30 @@
-<nb-card>
+<nb-card status="primary">
     <nb-card-header>
-        Login
+        <div class="tasksGroupHeader" style="font-size:26px;">Login</div>
     </nb-card-header>
     <nb-card-body>
             <div style="margin-bottom: 10px; text-align:left;">
-                Benutzername oder E-Mail<span style="color:red;">*</span>
+                Moodle E-Mail<span style="color:red;">*</span>
             </div>
-        <input  type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Moodle E-Mail" status="danger">
+        <input style="margin-bottom:10px;" type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Email..." status="danger">
         <br/>
+        <span style="background-color:red;" class="notifcationText" *ngIf="!this.userExistInMoodle && this.userDidInput"> <!-- User doesn't Exists in Moodle Message -->
+          {{this.registerOrLoginText}}
+      </span>
+
         <div *ngIf="this.PasswordFieldVisible" style="margin-bottom: 10px; margin-top: 10px; text-align:left;">
-          Passwort<span style="color:red;">*</span>
-      </div>
-        <input *ngIf="this.PasswordFieldVisible" type="password" placeholder="Passwort" (input)="this.Password = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Passwort..." status="danger" style="margin-bottom: 10px;">
+            Passwort<span style="color:red;">*</span>
         <br/>
-        <button hero fullWidth nbButton status="primary" (click)="this.Login();">Einloggen</button>
+            <input *ngIf="this.PasswordFieldVisible" type="password" placeholder="Passwort" (input)="this.Password = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Passwort..." status="danger" style="margin-bottom: 7px; margin-top:10px;">
+            <span *ngIf="this.registerOrLoginText != ''" style="text-align: center; overflow:wrap; font-size:13px; ">
+                <span class="notifcationText" *ngIf="this.userExistInMoodle"> <!-- User Exists in Moodle Message -->
+                  {{this.registerOrLoginText}}
+                </span>
+            </span>
+            <span class="notifcationText" *ngIf="this.IsRegistered">
+                  {{this.registerOrLoginText}}
+            </span>
+        </div>
+        <button style="margin-top:10px;" hero fullWidth nbButton status="primary" (click)="this.Login();">Einloggen</button>
     </nb-card-body>
 </nb-card>

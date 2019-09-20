@@ -148,7 +148,7 @@
         /// <param name="email">The email.</param>
         /// <returns>Returns true if the user exists.</returns>
         /// <response code="200">A boolean value as result.</response>
-        [Authorize(Roles = Roles.Admin)]
+        //[Authorize(Roles = Roles.Admin)] 
         [HttpGet("/api/users/user-exists")]
         [Produces("application/json")]
         public ActionResult<bool> UserExists(string email)
@@ -163,7 +163,7 @@
         /// <returns>Returns true if the user is registered.</returns>
         /// <response code="200">Successfully returned the value.</response>
         /// <response code="404">User with the email does not exist.</response>
-        [Authorize(Roles = Roles.Admin)]
+        //[Authorize(Roles = Roles.Admin)]
         [HttpGet("/api/users/is-user-registered")]
         [Produces("application/json")]
         public ActionResult<bool> IsUserRegistered(string email)

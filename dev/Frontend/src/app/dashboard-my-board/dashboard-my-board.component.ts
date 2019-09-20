@@ -74,23 +74,33 @@ export class DashboardMyBoardComponent implements OnInit {
     }
   }
 
+  public async ChangedTaskDescription(taskId: string, newDescription: string) {
+  let k = taskId;
+  // Add Change Description in Database
+  }
+
+  public async ChangedTaskTitle(taskId: string, newTitle: string) {
+    let k = taskId;
+    // Add Change Title in Database
+    }
+
   public async dropTaskToNewRow(event: CdkDragDrop<string[]>) {
     let taskId = event.item.data.id;
-    let newStatus = 0;
+    let newStatus = Task.StatusEnum.NUMBER_0;
     // Add Status/Row change to database
     switch (event.container.id) {
       case 'myOpenTasks':
-          newStatus = 0;
+          newStatus = Task.StatusEnum.NUMBER_0;
           break;
       case 'myInProgressTasks':
-          newStatus = 1;
+          newStatus = Task.StatusEnum.NUMBER_1;
           break;
       case 'myDoneTasks':
-          newStatus = 2;
+          newStatus = Task.StatusEnum.NUMBER_2;
           break;
     }
 
-    this.tasksService.moveTask(taskId, 0).toPromise();
+    this.tasksService.moveTask(taskId, newStatus).toPromise();
     // Apply changes to board
     transferArrayItem(event.previousContainer.data,
                       event.container.data,

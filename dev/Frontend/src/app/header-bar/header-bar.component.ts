@@ -70,9 +70,21 @@ public defaultUserLoggedOutView() {
 public OpenLogin() {
   // tslint:disable-next-line: max-line-length
   this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false }).onClose.subscribe(
-    (result) =>
-      this.login(result.username, result.password)
-    );
+    (result) => {
+    if (result.registered) {
+        this.login(result.username, result.password);
+    } else {
+        this.authenticationService.register(result.username, result.password).subscribe(message => {
+          this.login(result.username, result.password);
+        }, err => {
+          this.toastrService.danger('Bei der Registrierung ist wohl etwas schiefgelaufen...', 'Problem');
+        });
+    }
+  });
+}
+
+public DetermineLoginOrregister() {
+
 }
 
   /**

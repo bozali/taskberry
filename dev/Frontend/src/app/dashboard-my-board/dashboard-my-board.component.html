@@ -1,13 +1,14 @@
 
 <div id="tasksBoard">
 
-  <nb-accordion multi>
+  <nb-accordion> <!-- multi-->
       <nb-accordion-item>
         <nb-accordion-item-header>
           <h5 class="tasksGroupHeader">
-              <fa-icon style="float:left; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon>  Mein Board</h5>
+              <fa-icon style="float:left; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon>
+              Mein Board</h5>
         </nb-accordion-item-header>
-        <nb-accordion-item-body>
+        <nb-accordion-item-body style="background-color:#1a2138;">
       <div cdkDropListGroup>
         <div class="example-container">
             <h4 class="taskHeader">OFFEN<fa-icon style="float:right; margin-right:25px;" [icon]="this.openTasksHeaderIcon"></fa-icon></h4>
@@ -25,13 +26,18 @@
                 cdkDrag>
                 <!-- TASK -->
                 <!-- Title-->
-                <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">{{task.title}}</span>
+                <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">
+                  <input type="text" [value]="task.title" class="textboxBorder"
+                    (input)="task.title = $event.target.value"/>
+                </span>
                   <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 0)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
                 <hr>
                 <!-- Description-->
                 <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
-                    {{task.description}}
-                  </div>
+                  <textarea class="textboxBorder" [value]="task.description"
+                   (input)="task.description = $event.target.value"
+                    (focusout)="this.ChangedTaskDescription(task.id, task.description)"></textarea>
+                  </div> <!-- (focus)="focusFunction()"-->
                   <!-- Assigned Too (not required on "my board")-->
                 <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
                 Zugeordnet zu:

@@ -95,10 +95,6 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.authService.isAuthenticated())
-    {
-      this.router.navigate(['/']);
-    }
     this.InitializeGroupsTable();
   }
 

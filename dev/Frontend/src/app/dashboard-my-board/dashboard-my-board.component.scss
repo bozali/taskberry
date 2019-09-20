@@ -17,7 +17,7 @@
    opacity:0.93;
    text-shadow: 2px #4d82ff;
    border-bottom: outset 6px rgb(255, 255, 255);
-   border-top: outset 6px rgb(255, 255, 255);
+   //border-top: outset 6px rgb(255, 255, 255);
   // border-left: solid 3px rgb(255, 255, 255);
 
 }
@@ -26,12 +26,19 @@
   box-shadow: 0;
 }
 
+.textboxBorder {
+  border:0 none;
+  width:90%;
+  height:100%;
+  padding: 3px 5px 3px 5px;
+}
+
 
 
 
 .tasksGroupHeader:hover {
   border-bottom: inset 6px #eaecf1;
-  border-top: inset 6px #eaecf1;
+  //border-top: inset 6px #eaecf1;
   font-size:23px;
 }
 

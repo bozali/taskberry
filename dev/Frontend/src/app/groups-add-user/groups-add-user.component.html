@@ -1,4 +1,4 @@
-<nb-card *ngIf="!this.classSelected">
+<nb-card status="primary" *ngIf="!this.classSelected">
   <nb-card-header>
       Klasse auswählen
   </nb-card-header>
@@ -15,7 +15,7 @@
   </nb-card-body>
 </nb-card>
 
-<nb-card *ngIf="this.classSelected">
+<nb-card status="primary" *ngIf="this.classSelected">
     <nb-card-header>
 Benutzer auswählen
 <button style="float:right;" size="small" nbTooltipStatus="primary" nbTooltip="Zurück zur Klassenauswahl!" (click)="this.ResetClassSelected()" nbButton status="primary"><fa-icon [icon]="this.backButtonIcon"></fa-icon></button>

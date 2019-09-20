@@ -1,9 +1,11 @@
-<nb-card *ngIf="!this.classSelected">
+<nb-card status="primary" *ngIf="!this.classSelected">
     <nb-card-header>
-        <h4 class="hoverCursor" style="float:left;">Gruppen</h4>
-        <button style="float: right;" (click)="this.ShowAddGroupWindow()" nbButton status="primary">Gruppe hinzufügen</button>
-
-    </nb-card-header>
+        <h4 class="hoverCursor" style="float:left;"><fa-icon style="margin-right:10px;" [icon]="this.groupIcon"></fa-icon>  Gruppen</h4>
+        <button status="success" style="float: right; color:#ffffff;" (click)="this.ShowAddGroupWindow()" nbButton>
+            <nb-icon icon="plus-outline"></nb-icon>
+            Gruppe hinzufügen
+      </button>
+      </nb-card-header>
 <nb-card-body>
 
     <div *ngIf="!this.loaded">
