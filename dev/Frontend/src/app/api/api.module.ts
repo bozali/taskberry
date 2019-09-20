@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './api/authentication.service';
 import { GroupsService } from './api/groups.service';
 import { UsersService } from './api/users.service';
+import { TasksService } from './api/tasks.service';
 
 @NgModule({
   imports:      [],
@@ -14,7 +15,8 @@ import { UsersService } from './api/users.service';
   providers: [
     AuthenticationService,
     GroupsService,
-    UsersService ]
+    UsersService,
+    TasksService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

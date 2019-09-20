@@ -7,6 +7,8 @@ import { GroupsAddUserComponent } from '../groups-add-user/groups-add-user.compo
 import { GroupsAddComponent } from '../groups-add/groups-add.component';
 import { Group, GroupsService, User, UsersService } from '../api';
 import { GroupsEditComponent } from '../groups-edit/groups-edit.component';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 interface TreeNode<T> {
   data: T;
@@ -85,13 +87,18 @@ export class GroupsComponent implements OnInit {
     ]
   }*/];
 
-  constructor(private usersService: UsersService, private dialogService: NbDialogService,
+  constructor(private router: Router, private authService: AuthService, private usersService: UsersService,
+              private dialogService: NbDialogService,
               private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private toastrService: NbToastrService, private groupsService: GroupsService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   ngOnInit() {
+    if (!this.authService.isAuthenticated())
+    {
+      this.router.navigate(['/']);
+    }
     this.InitializeGroupsTable();
   }
 

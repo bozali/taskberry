@@ -32,7 +32,8 @@ export class AuthService {
     }
 
   // Check whether the token is expired
-    return !this.jwtHelper.isTokenExpired(token, 600);
+  let isAuthenticated = !this.jwtHelper.isTokenExpired(token, 600);
+    return isAuthenticated;
   }
 
     public logout() {

@@ -4,33 +4,41 @@
   <nb-accordion multi>
       <nb-accordion-item>
         <nb-accordion-item-header>
-          <h4 class="tasksGroupHeader">
-            Meine Aufgaben <fa-icon style="float:right; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon></h4>
+          <h5 class="tasksGroupHeader">
+              <fa-icon style="float:left; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon>  Mein Board</h5>
         </nb-accordion-item-header>
         <nb-accordion-item-body>
+      <div cdkDropListGroup>
         <div class="example-container">
             <h4 class="taskHeader">OFFEN<fa-icon style="float:right; margin-right:25px;" [icon]="this.openTasksHeaderIcon"></fa-icon></h4>
             <div
-              id="all"
+              id="myOpenTasks"
               cdkDropList
-              [cdkDropListData]="all"
-              cdkDropListConnectedTo="even"
+              [cdkDropListData]="openTasksRow"
               class="example-list"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListEnterPredicate]="noReturnPredicate">
               <div
                 class="example-box"
-                *ngFor="let number of all"
-                [cdkDragData]="number"
+                *ngFor="let task of openTasksRow"
+                [cdkDragData]="task"
                 cdkDrag>
                 <!-- TASK -->
-                <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
+                <!-- Title-->
+                <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">{{task.title}}</span>
+                  <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 0)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
                 <hr>
-                Beschreibung der Aufgabe
-
+                <!-- Description-->
+                <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
+                    {{task.description}}
+                  </div>
+                  <!-- Assigned Too (not required on "my board")-->
+                <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
+                Zugeordnet zu:
+              </div>-->
               </div>
               <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
-                  <button (click)="AddTask()" fullWidth nbButton status="primary">
+                  <button hero (click)="AddTaskToMyBoard(0)" fullWidth nbButton status="primary">
                       <nb-icon icon="plus-outline"></nb-icon>
                       Aufgabe hinzufügen
                       </button>
@@ -40,59 +48,76 @@
           <div class="example-container">
             <h4 class="taskHeader">IN ARBEIT <fa-icon style="float:right; margin-right:25px;" [icon]="this.inProgressHeaderIcon"></fa-icon></h4>
             <div
-              id="even"
-              cdkDropList
-              [cdkDropListData]="even"
-              cdkDropListConnectedTo="all"
-              class="example-list"
-              (cdkDropListDropped)="drop($event)"
-              [cdkDropListEnterPredicate]="noReturnPredicate">
-              <div
-                class="example-box"
-                *ngFor="let number of even"
-                [cdkDragData]="number"
-                cdkDrag>
-                <!-- TASK -->
-                <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Benutzer aus Gruppe entfernen"></fa-icon></div>
-                <hr>
-                Beschreibung der Aufgabe
-
-              </div>
-              <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
-                  <button (click)="AddTask()" fullWidth nbButton status="primary">
-                      <nb-icon icon="plus-outline"></nb-icon>
-                      Aufgabe hinzufügen
-                      </button>
-              </div>
-            </div>
-            </div>
-            <div class="example-container">
-                <h4 class="taskHeader">FERTIG <fa-icon style="float:right; margin-right:25px;" [icon]="this.doneHeaderIcon"></fa-icon></h4>
-            <div
-            id="even3"
+            id="inProgressTasksRow"
             cdkDropList
-            [cdkDropListData]="even3"
-            [cdkDropListConnectedTo]="all"
+            [cdkDropListData]="inProgressTasksRow"
             class="example-list"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListEnterPredicate]="noReturnPredicate">
             <div
               class="example-box"
-              *ngFor="let number of even3"
-              [cdkDragData]="number"
+              *ngFor="let task of inProgressTasksRow"
+              [cdkDragData]="task"
               cdkDrag>
               <!-- TASK -->
-              <div>{{number}}<fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Benutzer aus Gruppe entfernen"></fa-icon></div>
+              <!-- Title-->
+              <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">{{task.title}}</span>
+                <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 1)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
               <hr>
-              Beschreibung der Aufgabe
+              <!-- Description-->
+              <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
+                  {{task.description}}
+                </div>
+                <!-- Assigned Too (not required on "my board")-->
+              <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
+              Zugeordnet zu:
+            </div>-->
             </div>
             <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
-                <button (click)="AddTask()" fullWidth nbButton status="primary">
+                <button hero class="removeActiveBorder" (click)="AddTaskToMyBoard(1)" fullWidth nbButton status="primary">
                     <nb-icon icon="plus-outline"></nb-icon>
                     Aufgabe hinzufügen
                     </button>
             </div>
           </div>
+            </div>
+            <div class="example-container">
+                <h4 class="taskHeader">FERTIG <fa-icon style="float:right; margin-right:25px;" [icon]="this.doneHeaderIcon"></fa-icon></h4>
+
+                <div
+                id="myDoneTasks"
+                cdkDropList
+                [cdkDropListData]="doneTasksRow"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+                [cdkDropListEnterPredicate]="noReturnPredicate">
+                <div
+                  class="example-box"
+                  *ngFor="let task of doneTasksRow"
+                  [cdkDragData]="task"
+                  cdkDrag>
+                  <!-- TASK -->
+                  <!-- Title-->
+                  <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">{{task.title}}</span>
+                    <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 2)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
+                  <hr>
+                  <!-- Description-->
+                  <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
+                      {{task.description}}
+                    </div>
+                    <!-- Assigned Too (not required on "my board")-->
+                  <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
+                  Zugeordnet zu:
+                </div>-->
+                </div>
+                <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
+                    <button hero (click)="AddTaskToMyBoard(2)" fullWidth nbButton status="primary">
+                        <nb-icon icon="plus-outline"></nb-icon>
+                        Aufgabe hinzufügen
+                        </button>
+                </div>
+              </div>
+</div>
 </div>
         </nb-accordion-item-body>
       </nb-accordion-item>
@@ -100,7 +125,7 @@
       <!-- Foreach Group from User -->
       <nb-accordion-item>
         <nb-accordion-item-header>
-          <h4 class="tasksGroupHeader">Gruppen</h4>
+          <h4 class="tasksGroupHeader"><fa-icon style="float:left; margin-right:25px;" [icon]="this.groupsIcon"></fa-icon> Gruppen</h4>
         </nb-accordion-item-header>
         <nb-accordion-item-body>
           Group Task Board

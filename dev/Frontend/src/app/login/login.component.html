@@ -13,6 +13,6 @@
       </div>
         <input *ngIf="this.PasswordFieldVisible" type="password" placeholder="Passwort" (input)="this.Password = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Passwort..." status="danger" style="margin-bottom: 10px;">
         <br/>
-        <button nbButton status="primary" (click)="this.Login();">Einloggen</button>
+        <button hero fullWidth nbButton status="primary" (click)="this.Login();">Einloggen</button>
     </nb-card-body>
 </nb-card>

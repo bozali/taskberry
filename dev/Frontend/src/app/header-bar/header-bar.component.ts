@@ -4,7 +4,7 @@ import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabse
 import { LoginComponent } from '../login/login.component';
 import { AuthService } from '../auth.service';
 import { faColumns } from '@fortawesome/free-solid-svg-icons';
-import { AuthenticationService, GroupsService, UsersService } from '../api';
+import { AuthenticationService, GroupsService, UsersService, TasksService } from '../api';
 
 @Component({
   selector: 'app-header-bar',
@@ -27,7 +27,6 @@ export class HeaderBarComponent implements OnInit {
   // Font Awesome Icons
   dashboardIcon = faColumns;
 
-
   public dashboardVisible = false;
   public groupsVisible = false;
   public logoutVisible = false;
@@ -38,7 +37,7 @@ export class HeaderBarComponent implements OnInit {
 
 
   // tslint:disable-next-line: max-line-length
-  constructor(private authenticationService: AuthenticationService, private groupsService: GroupsService, private authService: AuthService, private router: Router,
+  constructor(private taskService: TasksService, private authenticationService: AuthenticationService, private groupsService: GroupsService, private authService: AuthService, private router: Router,
               private toastrService: NbToastrService, public dialogService: NbDialogService, private usersService: UsersService) { }
 
   toggle() {
@@ -71,8 +70,8 @@ public defaultUserLoggedOutView() {
 public OpenLogin() {
   // tslint:disable-next-line: max-line-length
   this.dialogService.open(LoginComponent, { hasBackdrop: true, closeOnBackdropClick: false }).onClose.subscribe(
-    (username) =>
-      this.login(username)
+    (result) =>
+      this.login(result.username, result.password)
     );
 }
 
@@ -106,7 +105,7 @@ public OpenLogin() {
 
 
 
-  public login(userName: string) {
+  public login(userName: string, password: string) {
     if (userName == null || userName === undefined) {
           console.log(userName + ' falscher benutzername wurde eingegeben.');
           return false;
@@ -122,7 +121,7 @@ public OpenLogin() {
 
       // Increase if authentification failed -> PasswordInputWrong++
 
-    this.authenticationService.login(userName).
+    this.authenticationService.login(userName, password).
       subscribe(response => {
         const token = (response as any).token;
         const id = (response as any).id;
@@ -139,6 +138,8 @@ public OpenLogin() {
         this.authenticationService.configuration.apiKeys = { Authorization: token };
         this.groupsService.configuration.apiKeys = { Authorization: token };
         this.usersService.configuration.apiKeys = { Authorization: token };
+        this.taskService.configuration.apiKeys = { Authorization: token };
+
         this.defaultUserLoggedInView();
         this.toastrService.primary('Du hast dich erfolgreich angemeldet!', 'Anmeldung');
         //this.dialog.close(false);

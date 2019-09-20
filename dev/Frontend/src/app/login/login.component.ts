@@ -45,7 +45,7 @@ export class LoginComponent {
 
   if (this.PasswordFieldVisible) {
       // close dialog and route to other component?
-      this.dialogRef.close(this.Username);
+      this.dialogRef.close({username: this.Username, password: this.Password});
   } else if(isNullOrUndefined(this.Password) && this.PasswordFieldVisible) {
       this.toastrService.show('Die eingegebenen Einlog Daten waren nicht korrekt!', 'Fehler beim Einloggen');
   } else if (this.PasswordFieldVisible === false) {

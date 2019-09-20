@@ -11,29 +11,35 @@
    width:110%;
    height:100%;
    padding: 10px 2px 5px 3px;
-   border-radius:3px;
+   font-family: "Open Sans", "sans-serif";
+   border-radius:1px;
    padding-left:20px;
    opacity:0.93;
    text-shadow: 2px #4d82ff;
-   border-bottom: solid 6px rgb(255, 255, 255);
-   border-top: solid 6px rgb(255, 255, 255);
+   border-bottom: outset 6px rgb(255, 255, 255);
+   border-top: outset 6px rgb(255, 255, 255);
   // border-left: solid 3px rgb(255, 255, 255);
 
 }
+
+.removeActiveBorder :active {
+  box-shadow: 0;
+}
+
+
 
 
 .tasksGroupHeader:hover {
   border-bottom: inset 6px #eaecf1;
   border-top: inset 6px #eaecf1;
-  font-size:28px;
-
+  font-size:23px;
 }
 
 .taskHeader {
   background-color: #598bff;
   color: rgb(255, 255, 255);
   opacity: 0.92;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", "sans-serif";
   padding-left:20px;
   padding-top:5px;
   padding-bottom:10px;
@@ -85,10 +91,17 @@ cursor: not-allowed;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  cursor: move;
+  cursor: grab;
   background: rgb(255, 255, 255);
   font-size: 18px;
 }
+
+
+.example-box :hover {
+  //border-bottom: solid 3px rgb(25, 253, 242);
+  cursor: alias;
+}
+
 
 #tasksBoard{
   width:100%;

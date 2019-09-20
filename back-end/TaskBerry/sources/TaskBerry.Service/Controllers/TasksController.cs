@@ -77,12 +77,12 @@
         [Produces("application/json")]
         public ActionResult<IEnumerable<Task>> GetCurrentUserTasks()
         {
-            IEnumerable<TaskEntity> userTasks = this._taskBerry.Context.Tasks.Where(t => t.Type == TaskType.User);
-
             int userId = int.Parse(this.User.Identity.Name);
-            IEnumerable<TaskEntity> tasks = userTasks.Where(t => t.AssigneeId == userId);
+            IEnumerable<TaskEntity> userTasks = this._taskBerry.Context.Tasks.Where(t => t.Type == TaskType.User && t.OwnerId == userId.ToString());
+     
+            //IEnumerable<TaskEntity> tasks = userTasks.Where(t => t.AssigneeId == userId);
 
-            return this.Ok(tasks.Select(this._mapper.Map<Task>));
+            return this.Ok(userTasks.Select(this._mapper.Map<Task>));
         }
 
         /// <summary>
@@ -207,7 +207,7 @@
             this._taskBerry.Context.Tasks.Remove(taskEntity);
             this._taskBerry.Context.SaveChanges();
 
-            return this.Ok($"Successfully deleted {taskId}");
+            return this.Ok( new { result = string.Format("Die Aufgabe wurde erfolgreich entfernt.") });
         }
     }
 }

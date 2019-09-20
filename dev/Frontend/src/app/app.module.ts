@@ -17,7 +17,7 @@ import { LoginComponent } from './login/login.component';
 import { GroupsAddComponent } from './groups-add/groups-add.component';
 import { AuthGuardGuard } from './auth-guard.guard';
 import { JwtModule, JwtModuleOptions } from '@auth0/angular-jwt';
-import { AuthenticationService, GroupsService, UsersService } from './api';
+import { AuthenticationService, GroupsService, UsersService, TasksService } from './api';
 import { GroupsEditComponent } from './groups-edit/groups-edit.component';
 import { DashboardMyBoardComponent } from './dashboard-my-board/dashboard-my-board.component';
 import { DashboardGroupBoardsComponent } from './dashboard-group-boards/dashboard-group-boards.component';
@@ -85,9 +85,10 @@ const JWT_Module_Options: JwtModuleOptions = {
       AuthGuardGuard,
       AuthenticationService,
       GroupsService,
-      UsersService
+      UsersService,
+      TasksService
     //{
-      // provide: BASE_PATH, useValue: 'http://localhost:50352/v2',
+     // provide: BASE_PATH, useValue: 'http://localhost:50352/v2',
     //},
   ],
   bootstrap: [AppComponent]
