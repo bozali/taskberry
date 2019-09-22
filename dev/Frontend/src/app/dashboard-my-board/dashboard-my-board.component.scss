@@ -28,6 +28,10 @@
 
 textarea {
   height:85px;
+  max-height: 85px;
+  max-width: 90%;
+  min-width: 80%;
+  min-height: 70px;
 }
 
 .textboxBorder {
