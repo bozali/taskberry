@@ -130,8 +130,8 @@ export class DashboardGroupBoardComponent implements OnInit {
     }, err => {
       console.log('ERRUR:830');
       // Move Card Back cuz changes couldn't be applied to backend
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
+      transferArrayItem(event.container.data,
+        event.previousContainer.data,
         event.currentIndex,
         event.previousIndex);
     });
