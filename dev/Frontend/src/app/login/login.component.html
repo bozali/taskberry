@@ -6,7 +6,7 @@
             <div style="margin-bottom: 10px; text-align:left;">
                 Moodle E-Mail<span style="color:red;">*</span>
             </div>
-        <input style="margin-bottom:10px;" type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Email..." status="danger">
+        <input [attr.disabled]="disabled ? '' : null" style="margin-bottom:10px;" type="text" (input)="this.Username = $event.target.value" nbInput fullWidth fieldSize="large" placeholder="Email..." status="danger">
         <br/>
         <span style="background-color:red;" class="notifcationText" *ngIf="!this.userExistInMoodle && this.userDidInput"> <!-- User doesn't Exists in Moodle Message -->
           {{this.registerOrLoginText}}

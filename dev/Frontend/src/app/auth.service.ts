@@ -47,7 +47,7 @@ export class AuthService {
             this.isLoggedIn = false;
           },
            err => {
-            console.log('Couldnt log out! ' + err.toString());
+            console.log('ERRUR: 101');
            });
 
          } else {

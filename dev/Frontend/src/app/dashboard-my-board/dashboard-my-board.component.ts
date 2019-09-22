@@ -74,15 +74,66 @@ export class DashboardMyBoardComponent implements OnInit {
     }
   }
 
-  public async ChangedTaskDescription(taskId: string, newDescription: string) {
-  let k = taskId;
-  // Add Change Description in Database
+  public async ChangedTaskDescription(taskId: string, row, newDescription: string) {
+    let selectedTask;
+
+    switch (row) {
+      case 0:
+        selectedTask = this.openTasksRow.find(w => w.id === taskId);
+        break;
+      case 1:
+        selectedTask = this.inProgressTasksRow.find(w => w.id === taskId);
+        break;
+      case 2:
+        selectedTask = this.doneTasksRow.find(w => w.id === taskId);
+        break;
+      default:
+      return;
+    }
+
+    if (selectedTask !== undefined && selectedTask !== null) {
+      if (selectedTask.description !== newDescription) { // Prevents Spam
+        // Change Description in Database
+        selectedTask.description = newDescription;
+        await this.tasksService.editTaskDescription(taskId, newDescription).subscribe(result=> {
+          this.toastrService.primary('Beschreibung wurde geändert.', 'Änderung');
+        }, err => {
+          console.log('ERRUR:731');
+        });
+      }
+     }
   }
 
-  public async ChangedTaskTitle(taskId: string, newTitle: string) {
-    let k = taskId;
-    // Add Change Title in Database
+  public async ChangedTaskTitle(taskId: string, row, newTitle: string) {
+    let selectedTask;
+
+    switch (row) {
+      case 0:
+        selectedTask = this.openTasksRow.find(w => w.id === taskId);
+        break;
+      case 1:
+        selectedTask = this.inProgressTasksRow.find(w => w.id === taskId);
+        break;
+      case 2:
+        selectedTask = this.doneTasksRow.find(w => w.id === taskId);
+        break;
+      default:
+      return;
     }
+
+    if (selectedTask !== undefined && selectedTask !== null) {
+      if (selectedTask.title !== newTitle) { // Prevents Spam
+        // Change Description in Database
+        selectedTask.title = newTitle;
+        await this.tasksService.editTaskTitle(taskId, newTitle).subscribe(result => {
+          this.toastrService.primary('Titel wurde geändert.', 'Änderung');
+        }, err => {
+          console.log('ERRUR:730');
+        });
+      }
+     }
+    }
+
 
   public async dropTaskToNewRow(event: CdkDragDrop<string[]>) {
     let taskId = event.item.data.id;
@@ -101,6 +152,7 @@ export class DashboardMyBoardComponent implements OnInit {
     }
 
     this.tasksService.moveTask(taskId, newStatus).toPromise();
+    event.item.data.status = newStatus;
     // Apply changes to board
     transferArrayItem(event.previousContainer.data,
                       event.container.data,

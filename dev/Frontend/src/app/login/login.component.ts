@@ -31,6 +31,7 @@ export class LoginComponent {
   registerOrLoginText: string;
   userExistInMoodle = false;
   userDidInput = false;
+  disabled = false;
   // tslint:disable-next-line: max-line-length
   constructor(private userService: UsersService, private groupsService: GroupsService, private router: Router, public dialogRef: NbDialogRef<HeaderBarComponent>, public authService: AuthService,
               public toastrService: NbToastrService) { }
@@ -40,13 +41,6 @@ export class LoginComponent {
   }
 
   public async Login() {
-
-    // Validate Username
-    // if email exists in moodle database
-    //    Show Password Field
-    // else
-    //    Proper User Notification
-
   if (this.PasswordFieldVisible) {
       // close dialog and route to other component?
       this.dialogRef.close({registered: this.IsRegistered, username: this.Username, password: this.Password});
@@ -58,6 +52,7 @@ export class LoginComponent {
           this.IsRegistered = true;
           this.PasswordFieldVisible = true;
           this.registerOrLoginText = 'Benutzer gefunden, gib dein Passwort ein.';
+          this.disabled = true;
           this.userDidInput = false;
         } else {
           this.IsRegistered = false;
@@ -66,6 +61,7 @@ export class LoginComponent {
               this.registerOrLoginText = 'Unregistriert, gib dein zukünfitges Passwort nun ein!';
               this.userExistInMoodle = true;
               this.PasswordFieldVisible = true;
+              this.disabled = true;
               this.userDidInput = false;
             } else {
               this.registerOrLoginText = 'Benutzer nicht gefunden!';

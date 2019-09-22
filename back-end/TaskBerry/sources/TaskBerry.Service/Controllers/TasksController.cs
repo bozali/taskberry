@@ -65,6 +65,63 @@
         }
 
         /// <summary>
+        /// Updates the Task title
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="newTaskTitle">The newTaskTitle of the task. Can be null.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="404">Task could not be updated.</response>
+        /// <response code="200">Successfully updated the task.</response>
+        [Authorize]
+        [HttpPost("/api/tasks/update/title")]
+        [Produces("application/json")]
+        public IActionResult EditTaskTitle(Guid taskId, string newTaskTitle)
+        {
+            // TODO Check if the user has access rights to edit the task
+
+            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+
+            if (taskEntity == null)
+            {
+                return this.NotFound($"Could not fnd {taskId}.");
+            }
+
+            taskEntity.Title = newTaskTitle ?? taskEntity.Title;
+        
+            this._taskBerry.Context.SaveChanges();
+
+            return this.Ok("Successfully edited the task.");
+        }
+
+        /// <summary>
+        /// Updates the Task description
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="newTaskDescription">The new TaskDescription of the task. Can not be null.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="404">Task could not be updated.</response>
+        /// <response code="200">Successfully updated the task.</response>
+        [Authorize]
+        [HttpPost("/api/tasks/update/description")]
+        [Produces("application/json")]
+        public IActionResult EditTaskDescription(Guid taskId, string newTaskDescription)
+        {
+            // TODO Check if the user has access rights to edit the task
+
+            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+
+            if (taskEntity == null)
+            {
+                return this.NotFound($"Could not fnd {taskId}.");
+            }
+
+            taskEntity.Description = newTaskDescription == "" ? taskEntity.Description : newTaskDescription;
+            this._taskBerry.Context.SaveChanges();
+
+            return this.Ok("Successfully edited the task.");
+        }
+
+        /// <summary>
         /// Gets all the users tasks of the current user.
         /// </summary>
         /// <remarks>This does not return the tasks that are assigned to the user. This methods
@@ -84,6 +141,8 @@
 
             return this.Ok(userTasks.Select(this._mapper.Map<Task>));
         }
+
+
 
         /// <summary>
         /// Gets all tasks from the group.

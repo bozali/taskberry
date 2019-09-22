@@ -1,2 +1,25 @@
 <!-- group selection ova here -> https://akveo.github.io/nebular/docs/components/accordion/overview#nbaccordioncomponent-->
-<app-dashboard-my-board></app-dashboard-my-board>
+
+<div id="tasksBoard">
+
+  <nb-accordion> <!-- multi-->
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          <h5 class="tasksGroupHeader">
+              <fa-icon style="float:left; margin-right:25px;" [icon]="this.userTasksIcon"></fa-icon>
+              Mein Board</h5>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body style="border: solid 2px #598bff;background-color:#1a2138;">
+            <app-dashboard-my-board></app-dashboard-my-board>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+  <nb-accordion-item>
+  <nb-accordion-item-header>
+    <h5 class="tasksGroupHeader"><fa-icon style="float:left; margin-right:25px;" [icon]="this.groupsIcon"></fa-icon> Gruppen</h5>
+  </nb-accordion-item-header>
+  <nb-accordion-item-body style="background-color:#1a2138;">
+    <app-dashboard-group-boards></app-dashboard-group-boards>
+  </nb-accordion-item-body>
+</nb-accordion-item>
+
+</nb-accordion>

@@ -360,5 +360,114 @@ export class TasksService {
             }
         );
     }
+     /**
+     * Updates the Task description
+     *
+     * @param taskId
+     * @param newTaskDescription The new TaskDescription of the task. Can not be null.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public editTaskDescription(taskId?: string, newTaskDescription?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public editTaskDescription(taskId?: string, newTaskDescription?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public editTaskDescription(taskId?: string, newTaskDescription?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public editTaskDescription(taskId?: string, newTaskDescription?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (taskId !== undefined && taskId !== null) {
+            queryParameters = queryParameters.set('taskId', <any>taskId);
+        }
+        if (newTaskDescription !== undefined && newTaskDescription !== null) {
+            queryParameters = queryParameters.set('newTaskDescription', <any>newTaskDescription);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys["Authorization"]) {
+            headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.post<any>(`${this.basePath}/api/tasks/update/description`,
+            null,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Updates the Task title
+     *
+     * @param taskId
+     * @param newTaskTitle The newTaskTitle of the task. Can be null.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public editTaskTitle(taskId?: string, newTaskTitle?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public editTaskTitle(taskId?: string, newTaskTitle?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public editTaskTitle(taskId?: string, newTaskTitle?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public editTaskTitle(taskId?: string, newTaskTitle?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (taskId !== undefined && taskId !== null) {
+            queryParameters = queryParameters.set('taskId', <any>taskId);
+        }
+        if (newTaskTitle !== undefined && newTaskTitle !== null) {
+            queryParameters = queryParameters.set('newTaskTitle', <any>newTaskTitle);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys["Authorization"]) {
+            headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.post<any>(`${this.basePath}/api/tasks/update/title`,
+            null,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
 }
