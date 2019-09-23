@@ -11,14 +11,11 @@
         [Key]
         public Guid Id { get; set; }
 
-        [ForeignKey("User")]
         public int UserId { get; set; }
 
         [MaxLength(36)]
         [ForeignKey("Group")]
         public Guid GroupId { get; set; }
-
-        public UserEntity User { get; set; }
 
         public GroupEntity Group { get; set; }
     }

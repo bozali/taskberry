@@ -85,7 +85,7 @@
 
             foreach (GroupEntity groupEntity in groupEntities)
             {
-                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
+                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
 
                 Group group = this._mapper.Map<Group>(groupEntity);
                 group.Members = new List<int>();
@@ -175,7 +175,7 @@
             Group group = this._mapper.Map<Group>(groupEntity);
             group.Members = new List<int>();
 
-            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments;
 
             foreach (int userId in users)
             {
@@ -183,16 +183,16 @@
                 // Get assignments with the userId and the groupId
                 GroupAssignmentEntity toRemove = assignments.FirstOrDefault(a => a.GroupId == groupId && a.UserId == userId);
 
-                this._taskBerry.Context.GroupAssignments.Remove(toRemove);
+                this._taskBerry.TaskBerryContext.GroupAssignments.Remove(toRemove);
             }
 
-            foreach (GroupAssignmentEntity assignment in this._taskBerry.Context.GroupAssignments)
+            foreach (GroupAssignmentEntity assignment in this._taskBerry.TaskBerryContext.GroupAssignments)
             {
                 group.Members.Add(assignment.UserId);
             }
 
             // TODO Check if saved successfully
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok(group);
         }
@@ -209,18 +209,18 @@
         [Produces("application/json")]
         public IActionResult DeleteGroup(Guid groupId)
         {
-            GroupEntity groupEntity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == groupId);
+            GroupEntity groupEntity = this._taskBerry.TaskBerryContext.Groups.FirstOrDefault(g => g.Id == groupId);
 
             if (groupEntity == null)
             {
                 return this.NotFound($"Could not find {groupId}.");
             }
 
-            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments.Where(a => a.GroupId == groupId);
-            this._taskBerry.Context.GroupAssignments.RemoveRange(assignments);
-            this._taskBerry.Context.Groups.Remove(groupEntity);
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments.Where(a => a.GroupId == groupId);
+            this._taskBerry.TaskBerryContext.GroupAssignments.RemoveRange(assignments);
+            this._taskBerry.TaskBerryContext.Groups.Remove(groupEntity);
 
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok($"Successfully deleted {groupId}");
         }
@@ -238,7 +238,7 @@
         [Produces("application/json")]
         public ActionResult<Group> EditGroup([FromBody] Group group)
         {
-            GroupEntity entity = this._taskBerry.Context.Groups.FirstOrDefault(g => g.Id == group.Id);
+            GroupEntity entity = this._taskBerry.TaskBerryContext.Groups.FirstOrDefault(g => g.Id == group.Id);
 
             if (entity == null)
             {
@@ -248,7 +248,7 @@
             entity.Name = group.Name;
             entity.Description = group.Description ?? "";
 
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok(this._mapper.Map<Group>(entity));
         }

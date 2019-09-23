@@ -153,7 +153,7 @@
         [Produces("application/json")]
         public ActionResult<bool> UserExists(string email)
         {
-            return this._taskBerry.Context.Users.Any(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+            return this._taskBerry.MoodleContext.Users.Any(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -168,14 +168,14 @@
         [Produces("application/json")]
         public ActionResult<bool> IsUserRegistered(string email)
         {
-            UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+            UserEntity userEntity = this._taskBerry.MoodleContext.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 
             if (userEntity == null)
             {
                 return this.NotFound($"User with the email {email} does not exist.");
             }
 
-            return this._taskBerry.Context.UserInfos.Any(info => info.UserId == userEntity.Id);
+            return this._taskBerry.TaskBerryContext.UserInfos.Any(info => info.UserId == userEntity.Id);
         }
 
         /// <summary>
@@ -196,14 +196,14 @@
                 byte[] bytes = cryptoProvider.ComputeHash(Encoding.ASCII.GetBytes(newPassword));
                 string hashedPassword = Encoding.ASCII.GetString(bytes);
 
-                UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+                UserEntity userEntity = this._taskBerry.MoodleContext.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 
                 if (userEntity == null)
                 {
                     return this.NotFound($"Could not find user {email}.");
                 }
 
-                UserInfoEntity infoEntity = this._taskBerry.Context.UserInfos.FirstOrDefault(info => info.UserId == userEntity.Id);
+                UserInfoEntity infoEntity = this._taskBerry.TaskBerryContext.UserInfos.FirstOrDefault(info => info.UserId == userEntity.Id);
 
                 if (infoEntity == null)
                 {
@@ -211,7 +211,7 @@
                 }
 
                 infoEntity.Password = hashedPassword;
-                this._taskBerry.Context.SaveChanges();
+                this._taskBerry.TaskBerryContext.SaveChanges();
             }
 
             return this.Ok($"Successfully changed password of {email}.");

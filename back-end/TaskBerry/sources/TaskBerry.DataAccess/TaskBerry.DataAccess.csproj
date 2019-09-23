@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\ITaskBerryUnitOfWork.cs" />
+    <Compile Include="Domain\MoodleDbContext.cs" />
     <Compile Include="Domain\TaskBerryDbContext.cs" />
     <Compile Include="Domain\TaskBerryUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

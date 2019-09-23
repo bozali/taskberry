@@ -2,25 +2,29 @@
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
-    using System;
 
 
     /// <summary>
     /// </summary>
-    [Table("UserInfo")]
-    public class UserInfoEntity
+    [Table("user_info_data")]
+    public class MoodleUserInfoData
     {
         /// <summary>
         /// </summary>
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// </summary>
+        [ForeignKey("User")]
         public int UserId { get; set; }
 
         /// <summary>
         /// </summary>
-        public string Password { get; set; }
+        public string Data { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public UserEntity User { get; set; }
     }
 }

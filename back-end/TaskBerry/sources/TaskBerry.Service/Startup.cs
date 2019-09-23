@@ -72,17 +72,15 @@
             // Dependency injection configuration
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
+                .AddDbContext<MoodleDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("Moodle")))
                 .AddSingleton(p => new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper())
                 .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
                 .AddScoped<IGroupsService, GroupsService>()
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
 
-            // TODO Use automapper c#
-
+#if DEBUG
             // Add swagger documentation generation
 
-
-#if DEBUG
             services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("Bearer", new ApiKeyScheme

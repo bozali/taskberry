@@ -15,6 +15,8 @@
 
         IUserRepository UsersRepository { get; set; }
 
-        TaskBerryDbContext Context { get; set; }
+        TaskBerryDbContext TaskBerryContext { get; set; }
+
+        MoodleDbContext MoodleContext { get; set; }
     }
 }

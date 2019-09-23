@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Entities\GroupAssignmentEntity.cs" />
     <Compile Include="Entities\GroupEntity.cs" />
+    <Compile Include="Entities\MoodleUserInfoData.cs" />
     <Compile Include="Entities\TaskEntity.cs" />
     <Compile Include="Entities\TaskStatus.cs" />
     <Compile Include="Entities\TaskType.cs" />

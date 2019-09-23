@@ -62,7 +62,7 @@
                 return this.NotFound(email);
             }
 
-            UserInfoEntity userInfoEntity = this._taskBerry.Context.UserInfos.FirstOrDefault(info => info.UserId == entity.Id);
+            UserInfoEntity userInfoEntity = this._taskBerry.TaskBerryContext.UserInfos.FirstOrDefault(info => info.UserId == entity.Id);
 
             if (userInfoEntity == null)
             {
@@ -116,14 +116,14 @@
         public IActionResult Register(string email, string password)
         {
 
-            UserEntity userEntity = this._taskBerry.Context.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
+            UserEntity userEntity = this._taskBerry.MoodleContext.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 
             if (userEntity == null)
             {
                 return this.NotFound($"User with the email {email} does not exist.");
             }
 
-            if (this._taskBerry.Context.UserInfos.Any(info => info.UserId == userEntity.Id))
+            if (this._taskBerry.TaskBerryContext.UserInfos.Any(info => info.UserId == userEntity.Id))
             {
                 return this.BadRequest($"User with the email {email} already exists.");
             }
@@ -140,8 +140,8 @@
                     Password = hashedPassword
                 };
 
-                this._taskBerry.Context.UserInfos.Add(entity);
-                this._taskBerry.Context.SaveChanges();
+                this._taskBerry.TaskBerryContext.UserInfos.Add(entity);
+                this._taskBerry.TaskBerryContext.SaveChanges();
             }
 
             return this.Ok($"Successfully registered {email}.");
