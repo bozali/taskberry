@@ -50,7 +50,7 @@
         {
             // TODO Check if the user has access rights to edit the task
 
-            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            TaskEntity taskEntity = this._taskBerry.TaskBerryContext.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
@@ -59,7 +59,7 @@
 
             taskEntity.Status = status ?? taskEntity.Status;
             taskEntity.Row = row ?? taskEntity.Row;
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok("Successfully moved the task.");
         }
@@ -79,7 +79,7 @@
         {
             // TODO Check if the user has access rights to edit the task
 
-            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            TaskEntity taskEntity = this._taskBerry.TaskBerryContext.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
@@ -88,7 +88,7 @@
 
             taskEntity.Title = newTaskTitle ?? taskEntity.Title;
         
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok("Successfully edited the task.");
         }
@@ -108,7 +108,7 @@
         {
             // TODO Check if the user has access rights to edit the task
 
-            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            TaskEntity taskEntity = this._taskBerry.TaskBerryContext.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
@@ -116,7 +116,7 @@
             }
 
             taskEntity.Description = newTaskDescription == "" ? taskEntity.Description : newTaskDescription;
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok("Successfully edited the task.");
         }
@@ -135,7 +135,7 @@
         public ActionResult<IEnumerable<Task>> GetCurrentUserTasks()
         {
             int userId = int.Parse(this.User.Identity.Name);
-            IEnumerable<TaskEntity> userTasks = this._taskBerry.Context.Tasks.Where(t => t.Type == TaskType.User && t.OwnerId == userId.ToString());
+            IEnumerable<TaskEntity> userTasks = this._taskBerry.TaskBerryContext.Tasks.Where(t => t.Type == TaskType.User && t.OwnerId == userId.ToString());
      
             //IEnumerable<TaskEntity> tasks = userTasks.Where(t => t.AssigneeId == userId);
 
@@ -158,7 +158,7 @@
         public ActionResult<IEnumerable<Task>> GetTasksFromGroup(Guid groupId)
         {
             // Check if group exists
-            if (!this._taskBerry.Context.Groups.Any(entity => entity.Id == groupId))
+            if (!this._taskBerry.TaskBerryContext.Groups.Any(entity => entity.Id == groupId))
             {
                 return this.NotFound($"Could not find {groupId}.");
             }
@@ -166,13 +166,13 @@
             // Check if user is member of the group
             int userId = int.Parse(this.User.Identity.Name);
 
-            if (!this._taskBerry.Context.GroupAssignments.Any(assignment => assignment.GroupId == groupId && assignment.UserId == userId))
+            if (!this._taskBerry.TaskBerryContext.GroupAssignments.Any(assignment => assignment.GroupId == groupId && assignment.UserId == userId))
             {
                 return this.Forbid($"User {userId} is not member of the group.");
             }
 
             // Get all group tasks and than the tasks where the OwnerId equals groupId
-            IEnumerable<TaskEntity> taskEntities = this._taskBerry.Context.Tasks
+            IEnumerable<TaskEntity> taskEntities = this._taskBerry.TaskBerryContext.Tasks
                 .Where(t => t.Type == TaskType.Group)
                 .Where(gt => gt.OwnerId.Equals(groupId.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
@@ -196,9 +196,9 @@
             TaskEntity taskEntity = this._mapper.Map<TaskEntity>(newTask);
             taskEntity.Id = Guid.NewGuid();
 
-            this._taskBerry.Context.Tasks.Add(taskEntity);
+            this._taskBerry.TaskBerryContext.Tasks.Add(taskEntity);
 
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok(taskEntity);
         }
@@ -217,7 +217,7 @@
         [Produces("application/json")]
         public ActionResult<Task> AssignTaskToUser(Guid taskId, int user)
         {
-            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            TaskEntity taskEntity = this._taskBerry.TaskBerryContext.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
@@ -230,7 +230,7 @@
             }
 
             // Check if user is in the group where the task is located at.
-            IEnumerable<GroupAssignmentEntity> assignmentEntities = this._taskBerry.Context.GroupAssignments;
+            IEnumerable<GroupAssignmentEntity> assignmentEntities = this._taskBerry.TaskBerryContext.GroupAssignments;
 
             Guid groupId = Guid.Parse(taskEntity.OwnerId);
             if (!assignmentEntities.Any(assignment => assignment.GroupId == groupId && assignment.UserId == user))
@@ -240,7 +240,7 @@
 
             taskEntity.AssigneeId = user;
 
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok(this._mapper.Map<Task>(taskEntity));
         }
@@ -256,15 +256,15 @@
         [HttpDelete("/api/tasks/delete")]
         public IActionResult DeleteTask(Guid taskId)
         {
-            TaskEntity taskEntity = this._taskBerry.Context.Tasks.FirstOrDefault(t => t.Id == taskId);
+            TaskEntity taskEntity = this._taskBerry.TaskBerryContext.Tasks.FirstOrDefault(t => t.Id == taskId);
 
             if (taskEntity == null)
             {
                 return this.NotFound($"Could not find {taskId}.");
             }
 
-            this._taskBerry.Context.Tasks.Remove(taskEntity);
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.Tasks.Remove(taskEntity);
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return this.Ok( new { result = string.Format("Die Aufgabe wurde erfolgreich entfernt.") });
         }

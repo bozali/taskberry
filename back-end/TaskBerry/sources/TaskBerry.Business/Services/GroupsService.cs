@@ -65,7 +65,7 @@
             Group group = this._mapper.Map<Group>(groupEntity);
             group.Members = new List<int>();
 
-            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.Context.GroupAssignments;
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments;
 
             foreach (int userId in users)
             {
@@ -83,16 +83,16 @@
                     GroupId = groupId
                 };
 
-                this._taskBerry.Context.GroupAssignments.Add(assignment);
+                this._taskBerry.TaskBerryContext.GroupAssignments.Add(assignment);
             }
 
-            foreach (GroupAssignmentEntity assignment in this._taskBerry.Context.GroupAssignments)
+            foreach (GroupAssignmentEntity assignment in this._taskBerry.TaskBerryContext.GroupAssignments)
             {
                 group.Members.Add(assignment.UserId);
             }
 
             // TODO Check if saved successfully
-            this._taskBerry.Context.SaveChanges();
+            this._taskBerry.TaskBerryContext.SaveChanges();
 
             return group;
         }

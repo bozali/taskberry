@@ -22,24 +22,24 @@
 
         public IEnumerable<UserEntity> GetUsers()
         {
-            return this.TaskBerry.Context.Users;
+            return this.TaskBerry.MoodleContext.Users;
         }
 
         public UserEntity GetUserById(int id)
         {
-            return this.TaskBerry.Context.Users.FirstOrDefault(user => user.Id == id);
+            return this.TaskBerry.MoodleContext.Users.FirstOrDefault(user => user.Id == id);
         }
 
         public IEnumerable<User> GetUsersByGroupId(Guid groupId)
         {
-            List<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.GroupId == groupId).Distinct().ToList();
+            List<GroupAssignmentEntity> assignments = this.TaskBerry.TaskBerryContext.GroupAssignments.Where(assignment => assignment.GroupId == groupId).Distinct().ToList();
             List<User> usersToAdd = new List<User>();
 
             foreach (GroupAssignmentEntity assignment in assignments)
             {
-                if (this.TaskBerry.Context.Users.Any(w => w.Id == assignment.UserId))
+                if (this.TaskBerry.MoodleContext.Users.Any(w => w.Id == assignment.UserId))
                 {
-                    UserEntity assignedUser = this.TaskBerry.Context.Users.SingleOrDefault(w => w.Id == assignment.UserId);
+                    UserEntity assignedUser = this.TaskBerry.MoodleContext.Users.SingleOrDefault(w => w.Id == assignment.UserId);
                     usersToAdd.Add(this._mapper.Map<User>(assignedUser));
                 }
             }
