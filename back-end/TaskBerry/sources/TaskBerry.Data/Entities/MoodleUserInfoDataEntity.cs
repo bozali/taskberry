@@ -7,7 +7,7 @@
     /// <summary>
     /// </summary>
     [Table("user_info_data")]
-    public class MoodleUserInfoData
+    public class MoodleUserInfoDataEntity
     {
         /// <summary>
         /// </summary>

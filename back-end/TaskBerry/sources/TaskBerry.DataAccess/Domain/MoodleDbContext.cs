@@ -17,6 +17,6 @@
 
         /// <summary>
         /// </summary>
-        public DbSet<MoodleUserInfoData> UserInfoData { get; set; }
+        public DbSet<MoodleUserInfoDataEntity> UserInfoData { get; set; }
     }
 }

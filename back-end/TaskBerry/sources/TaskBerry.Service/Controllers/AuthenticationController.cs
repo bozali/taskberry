@@ -80,6 +80,13 @@
                 }
             }
 
+            MoodleUserInfoDataEntity infoData = this._taskBerry.MoodleContext.UserInfoData.FirstOrDefault(info => info.UserId == entity.Id);
+
+            if (infoData == null)
+            {
+                return this.BadRequest("Could not get UserInfoData");
+            }
+
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(this._configurationProvider.GetTokenConfiguration().Secret);
 
@@ -89,7 +96,7 @@
                 {
                     new Claim(ClaimTypes.Name, entity.Id.ToString()),
                     new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, Roles.Admin), // TODO Check if user is admin
+                    new Claim(ClaimTypes.Role, (infoData.Data.Equals("Lehrer", StringComparison.InvariantCultureIgnoreCase) ? Roles.Admin : Roles.User)),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15.0),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

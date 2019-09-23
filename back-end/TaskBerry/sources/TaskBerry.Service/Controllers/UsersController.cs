@@ -125,7 +125,10 @@
         [Produces("application/json")]
         public ActionResult<IEnumerable<string>> GetClasses()
         {
-            return this.Ok();
+            IEnumerable<string> classes = this._taskBerry.MoodleContext.UserInfoData.Select(x => x.Data);
+            HashSet<string> set = new HashSet<string>(classes);
+
+            return this.Ok(set);
         }
 
         /// <summary>
@@ -139,7 +142,10 @@
         [Produces("application/json")]
         public ActionResult<IEnumerable<User>> GetUsersInClass(string schoolClass)
         {
-            return this.Ok();
+            IEnumerable<MoodleUserInfoDataEntity> userInfos = this._taskBerry.MoodleContext.UserInfoData.Where(x => x.Data.Equals(schoolClass, StringComparison.InvariantCultureIgnoreCase));
+            List<UserEntity> userEntities = userInfos.Select(data => this._taskBerry.MoodleContext.Users.FirstOrDefault(d => d.Id == data.UserId)).ToList();
+
+            return this.Ok(userEntities.Select(this._mapper.Map<User>));
         }
 
         /// <summary>
