@@ -56,7 +56,7 @@
             <div *ngIf="row.data.type == 1 && column == 'Aktionen'" >
               <!-- Gruppen Interaktionsbuttons -->
               <span class="hoverCursorInteract">
-                <fa-icon [icon]="this.trashIcon" (click)="this.DeleteUserFromGroup(row.data.id)" nbTooltipStatus="danger" nbTooltip="Gruppe löschen" alt="Gruppe löschen"></fa-icon>
+                <fa-icon [icon]="this.trashIcon" (click)="this.DeleteGroup(row.data.id)" nbTooltipStatus="danger" nbTooltip="Gruppe löschen" alt="Gruppe löschen"></fa-icon>
 
                 <fa-icon [icon]="this.addUserIcon" (click)="this.ShowAddUserWindow(row.data.id)" style="margin-left: 10px;" nbTooltipStatus="primary" nbTooltip="Benutzer der Gruppe hinzufügen" alt="Benutzer der Gruppe hinzufügen"></fa-icon>
 
