@@ -49,7 +49,23 @@
 
         public Group CreateGroup(Group @group)
         {
-            throw new NotImplementedException();
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            if (string.IsNullOrEmpty(group.Name))
+            {
+                throw new ArgumentException("GroupsService group.Name parameter is null.");
+            }
+
+            group.Id = Guid.NewGuid();
+            group.Description = group.Description ?? "";
+
+            GroupEntity entity = this._mapper.Map<GroupEntity>(group);
+
+            this._taskBerry.GroupsRepository.CreateGroup(entity);
+            return group;
         }
 
         public Group AssignUsersToGroup(int[] users, Guid groupId)
@@ -95,16 +111,6 @@
             this._taskBerry.TaskBerryContext.SaveChanges();
 
             return group;
-        }
-
-        public Group RemoveUsersFromGroup(int[] users, Guid groupId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Group EditGroup(Group groups)
-        {
-            throw new NotImplementedException();
         }
     }
 }

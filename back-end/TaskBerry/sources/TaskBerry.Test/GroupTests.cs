@@ -20,9 +20,99 @@ namespace TaskBerry.Test
 
     public class GroupTests
     {
-        [Test]
-        public void Test_GetGroups_Without_User_Assignments()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void Setup()
         {
+            this._mapper = new Mapper(new MapperConfiguration(config =>
+            {
+                config.CreateMap<GroupEntity, Group>();
+                config.CreateMap<Group, GroupEntity>();
+            }));
+        }
+
+        [Test]
+        [TestCase("Group Name", "")]
+        [TestCase("Group Name", "Group Description")]
+        public void Test_CreateGroup_With_GroupName_And_GroupDescription_And_Empty_GroupDescription(string groupName, string groupDescription)
+        {
+            Group group = new Group
+            {
+                Name = groupName,
+                Description = groupDescription
+            };
+
+            using (AutoMock mock = AutoMock.GetLoose())
+            {
+                mock.Provide(this._mapper);
+
+                Mock<IGroupRepository> groupRepository = mock.Mock<IGroupRepository>();
+                groupRepository.Setup(x => x.CreateGroup(It.IsAny<GroupEntity>())).Returns(this._mapper.Map<GroupEntity>(group));
+
+                Mock<ITaskBerryUnitOfWork> unitOfWork = mock.Mock<ITaskBerryUnitOfWork>();
+                unitOfWork
+                    .SetupProperty(p => p.GroupsRepository)
+                    .SetupGet(x => x.GroupsRepository)
+                    .Returns(groupRepository.Object);
+
+                IGroupsService service = mock.Create<GroupsService>();
+                Group newGroup = service.CreateGroup(group);
+
+                Assert.IsTrue(!Guid.Empty.Equals(newGroup.Id));
+                Assert.IsTrue(newGroup.Name == groupName);
+                Assert.IsTrue(newGroup.Description == groupDescription);
+            }
+        }
+
+        [Test]
+        [TestCase("", "Group Description")]
+        public void Test_CreateGroup_With_Empty_GroupName_And_GroupDescription(string groupName, string groupDescription)
+        {
+            Group group = new Group
+            {
+                Name = groupName,
+                Description = groupDescription
+            };
+
+            using (AutoMock mock = AutoMock.GetLoose())
+            {
+                mock.Provide(this._mapper);
+
+                IGroupsService service = mock.Create<GroupsService>();
+                Assert.Throws<ArgumentException>(delegate { service.CreateGroup(group); });
+            }
+        }
+
+        [Test]
+        [TestCase("", "")]
+        public void Test_CreateGroup_With_Empty_GroupName_And_Empty_GroupDescription(string groupName, string groupDescription)
+        {
+            Group group = new Group
+            {
+                Name = groupName,
+                Description = groupDescription
+            };
+
+            using (AutoMock mock = AutoMock.GetLoose())
+            {
+                mock.Provide(this._mapper);
+
+                IGroupsService service = mock.Create<GroupsService>();
+                Assert.Throws<ArgumentException>(delegate { service.CreateGroup(group); });
+            }
+        }
+
+        [Test]
+        public void Test_CreateGroup_With_Null_GroupParameter()
+        {
+            using (AutoMock mock = AutoMock.GetLoose())
+            {
+                mock.Provide(this._mapper);
+
+                IGroupsService service = mock.Create<GroupsService>();
+                Assert.Throws<ArgumentNullException>(delegate { service.CreateGroup(null); });
+            }
         }
 
         [Test]
@@ -96,49 +186,5 @@ namespace TaskBerry.Test
             }
         }
 
-        [Test]
-        public void Test_RemoveUsersFromGroup_Where_Users_Are_In_Group()
-        {
-        }
-
-        [Test]
-        public void Test_RemoveUsersFromGroup_Where_Users_Are_Not_In_Group()
-        {
-        }
-
-        [Test]
-        public void Test_EditGroup_Where_Group_Does_Not_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_EditGroup_Where_Group_Does_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_DeleteGroup_Where_Group_Does_Not_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_DeleteGroup_Where_Group_Does_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_AssignsUsersToGroup_Where_Group_Does_Not_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_AssignUsersToGroup_Where_Users_Does_Not_Exist()
-        {
-        }
-
-        [Test]
-        public void Test_AssignUsersToGroup_Where_Users_And_Group_Exists()
-        {
-        }
     }
 }

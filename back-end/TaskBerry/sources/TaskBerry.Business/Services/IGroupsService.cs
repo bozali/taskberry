@@ -14,8 +14,5 @@
 
         Group AssignUsersToGroup(int[] users, Guid groupId);
 
-        Group RemoveUsersFromGroup(int[] users, Guid groupId);
-
-        Group EditGroup(Group groups);
     }
 }
