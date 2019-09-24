@@ -14,17 +14,21 @@ $nb-themes: nb-register-theme((
   // color-primary-700: #1a34b8,
   // color-primary-800: #102694,
   // color-primary-900: #091c7a,
-  //accordion-item-background-color:#598bff,
-  accordion-item-background-color:#598bff,
+  // accordion-item-background-color:#598bff,
+  accordion-item-background-color:#003161,
   button-filled-primary-active-border-color:#ffffff,
   button-filled-primary-focus-border-color: #ffffff,
   button-hero-primary-glow-color: #ffffff,
   button-hero-primary-bevel-color: #ffffff,
- // header-background-color: #edf1f7,
- // layout-background-color: #666666,
- layout-background-color: #edf1f7,
+  // header-background-color: #edf1f7,
+  tabset-tab-text-color: white,
+  accordion-header-border-color:#ffffff,
+  // layout-background-color: #666666,
+  layout-background-color: #edf1f7,
+  tabset-tab-font-size: 24px,
   tree-grid-row-background-color: #edf1f7,
-  tree-grid-row-even-background-color: #d9dee4
+  tree-grid-row-even-background-color: #c7cbd1,
+  accordion-header-text-line-height: 5em
   //footer-background-color: #edf1f7
   //tabset-background-color:#598bff
 

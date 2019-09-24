@@ -105,6 +105,7 @@
             SecurityToken token = tokenHandler.CreateToken(descriptor);
 
             User user = this._mapper.Map<User>(entity);
+            user.IsTeacher = infoData.Data.Equals("Lehrer", StringComparison.InvariantCultureIgnoreCase);
             user.Token = "Bearer " + tokenHandler.WriteToken(token);
 
             return this.Ok(user);

@@ -5,6 +5,31 @@
   align-items: left;
 }
 
+.accordingHeader {
+  width:100%;
+
+}
+
+.headerText {
+  border-bottom: solid 4px white;
+  margin-bottom: 3px;
+  width:98%;
+}
+
+.accordingHeader :hover {
+  border-bottom: solid 5px #4d82ff;
+
+}
+
+.nb-accordion-item-header {
+  border-bottom: solid 2px red;
+}
+
+.accordingBody {
+  background-color: #ffffff;
+  color:black;
+}
+
 .tasksGroupHeader {
   float:left;
   background-color:#598bff;
@@ -80,7 +105,7 @@ cursor: not-allowed;
 .example-list {
   border: solid 2px rgb(255, 255, 255);
   min-height: 60px;
-  background: rgb(197, 197, 197);
+  background: #ffffff;
   border-radius: 4px;
   overflow: hidden;
   display: block;

@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardGuard } from './auth-guard.guard';
 import { NbDialogRef } from '@nebular/theme';
 import { BlankComponent } from './blank/blank.component';
+import { DashboardMyBoardComponent } from './dashboard-my-board/dashboard-my-board.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,11 @@ const routes: Routes = [
     path: 'groups',
     component: GroupsComponent,
     canActivate: [AuthGuardGuard] // Add Teacher Guard later
+  },
+  {
+    path: 'my-board',
+    component: DashboardMyBoardComponent,
+    canActivate: [AuthGuardGuard]
   },
   {
     path: 'login',

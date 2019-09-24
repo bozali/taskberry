@@ -5,11 +5,7 @@
   <nb-card-body>
       <nb-select [(selected)]="this.selectedClass" placeholder="Klasse auswählen">
 
-         <nb-option value="FS 174">FS 174</nb-option>
-          <nb-option value="FS 175">FS 175</nb-option>
-          <nb-option value="FST 174">FST 174</nb-option>
-          <nb-option value="FIS 176">FIS 176</nb-option>
-          <nb-option value="Belegschaft">Belegschaft</nb-option>
+         <nb-option *ngFor="let class of this.allClasses" value="{{class}}">{{class}}</nb-option>
       </nb-select>
       <button  style="margin-left: 10px;" (click)="this.SearchForClass()" nbButton status="primary">Schüler zeigen</button>
   </nb-card-body>
@@ -25,15 +21,6 @@ Benutzer auswählen
 
       <nb-select [(selected)]="this.selectedUser" multiple placeholder="Schüler auswählen">
       <nb-option *ngFor="let user of this.allUser" value='{{user.id}}'>{{user.lastName + ' ' + user.firstName}}</nb-option>
-          <!--<nb-option value="11">Ali Bozna</nb-option>
-          <nb-option value="22">Alfredo Pommelonie</nb-option>
-          <nb-option value="33">Paul Panzer</nb-option>
-          <nb-option value="44">2pac</nb-option>
-          <nb-option value="55">Big Fat Fish</nb-option>
-          <nb-option value="36">Paul Panzer</nb-option>
-          <nb-option value="47">2pac</nb-option>
-          <nb-option value="58">Big Fat Fish</nb-option>
-          <nb-option value="69">Paul Panzer</nb-option>-->
       </nb-select>
       <button style="margin-left:10px;" (click)="this.AddSelectedUserToGroup()" nbButton status="primary">zur Gruppe Hinzufügen</button>
     </nb-card-body>

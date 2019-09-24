@@ -18,11 +18,13 @@ import { UsersService } from '../api';
     NbTooltipModule
   ]
 })
-export class GroupsAddUserComponent {
+export class GroupsAddUserComponent implements OnInit {
+
 public allUser = [];
 public selectedClass = '';
 public selectedUser = [];
 public classSelected = false;
+public allClasses = [];
 
 // tslint:disable-next-line: max-line-length
 constructor(private router: Router, private userService: UsersService, private toastrService: NbToastrService, protected dialogRef: NbDialogRef<GroupsComponent>) { }
@@ -32,20 +34,26 @@ backButtonIcon = faChevronLeft;
 
 //
 
-public async SearchForClass() {
-  //this.selectedUser =         // Get user from Classes
- // this.selectedUser = this.userService.
-  this.allUser = await this.userService.getUsers().toPromise();
-  if (this.selectedUser === undefined || this.selectedUser == null) {
-
-  } else {
-
-  }
-  this.classSelected = true;
+ngOnInit() {
+  this.LoadAvailableClasses();
 }
 
-public ResetClassSelected()
-{
+private async LoadAvailableClasses() {
+  this.allClasses = await this.userService.getClasses().toPromise();
+
+}
+
+public async SearchForClass() {
+  this.allUser = await this.userService.getUsersInClass(this.selectedClass).toPromise();
+  if (this.allUser === undefined || this.allUser == null || this.allUser[0] === null) {
+    this.toastrService.danger('In dieser Klasse befinden sich keine Schüler.', 'Klasse leer');
+  } else {
+    this.classSelected = true;
+  }
+
+}
+
+public ResetClassSelected() {
   this.classSelected = false;
 }
 

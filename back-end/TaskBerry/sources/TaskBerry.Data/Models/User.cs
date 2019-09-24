@@ -42,5 +42,11 @@
         /// </summary>
         [DataMember(Name = "token")]
         public string Token { get; set; }
+
+        /// <summary>
+        /// Is Teacher?
+        /// </summary>
+        [DataMember(Name = "isTeacher")]
+        public bool IsTeacher { get; set; }
     }
 }

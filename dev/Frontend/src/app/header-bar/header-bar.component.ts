@@ -52,9 +52,18 @@ export class HeaderBarComponent implements OnInit {
     }
   }
 
+  public IsTeacher() {
+    const isAdmin = localStorage.getItem('isTeacher');
+    if (isAdmin === 'true') {
+      return true;
+    }
+    return false;
+  }
 public defaultUserLoggedInView() {
   this.dashboardVisible = true;
-  this.groupsVisible = true; // Add extr authentification for teachers
+  if (this.IsTeacher()) {
+    this.groupsVisible = true; // Add extr authentification for teachers
+  }
   this.logoutVisible = true;
   this.loginVisibile = false;
   // this.router.navigate(['/dashboard']);
@@ -92,7 +101,7 @@ public DetermineLoginOrregister() {
    */
   public SelectedTabChanged(fisch) {
     switch (fisch) {
-      case 'Dashboard':
+      case 'Boards':
           this.router.navigate(['/dashboard']);
           break;
       case 'Gruppen':
@@ -106,6 +115,9 @@ public DetermineLoginOrregister() {
               break;
           case 'Einloggen':
             this.OpenLogin();
+            break;
+            case 'Mein Board':
+            this.router.navigate(['/my-board']);
             break;
       default:
         this.router.navigate(['/']);
@@ -140,12 +152,14 @@ public DetermineLoginOrregister() {
         const firstName = (response as any).firstName;
         const lastName = (response as any).lastName;
         const email = (response as any).email;
+        const isAdmin = (response as any).isTeacher;
         // Define some model e.g. AuthentificationModel
         localStorage.setItem('jwt', token);
         localStorage.setItem('userId', id);
         localStorage.setItem('userFirstName', firstName);
         localStorage.setItem('userLastName', lastName);
         localStorage.setItem('email', email);
+        localStorage.setItem('isTeacher', isAdmin);
         // this.invalidLogin = false;
         this.authenticationService.configuration.apiKeys = { Authorization: token };
         this.groupsService.configuration.apiKeys = { Authorization: token };
