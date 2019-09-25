@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Group, TasksService, Task, UsersService } from '../api';
-import { faMinusSquare, faPlusSquare, faTasks, faCogs, faClipboardCheck, faIdCardAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faMinusSquare, faPlusSquare, faTasks,
+          faCogs, faUser, faClipboardCheck, faIdCardAlt, faUsers, faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 import { NbToastrService, NbDialogService } from '@nebular/theme';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
 import { DashboardGroupChangeAssigneeComponent } from '../dashboard-group-change-assignee/dashboard-group-change-assignee.component';
@@ -25,6 +26,8 @@ export class DashboardGroupBoardComponent implements OnInit {
   doneHeaderIcon = faClipboardCheck;
   userTasksIcon = faIdCardAlt;
   groupsIcon = faUsers;
+  userIcon = faUser;
+  moveIcon = faExpandArrowsAlt;
 
   openTasksRow = [];
   inProgressTasksRow = [];
@@ -91,25 +94,25 @@ export class DashboardGroupBoardComponent implements OnInit {
     dialogRef.onClose.subscribe(result => {
         if  (result) {
           const taskIndex = this.tasks.findIndex(w=> w.id == taskId);
-          this.tasks[taskIndex].assigneeId = result.assigneeId;
+          this.tasks[taskIndex].assigneeId = +result.assigneeId;
           if(taskIndex != -1) {
             switch(this.tasks[taskIndex].status){
               case 0:
               const openTaskIndex = this.openTasksRow.findIndex(w=> w.id == taskId);
               if(openTaskIndex != -1) {
-                this.openTasksRow[openTaskIndex].assigneeId = result.assigneeId as number;
+                this.openTasksRow[openTaskIndex].assigneeId = +result.assigneeId;
               }
               break;
               case 1:
               const inProgressTaskIndex = this.inProgressTasksRow.findIndex(w => w.id == taskId);
               if(inProgressTaskIndex != -1) {
-                this.inProgressTasksRow[inProgressTaskIndex].assigneeId = result.assigneeId;
+                this.inProgressTasksRow[inProgressTaskIndex].assigneeId = +result.assigneeId;
               }
               break;
               case 2:
               const doneTaskIndex = this.doneTasksRow.findIndex(w => w.id == taskId);
               if(doneTaskIndex != -1) {
-                this.doneTasksRow[doneTaskIndex].assigneeId = result.assigneeId;
+                this.doneTasksRow[doneTaskIndex].assigneeId = +result.assigneeId;
               }
               break;
             }

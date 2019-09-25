@@ -171,6 +171,7 @@ public DetermineLoginOrregister() {
         //this.dialog.close(false);
         this.router.navigate(['/dashboard']);
       }, err => {
+        this.toastrService.danger('Das falsche Passwort wurde eingegeben.', 'Falsches Passwort');
         console.log('login failed' + err);
         // this.router.navigate(['/']);
         // this.PasswordInputWrong++;

@@ -144,7 +144,7 @@ cursor: not-allowed;
 
 .cdk-drag-preview {
   //box-sizing: border-box;
-  font-style:'Open Sans', 'sans-serif';
+  font-style:'Open Sans', 'sans-serif' !important;
   font-size: 19px;
   border-bottom: solid 3px rgb(50, 53, 255);
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),

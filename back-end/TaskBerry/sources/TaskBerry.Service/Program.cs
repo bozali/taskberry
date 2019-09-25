@@ -10,7 +10,9 @@
         {
             Program
                 .CreateWebHostBuilder(args)
+#if !DEBUG
                 .UseKestrel()
+#endif
                 .UseStartup<Startup>()
                 .Build().Run();
         }
