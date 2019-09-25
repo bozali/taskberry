@@ -45,7 +45,7 @@
             // Add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.Configure<TokenConfiguration>(this.Configuration.GetSection("TokenConfiguration"));
-            
+
             TokenConfiguration tokenConfiguration = this.Configuration.GetSection("TokenConfiguration").Get<TokenConfiguration>();
 
             services
@@ -77,6 +77,7 @@
                 .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
                 .AddScoped<IGroupsService, GroupsService>()
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
+
 
 #if DEBUG
             // Add swagger documentation generation
@@ -112,10 +113,11 @@
             app
                 .UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
                 .UseAuthentication()
-                .UseMvc()
-                .UseSwagger();
+                .UseMvc();
 
 #if DEBUG
+            app.UseSwagger();
+
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
 #endif
 
