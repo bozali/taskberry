@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbInputModule, NbAccordionModule, NbIconModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbTabsetModule, NbToastrModule, NbTreeGridModule, NbTooltipModule, NbWindowModule, NbDialogModule, NbCardModule, NbSelectModule, NbInputModule, NbAccordionModule, NbIconModule, NbUserModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FooterBarComponent } from './footer-bar/footer-bar.component';
@@ -25,6 +25,7 @@ import { DashboardGroupBoardComponent } from './dashboard-group-board/dashboard-
 import { BlankComponent } from './blank/blank.component';
 import { UserLogoutComponent } from './user-logout/user-logout.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DashboardGroupChangeAssigneeComponent } from './dashboard-group-change-assignee/dashboard-group-change-assignee.component';
 
 export function getToken() {
   return localStorage.getItem('token');
@@ -53,9 +54,16 @@ const JWT_Module_Options: JwtModuleOptions = {
     DashboardGroupBoardsComponent,
     DashboardGroupBoardComponent,
     BlankComponent,
-    UserLogoutComponent
+    UserLogoutComponent,
+    DashboardGroupChangeAssigneeComponent
   ],
-  entryComponents: [GroupsAddUserComponent, LoginComponent, GroupsAddComponent, GroupsEditComponent],
+  entryComponents: [
+    GroupsAddUserComponent,
+    LoginComponent,
+    GroupsAddComponent,
+    GroupsEditComponent,
+    DashboardGroupChangeAssigneeComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

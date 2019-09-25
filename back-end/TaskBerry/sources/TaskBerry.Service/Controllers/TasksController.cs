@@ -252,7 +252,7 @@
         /// <returns>Returns the result of the response.</returns>
         /// <response code="404">Could not find the task.</response>
         /// <response code="200">Successfully deleted the task.</response>
-        [Authorize(Roles = Roles.Admin)]
+        //[Authorize(Roles = Roles.Admin)] garbage wenn Lehrer von jedem Board die Karten löschen müssen...
         [HttpDelete("/api/tasks/delete")]
         public IActionResult DeleteTask(Guid taskId)
         {

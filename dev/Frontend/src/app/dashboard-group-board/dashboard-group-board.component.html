@@ -11,7 +11,7 @@
           (cdkDropListDropped)="drop($event)"
           [cdkDropListEnterPredicate]="noReturnPredicate">
           <div
-            class="example-box"
+            class="task"
             *ngFor="let task of openTasksRow"
             [cdkDragData]="task"
             cdkDrag [cdkDragStartDelay]="50">
@@ -27,10 +27,9 @@
               <textarea class="textboxBorder" [value]="task.description"
                 (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
               </div> <!-- (focus)="focusFunction()"-->
-              <!-- Assigned Too (not required on "my board")-->
-            <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
-            Zugeordnet zu:
-          </div>-->
+              <div (click)="this.ShowChangeAssigneeWindow(this.group.id, task.id)" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px;">
+                Zugeordnet zu: {{this.GetUserName(task.assigneeId)}}
+                </div>
           </div>
           <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
               <button hero (click)="AddTaskToMyBoard(this.group.id, 0)" fullWidth nbButton status="primary">
@@ -51,7 +50,7 @@
         (cdkDropListDropped)="drop($event)"
         [cdkDropListEnterPredicate]="noReturnPredicate">
         <div
-          class="example-box"
+          class="task"
           *ngFor="let task of inProgressTasksRow"
           [cdkDragData]="task"
           cdkDrag [cdkDragStartDelay]="50">
@@ -67,10 +66,9 @@
             <textarea class="textboxBorder" [value]="task.description"
             (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
             </div>
-            <!-- Assigned Too (not required on "my board")-->
-          <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
-          Zugeordnet zu:
-        </div>-->
+            <div (click)="this.ShowChangeAssigneeWindow()" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px;">
+              Zugeordnet zu: {{this.GetUserName(task.assigneeId)}}
+              </div>
         </div>
         <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
             <button hero class="removeActiveBorder" (click)="AddTaskToMyBoard(group.id, 1)" fullWidth nbButton status="primary">
@@ -91,7 +89,7 @@
             (cdkDropListDropped)="drop($event)"
             [cdkDropListEnterPredicate]="noReturnPredicate">
             <div
-              class="example-box"
+              class="task"
               *ngFor="let task of doneTasksRow"
               [cdkDragData]="task"
               cdkDrag
@@ -108,10 +106,9 @@
                 <textarea class="textboxBorder" [value]="task.description"
                 (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
                 </div>
-                <!-- Assigned Too (not required on "my board")-->
-              <!-- <div nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="vertical-align: text-bottom;">
-              Zugeordnet zu:
-            </div>-->
+              <div (click)="this.ShowChangeAssigneeWindow()" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px;">
+              Zugeordnet zu: {{this.GetUserName(task.assigneeId)}}
+              </div>
             </div>
             <div style="margin-top: 20px; margin-bottom:20px; padding-right: 5px; padding-left: 5px;">
                 <button hero (click)="AddTaskToMyBoard(group.id, 2)" fullWidth nbButton status="primary">

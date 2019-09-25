@@ -106,13 +106,12 @@ cursor: not-allowed;
   margin-right:8px;
 }
 
-.example-box {
+.task {
   padding: 20px 10px 5px 20px;
   margin: 3px 3px 3px 3px;
-  height: 170px;
+  height: 195px;
   border-bottom: solid 3px #001f3f;
   color: black;
-  background-color:red;
   display: flex-start;
   flex-direction: row;
   align-items: center;
@@ -121,6 +120,7 @@ cursor: not-allowed;
   cursor: grab;
   background: rgb(255, 255, 255);
   font-size: 18px;
+  margin-bottom:0;
 }
 
 
@@ -143,7 +143,9 @@ cursor: not-allowed;
 }
 
 .cdk-drag-preview {
-  box-sizing: border-box;
+  //box-sizing: border-box;
+  font-style:'Open Sans', 'sans-serif';
+  font-size: 19px;
   border-bottom: solid 3px rgb(50, 53, 255);
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
               0 8px 10px 1px rgba(0, 0, 0, 0.14),

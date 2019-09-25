@@ -1,13 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Group, TasksService, Task } from '../api';
+import { Group, TasksService, Task, UsersService } from '../api';
 import { faMinusSquare, faPlusSquare, faTasks, faCogs, faClipboardCheck, faIdCardAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { NbToastrService } from '@nebular/theme';
+import { NbToastrService, NbDialogService } from '@nebular/theme';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
+import { DashboardGroupChangeAssigneeComponent } from '../dashboard-group-change-assignee/dashboard-group-change-assignee.component';
+
 @Component({
   selector: 'app-dashboard-group-board',
   templateUrl: './dashboard-group-board.component.html',
   styleUrls: ['./dashboard-group-board.component.scss']
 })
+
 export class DashboardGroupBoardComponent implements OnInit {
 
   public nameAndDescription = '';
@@ -27,12 +30,29 @@ export class DashboardGroupBoardComponent implements OnInit {
   inProgressTasksRow = [];
   doneTasksRow = [];
 
-  constructor(private tasksService: TasksService, private toastrService: NbToastrService) { }
+  currentUsers = [];
+
+  constructor(private dialogService: NbDialogService,
+              private userService: UsersService, private tasksService: TasksService, private toastrService: NbToastrService) { }
 
   ngOnInit() {
     this.LoadAllTasks();
+    this.LoadAllUser();
   }
 
+  private async LoadAllUser() {
+    this.currentUsers = await this.userService.getUsersByGroupId(this.group.id).toPromise();
+  }
+
+  public GetUserName(userId) {
+    const user = this.currentUsers.find(w => w.id === userId as number);
+    if(user == undefined || user == null) {
+      return 'Niemand';
+    }
+    else {
+      return user.firstName + ' ' + user.lastName[0] + '.';
+    }
+  }
   private async LoadAllTasks() {
 
     // Get Tasks from Database
@@ -63,6 +83,44 @@ export class DashboardGroupBoardComponent implements OnInit {
     } else {
       this.dropTaskToNewRow(event);
     }
+  }
+
+  public ShowChangeAssigneeWindow(groupId, taskId) {
+    const dialogRef = this.dialogService.open(DashboardGroupChangeAssigneeComponent,
+      { hasBackdrop: true, closeOnBackdropClick: true});
+    dialogRef.onClose.subscribe(result => {
+        if  (result) {
+          const taskIndex = this.tasks.findIndex(w=> w.id == taskId);
+          this.tasks[taskIndex].assigneeId = result.assigneeId;
+          if(taskIndex != -1) {
+            switch(this.tasks[taskIndex].status){
+              case 0:
+              const openTaskIndex = this.openTasksRow.findIndex(w=> w.id == taskId);
+              if(openTaskIndex != -1) {
+                this.openTasksRow[openTaskIndex].assigneeId = result.assigneeId as number;
+              }
+              break;
+              case 1:
+              const inProgressTaskIndex = this.inProgressTasksRow.findIndex(w => w.id == taskId);
+              if(inProgressTaskIndex != -1) {
+                this.inProgressTasksRow[inProgressTaskIndex].assigneeId = result.assigneeId;
+              }
+              break;
+              case 2:
+              const doneTaskIndex = this.doneTasksRow.findIndex(w => w.id == taskId);
+              if(doneTaskIndex != -1) {
+                this.doneTasksRow[doneTaskIndex].assigneeId = result.assigneeId;
+              }
+              break;
+            }
+          }
+        }
+      });
+    const editComp = dialogRef.componentRef.instance;
+    editComp.allUser = this.currentUsers;
+    editComp.loaded = true;
+    editComp.groupId = groupId;
+    editComp.taskId = taskId;
   }
 
   public async ChangedTaskDescription(taskId: string, newDescription: string) {

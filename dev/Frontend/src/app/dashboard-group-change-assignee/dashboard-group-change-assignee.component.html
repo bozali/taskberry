@@ -1,0 +1,22 @@
+<nb-card status="primary" *ngIf="this.loaded">
+    <nb-card-header>
+Benutzer auswählen
+    </nb-card-header>
+    <nb-card-body>
+      <nb-select [(selected)]="this.selectedUser" placeholder="Benutzer zuweisen...">
+
+          <nb-option *ngFor="let user of this.allUser" value='{{user.id}}'>
+                {{user.firstName + ' ' + user.lastName[0] + '.'}}
+          </nb-option>
+      </nb-select>
+      <button style="margin-left:10px;" (click)="this.AssignSelectedUserToTask()" nbButton status="primary">Der Aufgabe zuweisen</button>
+    </nb-card-body>
+</nb-card>
+<nb-card status="primary" *ngIf="!this.loaded">
+  <nb-card-header>
+  Benutzer auswählen
+  </nb-card-header>
+  <nb-card-body>
+    Verfügbare Benutzer der Gruppe werden geladen...
+  </nb-card-body>
+</nb-card>
