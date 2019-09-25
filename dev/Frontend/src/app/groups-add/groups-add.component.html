@@ -1,0 +1,15 @@
+<nb-card status="primary" *ngIf="!this.classSelected">
+    <nb-card-header>
+        Neue Gruppe erstellen
+    </nb-card-header>
+    <nb-card-body>
+      <p>Gruppenname</p>
+      <div>
+        <input type="text" (input)="this.groupName = $event.target.value" nbInput fullWidth fieldSize="small" placeholder="Gruppenname...">
+        <p>Gruppen Beschreibung</p>
+        <textarea nbInput fullWidth (input)="this.groupDescription = $event.target.value" style="min-width:200px; min-height: 100px;" placeholder="Kurze Gruppen Beschreibung..."></textarea>
+        </div>
+        <button style="margin-top: 20px;" nbButton status="primary" (click)="this.AddNewGroup()">Gruppe erstellen</button>
+      </nb-card-body>
+</nb-card>
+

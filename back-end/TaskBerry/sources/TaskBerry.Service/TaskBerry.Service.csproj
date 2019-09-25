@@ -11,8 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
@@ -21,8 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskBerry.Business\TaskBerry.Business.csproj" />
     <ProjectReference Include="..\TaskBerry.DataAccess\TaskBerry.DataAccess.csproj" />
     <ProjectReference Include="..\TaskBerry.Data\TaskBerry.Data.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

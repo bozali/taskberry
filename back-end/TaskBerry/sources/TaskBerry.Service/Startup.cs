@@ -18,9 +18,11 @@
     using System;
 
     using TaskBerry.Service.Configuration;
+    using TaskBerry.Business.Services;
     using TaskBerry.DataAccess.Domain;
 
     using Swashbuckle.AspNetCore.Swagger;
+    using AutoMapper;
 
 
     /// <summary>
@@ -70,15 +72,16 @@
             // Dependency injection configuration
             services
                 .AddDbContext<TaskBerryDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("TaskBerry")))
+                .AddDbContext<MoodleDbContext>(options => options.UseMySql(this.Configuration.GetConnectionString("Moodle")))
+                .AddSingleton(p => new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper())
                 .AddScoped<Configuration.IConfigurationProvider, Configuration.ConfigurationProvider>(provider => new Configuration.ConfigurationProvider(this.Configuration))
+                .AddScoped<IGroupsService, GroupsService>()
                 .AddScoped<ITaskBerryUnitOfWork, TaskBerryUnitOfWork>();
-
-            // TODO Use automapper c#
-
-            // Add swagger documentation generation
 
 
 #if DEBUG
+            // Add swagger documentation generation
+
             services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("Bearer", new ApiKeyScheme
@@ -110,10 +113,11 @@
             app
                 .UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
                 .UseAuthentication()
-                .UseMvc()
-                .UseSwagger();
+                .UseMvc();
 
 #if DEBUG
+            app.UseSwagger();
+
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/taskberry/swagger.json", "TaskBerry"));
 #endif
 

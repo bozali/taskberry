@@ -1,0 +1,13 @@
+<!-- Foreach Group-->
+<div id="groupContainer" *ngIf="this.loaded">
+  <nb-accordion *ngFor="let group of this.userGroups">
+  <nb-accordion-item>
+    <nb-accordion-item-header class="accordingHeader">
+      <h6 class="headerText"><fa-icon style="float:left; margin-right:25px;" [icon]="this.groupsIcon"></fa-icon> {{group.name}}</h6>
+    </nb-accordion-item-header>
+    <nb-accordion-item-body class="accordingBody">
+      <app-dashboard-group-board [group]="group"></app-dashboard-group-board>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+  </nb-accordion>
+</div>

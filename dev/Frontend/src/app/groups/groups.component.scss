@@ -1,0 +1,21 @@
+.hoverEffect tr:hover {
+  background-color: #487fff;
+  opacity: 1;
+  
+}
+
+.hoverEffect tr {
+  color:black;
+}
+
+.hoverCursor fa-icon:hover {
+    cursor: zoom-in;
+}
+
+.hoverCursorInteract fa-icon:hover {
+  cursor: pointer;
+}
+
+.hoverCursorBlocked fa-icon:hover {
+  cursor: not-allowed;
+}

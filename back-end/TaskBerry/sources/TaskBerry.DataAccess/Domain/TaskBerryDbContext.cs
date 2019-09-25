@@ -7,13 +7,15 @@
 
     public class TaskBerryDbContext : DbContext
     {
-        public TaskBerryDbContext(DbContextOptions options) : base(options)
+        public TaskBerryDbContext(DbContextOptions<TaskBerryDbContext> options) : base(options)
         {
         }
 
-        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<UserInfoEntity> UserInfos { get; set; }
 
         public DbSet<GroupEntity> Groups { get; set; }
+
+        public DbSet<TaskEntity> Tasks { get; set; }
 
         public DbSet<GroupAssignmentEntity> GroupAssignments { get; set; }
     }

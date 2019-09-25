@@ -2,6 +2,7 @@
 {
     using Swashbuckle.AspNetCore.Annotations;
 
+    using TaskBerry.Business.Services;
     using TaskBerry.Service.Constants;
     using TaskBerry.DataAccess.Domain;
     using TaskBerry.Data.Entities;
@@ -15,27 +16,37 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using AutoMapper;
+
 
     /// <summary>
+    /// Controller for group functions.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/api/groups")]
     public class GroupsController : ControllerBase
     {
         private readonly ITaskBerryUnitOfWork _taskBerry;
+        private readonly IGroupsService _groupsService;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GroupsController(ITaskBerryUnitOfWork taskBerry)
+        public GroupsController(ITaskBerryUnitOfWork taskBerry, IGroupsService groupsService, IMapper mapper)
         {
+            this._groupsService = groupsService;
             this._taskBerry = taskBerry;
+            this._mapper = mapper;
         }
 
         /// <summary>
+        /// Returns all groups in database.
         /// </summary>
-        /// <returns></returns>
-        [HttpGet]
+        /// <returns>Returns all groups in database.</returns>
+        /// <response code="200">Successfully returned groups.</response>
+        /// <response code="403">User is not in the <see cref="Roles.Admin"/> to access the request.</response>
+        [HttpGet("/api/groups")]
         [Authorize(Roles = Roles.Admin)]
         [Produces("application/json")]
         public ActionResult<IEnumerable<Group>> GetGroups()
@@ -45,20 +56,20 @@
                 return this.Forbid();
             }
 
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroups();
-            
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            IEnumerable<Group> groups = this._groupsService.GetGroups();
+
+            return this.Ok(groups);
         }
 
         /// <summary>
         /// Gets all groups of the current logged in user.
         /// </summary>
         /// <returns>Returns all groups of the current logged in user.</returns>
+        /// <response code="400">No user is logged in.</response>
+        /// <response code="200">Returns all groups of the current user.</response>
         [Authorize]
-        [HttpGet("/currentUserGroups")]
+        [HttpGet("/api/groups/current-user-groups")]
         [Produces("application/json")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "No user is logged in.")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Returns all groups of the current user")]
         public ActionResult<IEnumerable<Group>> GetCurrentUserGroups()
         {
             if (this.User == null)
@@ -68,18 +79,39 @@
 
             int currentUserId = int.Parse(this.User.Identity.Name);
 
-            IEnumerable<GroupEntity> entities = this._taskBerry.GroupsRepository.GetGroupsByUserId(currentUserId);
+            IEnumerable<GroupEntity> groupEntities = this._taskBerry.GroupsRepository.GetGroupsByUserId(currentUserId);
 
-            return this.Ok(entities.Select(entity => entity.ToModel()));
+            List<Group> groups = new List<Group>();
+
+            foreach (GroupEntity groupEntity in groupEntities)
+            {
+                IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments.Where(a => a.GroupId == groupEntity.Id);
+
+                Group group = this._mapper.Map<Group>(groupEntity);
+                group.Members = new List<int>();
+
+                foreach (GroupAssignmentEntity assignmentEntity in assignments)
+                {
+                    group.Members.Add(assignmentEntity.UserId);
+                }
+
+                groups.Add(group);
+            }
+
+            return this.Ok(groups);
         }
 
         /// <summary>
+        /// Creating a new group.
         /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
-       // [Authorize]
-        [HttpPost("/new")]
+        /// <param name="group">New group to save in the database.</param>
+        /// <returns>Returns the new created group.</returns>
+        /// <remarks>For the property <see cref="Group.Members"/> only the ids of the user can be set.</remarks>
+        /// <response code="200">Created successfully the group and returned the result.</response>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("/api/groups/new")]
         [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Returned successfully model.")]
         public ActionResult<Group> CreateGroup([FromBody] Group group)
         {
             // TODO Create services or repositories to create this
@@ -93,17 +125,132 @@
 
             this._taskBerry.GroupsRepository.CreateGroup(entity);
 
-            if(group.Members != null)
+            return this.Ok(this._mapper.Map<Group>(entity)); // TODO CreateResult?
+        }
+
+        /// <summary>
+        /// Assigns a users to a specific group.
+        /// </summary>
+        /// <param name="users">List of the user ids.</param>
+        /// <param name="groupId">The group where the users will be assigned to.</param>
+        /// <returns>Returns the group with the assigned users.</returns>
+        /// <response code="404">The group with the id could not be found.</response>
+        /// <response code="200">Successfully assigned the users to the group.</response>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("/api/groups/assign")]
+        [Produces("application/json")]
+        public ActionResult<Group> AssignUsersToGroup(int[] users, Guid groupId)
+        {
+            Group group = this._groupsService.AssignUsersToGroup(users, groupId);
+
+            if (group == null)
             {
-            foreach (int member in group.Members)
-            {
-                this._taskBerry.Context.GroupAssignments.Add(new GroupAssignmentEntity { GroupId = entity.Id, UserId = member });
+                return this.NotFound($"Could not find {groupId}.");
             }
 
-            }
-            this._taskBerry.Context.SaveChanges();
+            return this.Ok(group);
+        }
 
-            return this.Ok(entity.ToModel()); // TODO CreateResult?
+        /// <summary>
+        /// Removes users from a group.
+        /// </summary>
+        /// <param name="users">List of user ids that will be removed from the group.</param>
+        /// <param name="groupId">The group id where the users will be removed.</param>
+        /// <returns>Returns the group with the removed users.</returns>
+        /// <response code="404">The group could not be found.</response>
+        /// <response code="200">Users were successfully removed from the group.</response>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("/api/groups/remove-user-from-group")]
+        [Produces("application/json")]
+        public ActionResult<Group> RemoveUsersFromGroup(int[] users, Guid groupId)
+        {
+            GroupEntity groupEntity = this._taskBerry.GroupsRepository.GetGroups().FirstOrDefault(g => g.Id == groupId);
+
+            if (groupEntity == null)
+            {
+                return this.NotFound($"Group {groupId} not found.");
+            }
+
+            // TODO Make the member assignment bitiful
+            Group group = this._mapper.Map<Group>(groupEntity);
+            group.Members = new List<int>();
+
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments;
+
+            foreach (int userId in users)
+            {
+                // TODO Make this bitiful
+                // Get assignments with the userId and the groupId
+                GroupAssignmentEntity toRemove = assignments.FirstOrDefault(a => a.GroupId == groupId && a.UserId == userId);
+
+                this._taskBerry.TaskBerryContext.GroupAssignments.Remove(toRemove);
+            }
+
+            foreach (GroupAssignmentEntity assignment in this._taskBerry.TaskBerryContext.GroupAssignments)
+            {
+                group.Members.Add(assignment.UserId);
+            }
+
+            // TODO Check if saved successfully
+            this._taskBerry.TaskBerryContext.SaveChanges();
+
+            return this.Ok(group);
+        }
+
+        /// <summary>
+        /// Deletes a group.
+        /// </summary>
+        /// <param name="groupId">The group to delete.</param>
+        /// <returns>Returns the result of the request.</returns>
+        /// <response code="404">Could not find the group.</response>
+        /// <response code="200">Successfully deleted the group.</response>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpDelete("/api/groups/delete")]
+        [Produces("application/json")]
+        public IActionResult DeleteGroup(Guid groupId)
+        {
+            GroupEntity groupEntity = this._taskBerry.TaskBerryContext.Groups.FirstOrDefault(g => g.Id == groupId);
+
+            if (groupEntity == null)
+            {
+                return this.NotFound($"Could not find {groupId}.");
+            }
+
+            IEnumerable<GroupAssignmentEntity> assignments = this._taskBerry.TaskBerryContext.GroupAssignments.Where(a => a.GroupId == groupId);
+            this._taskBerry.TaskBerryContext.GroupAssignments.RemoveRange(assignments);
+            this._taskBerry.TaskBerryContext.Groups.Remove(groupEntity);
+
+            this._taskBerry.TaskBerryContext.SaveChanges();
+
+            return this.Ok($"Successfully deleted {groupId}");
+        }
+
+        /// <summary>
+        /// Edits a group with its properties.
+        /// </summary>
+        /// <remarks>Members will be just ignored.</remarks>
+        /// <param name="group">The edited group.</param>
+        /// <returns>Returns the edited group.</returns>
+        /// <response code="404">Group could not be found.</response>
+        /// <response code="200">Successfully edited the group.</response>
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPatch("/api/groups/edit")]
+        [Produces("application/json")]
+        public ActionResult<Group> EditGroup([FromBody] Group group)
+        {
+            GroupEntity entity = this._taskBerry.TaskBerryContext.Groups.FirstOrDefault(g => g.Id == group.Id);
+
+            if (entity == null)
+            {
+                return this.NotFound($"Could not find {group.Id}.");
+            }
+
+            entity.Name = group.Name;
+            entity.Description = group.Description ?? "";
+
+            this._taskBerry.TaskBerryContext.SaveChanges();
+
+            return this.Ok(this._mapper.Map<Group>(entity));
         }
     }
 }

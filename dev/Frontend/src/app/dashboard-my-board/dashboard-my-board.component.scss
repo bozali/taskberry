@@ -1,0 +1,168 @@
+#top-left {
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: left; /* Safari 7.0+ */
+  display: inline-block;
+  align-items: left;
+}
+
+.tasksGroupHeader {
+  float:left;
+  background-color:#0074D9;
+   width:110%;
+   height:100%;
+   padding: 10px 2px 5px 3px;
+   font-family: "Open Sans", "sans-serif";
+   border-radius:1px;
+   padding-left:20px;
+   opacity:1;
+   text-shadow: 2px #4d82ff;
+   border-bottom: outset 6px rgb(255, 255, 255);
+   //border-top: outset 6px rgb(255, 255, 255);
+  // border-left: solid 3px rgb(255, 255, 255);
+
+}
+
+.removeActiveBorder :active {
+  box-shadow: 0;
+}
+
+textarea {
+  height:65px;
+  max-height: 65px;
+  max-width: 90%;
+  min-width: 80%;
+  min-height: 60px;
+}
+
+.textboxBorder {
+  border:0 none;
+  width:90%;
+  padding: 3px 5px 3px 5px;
+  overflow:visible;
+}
+
+
+
+
+.tasksGroupHeader:hover {
+  border-bottom: inset 6px #0c3596;
+  //border-top: inset 6px #eaecf1;
+  //font-size:23px;
+}
+
+.taskHeader {
+  width: 95%;
+  vertical-align: top;
+  color: black;
+  opacity: 1;
+  //font-family: "Open Sans", "sans-serif";
+  text-shadow: black 5px;
+  border-bottom: solid 2px black;
+  overflow: hidden;
+  background-color:white;
+  border-radius:4px;
+
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 5px;
+  margin: 10px 25px 25px 10px;
+  text-align:center;
+}
+
+.example-container {
+  width: 30%;
+  max-width: 30%;
+  margin: 0 25px 25px 0;
+  padding-top:5px;
+  border-radius:4px;
+  display: inline-block;
+  vertical-align: top;
+  background: #dddddd;
+  border-bottom: solid 2px #001f3f;
+  margin-top: 40px;
+}
+.hoverCursor fa-icon:hover {
+  cursor: zoom-in;
+}
+
+.hoverCursorInteract fa-icon:hover {
+cursor: pointer;
+}
+
+.hoverCursorBlocked fa-icon:hover {
+cursor: not-allowed;
+}
+
+.example-list {
+  //border-left: solid 2px #001f3f;
+  //border-right: solid 2px #001f3f;
+  min-height: 60px;
+  //background: #dddddd;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+  padding: 0 8px 0 8px;
+  margin-left:8px;
+  margin-right:8px;
+}
+
+.example-box {
+  padding: 20px 10px 5px 20px;
+  margin: 3px 3px 3px 3px;
+  height: 170px;
+  border-bottom: solid 3px #001f3f;
+  color: black;
+  background-color:red;
+  display: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: grab;
+  background: rgb(255, 255, 255);
+  font-size: 18px;
+}
+
+
+.example-box :hover {
+  //border-bottom: solid 3px rgb(25, 253, 242);
+  cursor: alias;
+}
+
+
+#tasksBoard{
+  width:100%;
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%;
+  margin:0;
+  padding:0;
+  margin-left:30px;
+  margin-right:30px;
+  border-radius: 4px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-bottom: solid 3px rgb(50, 53, 255);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  border-bottom: solid 3px rgb(50, 53, 255);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

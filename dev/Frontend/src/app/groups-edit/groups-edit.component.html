@@ -1,0 +1,16 @@
+<nb-card status="primary" *ngIf="!this.loaded">
+    <nb-card-header>
+        Gruppe bearbeiten
+    </nb-card-header>
+    <nb-card-body>
+      <p>Gruppenname</p>
+      <div>
+        <input [value]="this.name" (input)="this.name = $event.target.value" nbInput fullWidth fieldSize="small" placeholder="Gruppenname...">
+        <p>Gruppen Beschreibung</p>
+        <textarea nbInput fullWidth [value]="this.description" (input)="this.description = $event.target.value" style="min-width:200px; min-height: 100px;" placeholder="Kurze Gruppen Beschreibung..."></textarea>
+        </div>
+
+        <button style="margin-top: 20px;" nbButton status="primary" (click)="this.EditGroup()">Gruppe bearbeiten</button>
+      </nb-card-body>
+</nb-card>
+

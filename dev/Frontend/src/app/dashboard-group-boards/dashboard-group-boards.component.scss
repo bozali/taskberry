@@ -1,0 +1,174 @@
+#top-left {
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: left; /* Safari 7.0+ */
+  display: inline-block;
+  align-items: left;
+}
+
+.accordingHeader {
+  width:100%;
+
+}
+
+.headerText {
+  border-bottom: solid 4px white;
+  margin-bottom: 3px;
+  width:98%;
+}
+
+.accordingHeader :hover {
+  border-bottom: solid 5px #4d82ff;
+
+}
+
+.nb-accordion-item-header {
+  border-bottom: solid 2px red;
+}
+
+.accordingBody {
+  background-color: #ffffff;
+  color:black;
+}
+
+.tasksGroupHeader {
+  float:left;
+  background-color:#598bff;
+   width:110%;
+   height:100%;
+   padding: 10px 2px 5px 3px;
+   font-family: "Open Sans", "sans-serif";
+   border-radius:1px;
+   padding-left:20px;
+   opacity:0.93;
+   text-shadow: 2px #4d82ff;
+   border-bottom: outset 6px rgb(255, 255, 255);
+   //border-top: outset 6px rgb(255, 255, 255);
+  // border-left: solid 3px rgb(255, 255, 255);
+
+}
+
+.removeActiveBorder :active {
+  box-shadow: 0;
+}
+
+.textboxBorder {
+  border:0 none;
+  width:90%;
+  height:100%;
+  padding: 3px 5px 3px 5px;
+}
+
+
+
+
+.tasksGroupHeader:hover {
+  border-bottom: inset 6px #eaecf1;
+  //border-top: inset 6px #eaecf1;
+  font-size:23px;
+}
+
+.taskHeader {
+  background-color: #598bff;
+  color: rgb(255, 255, 255);
+  opacity: 0.92;
+  font-family: "Open Sans", "sans-serif";
+  padding-left:20px;
+  padding-top:5px;
+  padding-bottom:10px;
+  padding-top:10px;
+  margin-bottom:1px;
+  text-shadow: black 5px;
+  overflow: hidden;
+  display: block;
+  border-top:solid 9px rgb(224, 224, 224);
+}
+
+.example-container {
+  width: 30%;
+  max-width: 30%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+.hoverCursor fa-icon:hover {
+  cursor: zoom-in;
+}
+
+.hoverCursorInteract fa-icon:hover {
+cursor: pointer;
+}
+
+.hoverCursorBlocked fa-icon:hover {
+cursor: not-allowed;
+}
+
+.example-list {
+  border: solid 2px rgb(255, 255, 255);
+  min-height: 60px;
+  background: #ffffff;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+
+.example-box {
+  padding: 20px 20px 20px 20px;
+  margin: 3px 3px 3px 3px;
+  height: 170px;
+  border-bottom: solid 3px rgb(60, 135, 204);
+  color: black;
+  background-color:red;
+  display: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: grab;
+  background: rgb(255, 255, 255);
+  font-size: 18px;
+}
+
+
+.example-box :hover {
+  //border-bottom: solid 3px rgb(25, 253, 242);
+  cursor: alias;
+}
+
+
+#tasksBoard{
+  width:100%;
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%;
+  margin:0;
+  padding:0;
+  margin-left:30px;
+  margin-right:30px;
+  border-radius: 4px;
+  border-color: red;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border: solid 3px rgb(255, 0, 0);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  border-bottom: solid 3px rgb(50, 53, 255);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

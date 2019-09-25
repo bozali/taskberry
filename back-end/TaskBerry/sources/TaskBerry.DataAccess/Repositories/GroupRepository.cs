@@ -16,21 +16,27 @@
 
         public IEnumerable<GroupEntity> GetGroups()
         {
-            return this.TaskBerry.Context.Groups;
+            return this.TaskBerry.TaskBerryContext.Groups;
         }
 
         public IEnumerable<GroupEntity> GetGroupsByUserId(int userId)
         {
-            IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.Context.GroupAssignments.Where(assignment => assignment.UserId == userId);
-            return assignments.Select(entity => this.TaskBerry.Context.Groups.FirstOrDefault(group => @group.Id == entity.GroupId));
+            IEnumerable<GroupAssignmentEntity> assignments = this.TaskBerry.TaskBerryContext.GroupAssignments.Where(assignment => assignment.UserId == userId);
+
+            return assignments.Select(entity => this.TaskBerry.TaskBerryContext.Groups.FirstOrDefault(group => @group.Id == entity.GroupId));
         }
 
         public GroupEntity CreateGroup(GroupEntity @group)
         {
-            this.TaskBerry.Context.Groups.Add(group);
+            this.TaskBerry.TaskBerryContext.Groups.Add(group);
             this.TaskBerry.Commit();
 
             return group; // TODO
+        }
+
+        public IEnumerable<GroupAssignmentEntity> GetGroupAssignment(Guid groupId)
+        {
+            return this.TaskBerry.TaskBerryContext.GroupAssignments.Where(a => a.GroupId == groupId);
         }
     }
 }

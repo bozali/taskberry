@@ -8,7 +8,13 @@
     {
         public static void Main(string[] args)
         {
-            Program.CreateWebHostBuilder(args).Build().Run();
+            Program
+                .CreateWebHostBuilder(args)
+#if !DEBUG
+                .UseKestrel()
+#endif
+                .UseStartup<Startup>()
+                .Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
