@@ -13,24 +13,32 @@ export class FooterBarComponent implements OnInit {
 
   ngOnInit() {
     this.imprintSelected = false;
-    this.imprintSelected = false;
+    this.privacyPolicySelected = false;
   }
 
   public SelectedTabChanged(tabName) {
     switch (tabName) {
       case 'Impressum':
-        if(this.imprintSelected) {
+        if(!this.imprintSelected) {
           window.open('https://www.atiwonline.de/#openModal');
           this.imprintSelected = true;
         }
         break;
       case 'Datenschutzerklärung':
-          if(this.privacyPolicySelected) {
-            window.open('https://www.atiwonline.de/admin/tool/policy/viewall.php?returnurl=https%3A%2F%2Fwww.atiwonline.de%2F');
+          if (!this.privacyPolicySelected) {
+            window.open('https://www.atiwonline.de/admin/tool/policy/viewall.php');
             this.imprintSelected = true;
           }
           break;
     }
+  }
+
+  public SetImprintActive() {
+    this.imprintSelected = true;
+  }
+
+  public SetPrivacyPolicyActive() {
+    this.privacyPolicySelected = true;
   }
 
 }

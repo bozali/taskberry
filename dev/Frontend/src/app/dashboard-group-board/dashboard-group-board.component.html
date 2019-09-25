@@ -1,5 +1,5 @@
 <div id="groupBoard" *ngIf="this.group !== undefined && this.loaded">
-  {{this.group.description}}
+  <span style="font-size:20px; color:white;">{{this.group.description}}</span>
   <div cdkDropListGroup>
     <div class="example-container">
         <h4 class="taskHeader">Offen<fa-icon style="float:right; margin-right:25px;" [icon]="this.openTasksHeaderIcon"></fa-icon></h4>
@@ -37,7 +37,7 @@
                   Aufgabe hinzufügen
                   </button>
           </div>
-       
+
         </div>
     </div>
       <div class="example-container">
@@ -68,7 +68,7 @@
             (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
             </div>
             <div (click)="this.ShowChangeAssigneeWindow(this.group.id, task.id)" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px; display: inline-block;">
-              <fa-icon class="hoverCursorInteract" style="float:left;" [icon]="this.userIcon"></fa-icon><span style="margin-left:5px;">{{this.GetUserName(task.assigneeId)}}</span>  
+              <fa-icon class="hoverCursorInteract" style="float:left;" [icon]="this.userIcon"></fa-icon><span style="margin-left:5px;">{{this.GetUserName(task.assigneeId)}}</span>
             </div>
            <!-- <fa-icon class="hoverCursorInteract" style="float:right;" [icon]="this.moveIcon"></fa-icon>-->
           </div>
