@@ -1,8 +1,9 @@
 
     <!-- Header -->
     <nb-layout-column>
-      <nb-tabset tabset-tab-active-text-color="#3366ff" (changeTab)="SelectedTabChanged($event.tabTitle == 'undefined' ? '' : $event.tabTitle)" style="font-size:24px;" style=" margin-top:30px; height:100%; width:100%; color:rgb(89,139,255);">
-        <nb-tab tabTitle="Boards" *ngIf="this.dashboardVisible" tabIcon="layout">
+      <nb-tabset fullWidth tabset-tab-active-text-color="#3366ff" (changeTab)="SelectedTabChanged($event.tabTitle == 'undefined' ? '' : $event.tabTitle)" style="font-size:24px;" style=" margin-top:30px; height:100%; width:100%; color:rgb(89,139,255);">
+        <nb-tab tabTitle="Boards" *ngIf="this.dashboardVisible" tabIcon="grid-outline">
+
         </nb-tab>
         <nb-tab tabTitle="Mein Board" *ngIf="this.dashboardVisible" tabIcon="layout" responsive>
 
@@ -13,7 +14,10 @@
         <nb-tab tabTitle="Ausloggen" *ngIf="this.logoutVisible" tabIcon="log-out" responsive>
         </nb-tab>
         <nb-tab tabTitle="Einloggen" *ngIf="this.loginVisibile" tabIcon="log-in" responsive>
-
         </nb-tab>
        </nb-tabset>
     </nb-layout-column>
+
+    <div style="position:absolute; right: 21px; top: 8px;">
+    <img alt="taskberry" src="/assets/logo_white.png" width="60px" height="60px">
+    </div>

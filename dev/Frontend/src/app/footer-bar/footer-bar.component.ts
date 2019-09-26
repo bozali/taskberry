@@ -6,39 +6,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer-bar.component.scss']
 })
 export class FooterBarComponent implements OnInit {
-  public imprintSelected = false;
-  public privacyPolicySelected = false;
 
   constructor() { }
 
   ngOnInit() {
-    this.imprintSelected = false;
-    this.privacyPolicySelected = false;
   }
 
   public SelectedTabChanged(tabName) {
     switch (tabName) {
       case 'Impressum':
-        if(!this.imprintSelected) {
-          window.open('https://www.atiwonline.de/#openModal');
-          this.imprintSelected = true;
-        }
+          window.open('https://www.atiwonline.de/#openModal'); // Modal open
+
         break;
       case 'Datenschutzerklärung':
-          if (!this.privacyPolicySelected) {
             window.open('https://www.atiwonline.de/admin/tool/policy/viewall.php');
-            this.imprintSelected = true;
-          }
+          break;
+          case 'ATIW':
+          window.open('https://atiw.de/');
           break;
     }
-  }
-
-  public SetImprintActive() {
-    this.imprintSelected = true;
-  }
-
-  public SetPrivacyPolicyActive() {
-    this.privacyPolicySelected = true;
   }
 
 }

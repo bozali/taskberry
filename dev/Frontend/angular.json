@@ -25,7 +25,8 @@
             "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets/logo_white.png",
+              "src/assets/logo.png"
             ],
             "styles": [
               "src/styles.scss"],
