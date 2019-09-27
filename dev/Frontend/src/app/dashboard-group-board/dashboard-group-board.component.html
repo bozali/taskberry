@@ -14,17 +14,17 @@
             class="task"
             *ngFor="let task of openTasksRow"
             [cdkDragData]="task"
-            cdkDrag [cdkDragStartDelay]="50">
+            cdkDrag [cdkDragStartDelay]="20">
             <!-- TASK -->
             <!-- Title-->
             <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">
-              <input type="text" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
+              <input type="text" (keydown.enter)="this.ChangedTaskTitle(task.id, $event.target.value)" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
             </span>
               <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 0)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
             <hr>
             <!-- Description-->
             <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
-              <textarea class="textboxBorder" [value]="task.description"
+              <textarea class="textboxBorder" [value]="task.description" (keydown.enter)="this.ChangedTaskDescription(task.id, $event.target.value)"
                 (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
               </div> <!-- (focus)="focusFunction()"-->
               <div (click)="this.ShowChangeAssigneeWindow(this.group.id, task.id)" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px;">
@@ -54,17 +54,17 @@
           class="task"
           *ngFor="let task of inProgressTasksRow"
           [cdkDragData]="task"
-          cdkDrag [cdkDragStartDelay]="50">
+          cdkDrag [cdkDragStartDelay]="20">
           <!-- TASK -->
           <!-- Title-->
           <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">
-            <input type="text" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
+            <input type="text" (keydown.enter)="this.ChangedTaskTitle(task.id, $event.target.value)" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
           </span>
             <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 1)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
           <hr>
           <!-- Description-->
           <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
-            <textarea class="textboxBorder" [value]="task.description"
+            <textarea class="textboxBorder" [value]="task.description" (keydown.enter)="this.ChangedTaskDescription(task.id, $event.target.value)"
             (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
             </div>
             <div (click)="this.ShowChangeAssigneeWindow(this.group.id, task.id)" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px; display: inline-block;">
@@ -95,17 +95,17 @@
               *ngFor="let task of doneTasksRow"
               [cdkDragData]="task"
               cdkDrag
-              [cdkDragStartDelay]="50">
+              [cdkDragStartDelay]="20">
               <!-- TASK -->
               <!-- Title-->
               <div><span nbTooltipStatus="primary" nbTooltip="Aufgaben Titel bearbeiten">
-                <input type="text" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
+                <input type="text" (keydown.enter)="this.ChangedTaskTitle(task.id, $event.target.value)" (focusout)="this.ChangedTaskTitle(task.id, $event.target.value)"[value]="task.title" class="textboxBorder"/>
               </span>
                 <fa-icon (click)="this.RemoveTaskFromMyBoard(task.id, 2)" class="hoverCursorInteract" style="float:right;" [icon]="this.removeTaskIcon" nbTooltipStatus="danger" nbTooltip="Aufgabe löschen" alt="Aufgabe löschen"></fa-icon></div>
               <hr>
               <!-- Description-->
               <div nbTooltipStatus="primary" nbTooltip="Aufgaben Beschreibung bearbeiten">
-                <textarea class="textboxBorder" [value]="task.description"
+               <textarea class="textboxBorder" [value]="task.description" (keydown.enter)="this.ChangedTaskDescription(task.id, $event.target.value)"
                 (focusout)="this.ChangedTaskDescription(task.id, $event.target.value)"></textarea>
                 </div>
                 <div (click)="this.ShowChangeAssigneeWindow(this.group.id, task.id)" nbTooltipStatus="primary" nbTooltip="Zuweisung ändern" style="height: 25px; margin-top: 20px;">
